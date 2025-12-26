@@ -1,6 +1,6 @@
 {
     "name": "sdd-toolkit",
-    "version": "1.5.1",
+    "version": "1.0.0",
     "description": "Instalador automático dos agentes de desenvolvimento",
     "main": "src/index.js",
     "bin": {
@@ -35,6 +35,6 @@
     ],
     "repository": {
         "type": "git",
-        "url": "https://github.com/filipeoliveira93/sdd-toolkit"
+        "url": "https://github.com/filipeoliveira93/agents.dev"
     }
 }

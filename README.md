@@ -1,131 +1,133 @@
 # sdd-toolkit (Universal Spec CLI)
 
-Ferramenta CLI para configurar automaticamente o ambiente de desenvolvimento e instalar agentes de IA (Auditor, Coder, etc.) para diversas ferramentas modernas de IA.
+CLI tool to automatically set up the development environment and install AI agents (Auditor, Coder, etc.) for various modern AI tools.
 
-## Visão Geral
+## Overview
 
-**sdd-toolkit** é um "Gerenciador de Pacotes para Agentes de IA". Ele define um esquadrão padrão de Desenvolvedores de IA e os instala diretamente no contexto do seu Assistente de Codificação de IA favorito (como Gemini, Roo Code, Kilo Code, OpenCode).
+**sdd-toolkit** is an "AI Agent Package Manager". It defines a standard squad of AI Developers and installs them directly into the context of your favorite AI Coding Assistant (such as Gemini, Roo Code, Kilo Code, OpenCode).
 
-A ideia principal é parar de criar prompts do zero e instalar um fluxo de trabalho comprovado e estruturado.
+The main idea is to stop creating prompts from scratch and install a proven, structured workflow.
 
-## Funcionalidades Principais
+## Key Features
 
-### 1. Instalação de Agentes de IA
-Lê definições agnósticas (YAML) e converte para formatos específicos:
-*   **Gemini CLI:** Gera arquivos de configuração `.toml`.
-*   **Roo Code / Cline:** Gera modos customizados (`_custom_modes.json`) e regras de contexto em `.roo/` ou `.cline/`.
-*   **GitHub Copilot:** Gera instruções em `.github/copilot-instructions.md` e agentes em `.github/agents/`.
-*   **Cursor:** Gera regras em `.cursor/rules/*.mdc`.
-*   **Windsurf:** Gera regras em `.windsurfrules`.
-*   **Trae:** Gera instruções em `.trae/instructions.md`.
-*   **OpenCode:** Gera agentes em `.opencode/`.
-*   **OpenAI / Claude (Web):** Gera prompts em texto puro na pasta `prompts/`.
-*   **Kilo Code:** Gera prompts em Markdown (`.kilo/prompts/*.md`).
+### 1. AI Agent Installation
+Reads agnostic definitions (YAML) and converts them to specific formats:
+*   **Gemini CLI:** Generates `.toml` configuration files.
+*   **Roo Code / Cline:** Generates custom modes (`_custom_modes.json`) and context rules in `.roo/` or `.cline/`.
+*   **GitHub Copilot:** Generates instructions in `.github/copilot-instructions.md` and agents in `.github/agents/`.
+*   **Cursor:** Generates rules in `.cursor/rules/*.mdc`.
+*   **Windsurf:** Generates rules in `.windsurfrules`.
+*   **Trae:** Generates instructions in `.trae/instructions.md`.
+*   **OpenCode:** Generates agents in `.opencode/`.
+*   **OpenAI / Claude (Web):** Generates plain text prompts in the `prompts/` folder.
+*   **Kilo Code:** Generates Markdown prompts (`.kilo/prompts/*.md`).
 
-### 2. Configuração de Workflow
-Automatiza a criação da estrutura de documentação (`docs/` e `docs/logs/`) para suportar o fluxo de trabalho dos agentes.
+### 2. Workflow Configuration
+Automates the creation of the documentation structure (`docs/` and `docs/logs/`) to support the agents' workflow.
 
-## 👥 O Esquadrão (Funções dos Agentes)
+## 👥 The Squad (Agent Roles)
 
-O sistema funciona melhor quando você segue o pipeline definido. Cada agente salva seu "Cérebro" (contexto) na pasta `docs/`, que serve de base para o próximo agente na cadeia.
+The system works best when you follow the defined pipeline. Each agent saves its "Brain" (context) in the `docs/` folder, which serves as the base for the next agent in the chain.
 
-### 🏗️ 1. Project Architect (Arquiteto de Projeto)
-**"O Visionário"**
-Transforma sua ideia bruta em uma especificação profissional. Ele atua como um entrevistador para descobrir requisitos ocultos.
-- **Gatilho:** `/dev.project "Eu quero um clone do Uber para passear com cachorros"`
-- **Ação:** Faz perguntas esclarecedoras sobre recursos, público-alvo e restrições.
-- **Saída:** `docs/project.md` (Escopo, Histórias de Usuário, Princípios Fundamentais).
+### 🏗️ 1. Project Architect
+**"The Visionary"**
+Transforms your raw idea into a professional specification. Acts as an interviewer to uncover hidden requirements.
+- **Trigger:** `/dev.project "I want an Uber clone for dog walking"`
+- **Action:** Asks clarifying questions about features, target audience, and constraints.
+- **Output:** `docs/project.md` (Scope, User Stories, Fundamental Principles).
 
-### 🧱 2. Requirements Engineer (Engenheiro de Requisitos)
-**"O Líder Técnico"**
-Decide *como* construir. Define a pilha tecnológica (stack), esquema do banco de dados e limites técnicos com base na especificação.
-- **Gatilho:** `/dev.requirements`
-- **Ação:** Seleciona bibliotecas (ex: "Prisma vs TypeORM"), define contratos de API e regras de segurança.
-- **Saída:** `docs/requirements.md` (O "Contrato Técnico" que o Codificador deve obedecer).
+### 🧱 2. Requirements Engineer
+**"The Technical Lead"**
+Decides *how* to build. Defines the technology stack, database schema, and technical boundaries based on the specification.
+- **Trigger:** `/dev.requirements`
+- **Action:** Selects libraries (e.g., "Prisma vs TypeORM"), defines API contracts and security rules.
+- **Output:** `docs/requirements.md` (The "Technical Contract" the Coder must obey).
 
-### 🗺️ 3. Milestone Manager (Gerente de Marcos)
-**"O Estrategista"**
-Impede que você tente construir tudo de uma vez. Divide o projeto em "MVPs" lógicos (Fases).
-- **Gatilho:** `/dev.milestone`
-- **Saída:** `docs/milestones.md` (ex: Fase 1: Auth, Fase 2: Pagamento, Fase 3: GPS).
+### 🗺️ 3. Milestone Manager
+**"The Strategist"**
+Prevents you from trying to build everything at once. Breaks the project into logical "MVPs" (Phases).
+- **Trigger:** `/dev.milestone`
+- **Output:** `docs/milestones.md` (e.g., Phase 1: Auth, Phase 2: Payment, Phase 3: GPS).
 
-### 📋 4. Task Planner (Planejador de Tarefas)
-**"O Gerente de Projeto"**
-Pega **UM Marco** e o quebra em tarefas atômicas e pequenas para o Codificador de IA.
-- **Raciocínio:** Codificadores de IA alucinam menos quando o contexto é pequeno.
-- **Gatilho:** `/dev.tasks 1` (Planejar Marco 1)
-- **Saída:** `docs/task.md` (Uma lista de verificação de 5-10 operações de arquivo específicas).
+### 📋 4. Task Planner
+**"The Project Manager"**
+Takes **ONE Milestone** and breaks it down into small, atomic tasks for the AI Coder.
+- **Reasoning:** AI Coders hallucinate less when the context is small.
+- **Trigger:** `/dev.tasks 1` (Plan Milestone 1)
+- **Output:** `docs/task.md` (A checklist of 5-10 specific file operations).
 
 ### 🕵️ 5. Auditor
-**"O Guardião"**
-Uma verificação de segurança antes de começar a codificar. Ele lê os **Requisitos** e o **Plano de Tarefas** para garantir que nada se perdeu na tradução.
-- **Gatilho:** `/dev.auditor`
-- **Ação:** "Ei, você planejou a UI de Login, mas esqueceu o fluxo de 'Esqueci a Senha' mencionado nos Requisitos."
-- **Saída:** `audit_report.md` (Aprovado/Reprovado).
+**"The Guardian"**
+A safety check before coding starts. Reads the **Requirements** and **Task Plan** to ensure nothing was lost in translation.
+- **Trigger:** `/dev.auditor`
+- **Action:** "Hey, you planned the Login UI but forgot the 'Forgot Password' flow mentioned in the Requirements."
+- **Output:** `audit_report.md` (Pass/Fail).
 
-### 💻 6. Coder (Codificador)
-**"O Desenvolvedor Sênior"**
-O executor. Ele executa UMA tarefa da lista de verificação por vez.
-- **Funcionalidades:**
-    - **Consciente do Contexto:** Lê `project.md` para conhecer os "Princípios do Projeto" (ex: "Use Componentes Funcionais").
-    - **Segurança:** Verifica `.gitignore` antes de criar arquivos.
-    - **TDD:** Pode escrever testes antes do código, se solicitado.
-- **Gatilho:** `/dev.coder 1.1` (Implementar Tarefa 1.1)
-- **Saída:** Escreve código em `src/` e registra em `work_log.md`.
+### 💻 6. Coder
+**"The Senior Developer"**
+The executor. Runs ONE checklist task at a time.
+- **Features:**
+    - **Context Aware:** Reads `project.md` to know "Project Principles" (e.g., "Use Functional Components").
+    - **Safety:** Checks `.gitignore` before creating files.
+    - **TDD:** Can write tests before code if requested.
+- **Trigger:** `/dev.coder 1.1` (Implement Task 1.1)
+- **Output:** Writes code in `src/` and logs in `work_log.md`.
 
-### ⚖️ 7. QA Engineer (Engenheiro de QA)
-**"O Revisor"**
-Simula uma revisão de Pull Request. Verifica se o código corresponde aos contratos de Requisitos.
-- **Gatilho:** `/dev.review 1.1`
-- **Ação:** Lê o código e o `requirements.md`. Se variáveis forem mal nomeadas ou a lógica for insegura, ele REJEITA a tarefa.
+### ⚖️ 7. QA Engineer
+**"The Reviewer"**
+Simulates a Pull Request review. Checks if the code matches the Requirements contracts.
+- **Trigger:** `/dev.review 1.1`
+- **Action:** Reads the code and `requirements.md`. If variables are poorly named or logic is insecure, it REJECTS the task.
 
-### 📦 8. Release Manager (Gerente de Lançamento)
-**"O Historiador"**
-Consolida o `work_log.md` diário bagunçado em um `CHANGELOG` limpo.
-- **Gatilho:** `/dev.log`
+### 📦 8. Release Manager
+**"The Historian"**
+Consolidates the messy daily `work_log.md` into a clean `CHANGELOG`.
+- **Trigger:** `/dev.log`
 
-## 🛠️ Toolkit Sob Demanda
+## 🛠️ On-Demand Toolkit
 
 ### 🏗️ DevOps Engineer
-**"O Especialista em Configuração"**
-Chame este agente especificamente para tarefas de infraestrutura, para não gastar contexto do agente principal.
-- **Gatilho:** `/dev.ops`
-- **Exemplos:** "Criar Dockerfile", "Configurar Github Actions", "Configurar ESLint".
+**"The Config Specialist"**
+Call this agent specifically for infrastructure tasks, so you don't waste the main agent's context.
+- **Trigger:** `/dev.ops`
+- **Examples:** "Create Dockerfile", "Setup Github Actions", "Configure ESLint".
 
-## Instalação e Uso
+## Installation and Usage
 
-Você pode executar a ferramenta diretamente via `npx` sem instalação prévia:
+You can run the tool directly via `npx` without prior installation:
 
+```bash
 npx sdd-toolkit
+```
 
-Ou instalar globalmente:
+Or install globally:
 
 ```bash
 npm install -g sdd-toolkit
 sdd-toolkit
 ```
 
-## Como funciona a CLI
+## How the CLI Works
 
-Quando você executa `npx sdd-toolkit`, o assistente de instalação é iniciado:
+When you run `npx sdd-toolkit`, the installation wizard starts:
 
-1.  **Inicialização:** O assistente pergunta qual terminal (shell) você usa (Windows ou Unix) e gera um guia de fluxo de trabalho personalizado na pasta `docs/`.
-2.  **Construção dos Agentes:** O assistente lê as definições dos agentes (seja da pasta `definitions/` ou de um arquivo `agents.md` local) e os "compila" para o formato do seu assistente de IA escolhido.
-3.  **Destinos Suportados:**
-    -   **Gemini CLI:** Gera arquivos `.toml` em `.gemini/commands/`.
-    -   **Roo Code / Cline:** Gera modos customizados (`_custom_modes.json`) e regras em `.roo/` ou `.cline/`.
-    -   **GitHub Copilot:** Gera instruções em `.github/copilot-instructions.md` e agentes em `.github/agents/`.
-    -   **Kilo Code:** Gera fluxos de trabalho em `.kilocode/workflows/`.
-    -   **OpenCode:** Gera arquivos em `.opencode/command/`.
-    -   **Outros:** Suporte a Cursor, Windsurf, Trae, OpenAI/Claude Web.
+1.  **Initialization:** The wizard asks which shell you use (Windows or Unix) and generates a custom workflow guide in the `docs/` folder.
+2.  **Agent Building:** The wizard reads agent definitions (either from the `definitions/` folder or a local `agents.md` file) and "compiles" them into your chosen AI assistant's format.
+3.  **Supported Destinations:**
+    -   **Gemini CLI:** Generates `.toml` files in `.gemini/commands/`.
+    -   **Roo Code / Cline:** Generates custom modes (`_custom_modes.json`) and rules in `.roo/` or `.cline/`.
+    -   **GitHub Copilot:** Generates instructions in `.github/copilot-instructions.md` and agents in `.github/agents/`.
+    -   **Kilo Code:** Generates workflows in `.kilocode/workflows/`.
+    -   **OpenCode:** Generates files in `.opencode/command/`.
+    -   **Others:** Support for Cursor, Windsurf, Trae, OpenAI/Claude Web.
 
-Dessa forma, o **sdd-toolkit** atua como uma ponte entre definições de comportamento de agentes e a ferramenta que você usa para codificar, garantindo que seu "time" de IA esteja sempre configurado e pronto para trabalhar.
+This way, **sdd-toolkit** acts as a bridge between agent behavior definitions and the tool you use for coding, ensuring your AI "team" is always configured and ready to work.
 
-## Estrutura do Projeto
+## Project Structure
 
-*   `src/`: Código fonte da CLI.
-*   `definitions/`: Definições YAML dos agentes (agnósticas).
+*   `src/`: CLI source code.
+*   `definitions/`: YAML agent definitions (agnostic).
 
-## Licença
+## License
 
 MIT
