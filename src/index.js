@@ -3,11 +3,12 @@
 const fs = require('fs');
 const fsp = require('fs/promises');
 const path = require('path');
-const { intro, outro, multiselect, spinner, note } = require('@clack/prompts');
+const { intro, outro, multiselect, spinner, note, select, text } = require('@clack/prompts');
 const pc = require('picocolors');
 
 // Módulos Internos
 const { loadAgents } = require('./lib/agents');
+const { STACK_PROFILES } = require('./lib/profiles');
 const { 
     toGeminiTOML, 
     toRooConfig, 
@@ -30,7 +31,30 @@ async function main() {
         console.log(pc.green('✔ Estrutura de pastas (docs/) verificada.'));
     }
 
-    // 2. Seleção de Ferramentas (Múltipla escolha)
+    // 2. Feature 5: Seleção de Stack (Profile)
+    const stackOptions = Object.entries(STACK_PROFILES).map(([key, profile]) => ({
+        value: key,
+        label: profile.label
+    }));
+
+    const stackProfile = await select({
+        message: 'Qual é o perfil da sua Stack tecnológica?',
+        options: stackOptions,
+        initialValue: 'generic'
+    });
+
+    if (typeof stackProfile === 'symbol') { process.exit(0); } // Handle Cancel
+
+    // 3. Feature 3: Regras Globais (Opcional)
+    const globalRules = await text({
+        message: 'Deseja adicionar alguma Regra Global para TODOS os agentes?',
+        placeholder: 'Ex: Responda sempre em pt-BR; Use Conventional Commits...',
+        required: false
+    });
+
+    if (typeof globalRules === 'symbol') { process.exit(0); } // Handle Cancel
+
+    // 4. Seleção de Ferramentas (Múltipla escolha)
     const tools = await multiselect({
         message: 'Para quais ferramentas você deseja instalar os Agentes?',
         options: [
@@ -54,17 +78,17 @@ async function main() {
         process.exit(0);
     }
 
-    await processAgentsInstallation(tools);
+    await processAgentsInstallation(tools, { stackProfile, globalRules });
 
     outro(pc.green('Configuração concluída com sucesso! 🚀'));
 }
 
-async function processAgentsInstallation(tools) {
+async function processAgentsInstallation(tools, options) {
     const s = spinner();
     s.start('Carregando definições...');
 
     try {
-        const validAgents = await loadAgents();
+        const validAgents = await loadAgents(options);
 
         if (validAgents.length === 0) {
             s.stop('Nenhum agente válido encontrado.');

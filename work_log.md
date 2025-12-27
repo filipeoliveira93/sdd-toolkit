@@ -59,3 +59,10 @@
     - Criado `src/lib/docs.js` para gerar documentação automática (`docs/README.md`) explicando o fluxo de trabalho dos agentes.
     - Simplificado `src/index.js` para atuar apenas como orquestrador da UI.
 - **Motivo:** Melhorar a manutenibilidade, robustez (validando os YAMLs antes de processar) e experiência do usuário (entregando documentação de uso junto com os agentes).
+
+### 12. Personalização e Contexto de Stack (Novas Features)
+- **Ação:**
+    - **Feature 2 (Sobrescrita Local):** Implementada lógica em `src/lib/agents.js` que verifica a existência de arquivos na pasta `.sdd/agents/`. Se existirem, eles têm prioridade sobre as definições padrão.
+    - **Feature 3 (Regras Globais):** Adicionado prompt `text` no CLI para capturar regras personalizadas do usuário. Estas regras são injetadas em todos os agentes carregados.
+    - **Feature 5 (Perfis de Stack):** Criado `src/lib/profiles.js` com perfis pré-definidos (React, Node, Python, Go). O usuário seleciona o perfil no início do CLI e as regras específicas da tecnologia são injetadas nos agentes (ex: Coder e Auditor).
+- **Motivo:** Aumentar a flexibilidade do toolkit para diferentes tipos de projeto e permitir que o usuário refine o comportamento da IA sem editar o código fonte do CLI.
