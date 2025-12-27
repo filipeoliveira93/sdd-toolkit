@@ -22,17 +22,47 @@ const { generateWorkflowGuide } = require('./lib/docs');
 
 async function main() {
     console.clear();
-    intro(pc.bgMagenta(pc.white(' UNIVERSAL SPEC CLI ')));
+    
+    const args = process.argv.slice(2);
+    const isUpgrade = args.includes('upgrade') || args.includes('--upgrade');
+
+    if (isUpgrade) {
+        intro(pc.bgBlue(pc.white(' SDD TOOLKIT: UPGRADE MODE ')));
+        
+        // Detecção de Ferramentas Existentes
+        const tools = [];
+        if (fs.existsSync(path.join(process.cwd(), '.gemini'))) tools.push('gemini');
+        if (fs.existsSync(path.join(process.cwd(), '.roo'))) tools.push('roo');
+        if (fs.existsSync(path.join(process.cwd(), '.cline'))) tools.push('cline');
+        if (fs.existsSync(path.join(process.cwd(), '.cursor'))) tools.push('cursor');
+        if (fs.existsSync(path.join(process.cwd(), '.windsurfrules'))) tools.push('windsurf');
+        if (fs.existsSync(path.join(process.cwd(), '.trae'))) tools.push('trae');
+        if (fs.existsSync(path.join(process.cwd(), '.kilo'))) tools.push('kilo');
+        if (fs.existsSync(path.join(process.cwd(), '.github'))) tools.push('copilot'); // Assume copilot se .github existir
+        if (fs.existsSync(path.join(process.cwd(), '.opencode'))) tools.push('opencode');
+        if (fs.existsSync(path.join(process.cwd(), 'prompts'))) tools.push('web');
+
+        if (tools.length === 0) {
+            note('No existing configuration detected for upgrade. Starting standard installation.', 'Info');
+        } else {
+            note(`Tools detected: ${tools.join(', ')}`, 'Upgrading...');
+            await processAgentsInstallation(tools);
+            outro(pc.green('Agents updated successfully! 🚀'));
+            process.exit(0);
+        }
+    } else {
+        intro(pc.bgMagenta(pc.white(' UNIVERSAL SPEC CLI ')));
+    }
 
     // 1. Scaffold Automático (Sempre executa)
     const created = generateWorkflowGuide(process.cwd());
     if (created) {
-        console.log(pc.green('✔ Estrutura de pastas (docs/) verificada.'));
+        console.log(pc.green('✔ Workflow structure (docs/) verified.'));
     }
 
-    // 2. Seleção de Ferramentas (Múltipla escolha)
+    // 2. Tool Selection
     const tools = await multiselect({
-        message: 'Para quais ferramentas você deseja instalar os Agentes?',
+        message: 'Which tools do you want to install Agents for?',
         options: [
             { value: 'gemini', label: 'Gemini CLI', hint: '.gemini/commands/dev' },
             { value: 'roo', label: 'Roo Code', hint: '.roo/ & custom_modes.json' },
@@ -46,32 +76,63 @@ async function main() {
             { value: 'opencode', label: 'OpenCode', hint: '.opencode/*.md' },
         ],
         required: true,
-        hint: 'Espaço para selecionar, Enter para confirmar'
+        hint: 'Space to select, Enter to confirm'
     });
 
     if (!tools || tools.length === 0) {
-        outro('Nenhuma ferramenta selecionada. Operação cancelada.');
+        outro('No tools selected. Operation cancelled.');
         process.exit(0);
     }
 
     await processAgentsInstallation(tools);
 
-    outro(pc.green('Configuração concluída com sucesso! 🚀'));
+    // 3. Instalação de Scripts Auxiliares
+    const scriptsDir = path.join(process.cwd(), '.sdd', 'scripts');
+    await fsp.mkdir(scriptsDir, { recursive: true });
+    
+    // Copia scripts da fonte (assumindo que estão em ./src/scripts no pacote instalado)
+    // Em desenvolvimento local, o caminho pode variar, então ajustamos:
+    const srcScriptsDir = path.join(__dirname, 'scripts'); 
+    
+    if (fs.existsSync(srcScriptsDir)) {
+        const scriptFiles = fs.readdirSync(srcScriptsDir);
+        for (const file of scriptFiles) {
+            await fsp.copyFile(path.join(srcScriptsDir, file), path.join(scriptsDir, file));
+        }
+    }
+
+    // Tenta adicionar ao package.json do usuário
+    const pkgPath = path.join(process.cwd(), 'package.json');
+    if (fs.existsSync(pkgPath)) {
+        try {
+            const pkg = JSON.parse(fs.readFileSync(pkgPath, 'utf-8'));
+            pkg.scripts = pkg.scripts || {};
+            pkg.scripts['sdd:status'] = 'node .sdd/scripts/status.js';
+            pkg.scripts['sdd:reset'] = 'node .sdd/scripts/reset.js';
+            pkg.scripts['sdd:archive'] = 'node .sdd/scripts/archive.js';
+            fs.writeFileSync(pkgPath, JSON.stringify(pkg, null, 2));
+            note('Added npm scripts: sdd:status, sdd:reset, sdd:archive', 'NPM Scripts');
+        } catch (e) {
+            // Ignore invalid JSON error
+        }
+    }
+
+    outro(pc.green('Configuration completed successfully! 🚀'));
 }
 
 async function processAgentsInstallation(tools) {
     const s = spinner();
-    s.start('Carregando definições...');
+    s.start('Loading definitions...');
 
     try {
         const validAgents = await loadAgents();
 
         if (validAgents.length === 0) {
-            s.stop('Nenhum agente válido encontrado.');
+            s.stop('No valid agents found.');
             return;
         }
 
-        s.message(`Instalando agentes para: ${tools.join(', ')}...`);
+        s.message(`Installing agents for: ${tools.join(', ')}...`);
 
         // Itera sobre cada ferramenta selecionada
         for (const tool of tools) {
@@ -167,15 +228,15 @@ async function processAgentsInstallation(tools) {
             }
         }
         
-        s.stop('Instalação finalizada!');
+        s.stop('Installation complete!');
         
-        // Feedback consolidado
+        // Consolidated Feedback
         if (tools.includes('roo') || tools.includes('cline')) {
-            note('Lembre-se de configurar os Custom Modes no settings.json para Roo/Cline.', 'Aviso');
+            note('Remember to configure Custom Modes in settings.json for Roo/Cline.', 'Notice');
         }
 
     } catch (e) {
-        s.stop('Falha');
+        s.stop('Failed');
         console.error(pc.red(e.message));
     }
 }

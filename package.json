@@ -1,7 +1,7 @@
 {
     "name": "sdd-toolkit",
     "version": "1.0.0",
-    "description": "Instalador automático dos agentes de desenvolvimento",
+    "description": "Automatic installer for AI development agents",
     "main": "src/index.js",
     "bin": {
         "sdd-toolkit": "./src/index.js"

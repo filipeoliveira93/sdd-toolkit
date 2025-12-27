@@ -14,85 +14,94 @@ function generateWorkflowGuide(baseDir) {
         fs.mkdirSync(logsDir, { recursive: true });
     }
 
-    // Conteúdo do README.md
-    const content = `# 🤖 Agent Workflow Guide
+    const readmePath = path.join(docsDir, 'README.md');
+    const guidelinesPath = path.join(docsDir, 'guidelines.md');
 
-Este documento descreve o fluxo de desenvolvimento padrão usando os Agentes instalados.
-O sistema segue um processo **Waterfall** para planejamento (precisão) e **Iterativo** para execução.
+    if (!fs.existsSync(guidelinesPath)) {
+        const guidelinesContent = `# 📜 Project Guidelines
+
+This document defines the "Universal Laws" of the project. All agents must read this file before executing tasks.
 
 ---
 
-## 1. 🏗️ Project Spec (@Project Architect)
-**Role:** O Visionário.
-**Goal:** Traduzir sua ideia vaga em uma Especificação concreta com "Project Principles" definidos.
-- **Comando:** \\
-/dev:project "Eu quero um App de Todo que..."
-- **Saída:** 
-\`docs/project.md\`
+## 🏗️ Architecture Patterns
+- [Ex: Use Clean Architecture]
+- [Ex: Layers: Entities, UseCases, Repositories]
 
-## 2. 🧱 Requirements Engineering (@Requirements Engineer)
-**Role:** O Tech Lead.
-**Goal:** Fechar decisões técnicas (Stack, Banco de Dados, Libs).
-- **Why?** Evita que o Coder "invente" arquitetura. Cria o "Contrato".
-- **Comando:** 
-/dev:requirements
-- **Saída:** 
-\`docs/requirements.md\`
+## 💻 Code Conventions
+- [Ex: Use ESModules (import/export)]
+- [Ex: Semicolons: true]
+- [Ex: Naming: camelCase for variables, PascalCase for classes]
 
-## 3. 🗺️ Roadmap Strategy (@Milestone Manager)
-**Role:** O Estrategista.
-**Goal:** Fatiar o projeto em fases de entrega (MVPs).
-- **Comando:** 
-/dev:milestone
-- **Saída:** 
-\`docs/milestones.md\`
+## 🛠️ Tech Stack & Versions
+- Node.js: >=18.0.0
 
-## 4. 📋 Task Planning (@Task Planner)
-**Role:** O Gerente.
-**Goal:** Quebrar um Milestone específico em tarefas atômicas para desenvolvedores.
-- **Why?** IAs falham com contextos gigantes. Tarefas pequenas = Código perfeito.
-- **Comando:** 
-/dev:tasks <Milestone_ID>
-- **Saída:** 
-\`docs/task.md\`
-
-## 5. 🕵️ Blueprint Audit (@Auditor)
-**Role:** O Guardião.
-**Goal:** Validar consistência entre **Requirements** e **Tasks**.
-- **Comando:** 
-/dev:auditor
-- **Saída:** 
-\`audit_report.md\`
-
-## 6. 💻 Implementation (@Coder)
-**Role:** O Construtor.
-**Goal:** Executar *uma tarefa por vez* do arquivo 
-\`task.md\`.
-- **Comando:** 
-/dev:coder <Task_ID>
-- **Buffer:** 
-\`work_log.md\`
-
-## 7. ⚖️ Quality Assurance (@QA Engineer)
-**Role:** O Inspetor.
-**Goal:** Verificar se a implementação bate com os Requisitos.
-- **Comando:** 
-/dev:review <Task_ID>
-- **Saída:** 
-\`docs/logs/review_log.md\`
-
-## 8. 📦 Release Management (@Release Manager)
-**Role:** O Historiador.
-**Goal:** Consolidar o 
-\`work_log.md\` em um 
-\`changelog.md\` permanente.
-- **Comando:** 
-/dev:log
-- **Saída:** 
-\`changelog.md\`
+## 🛡️ Security & Performance
+- [Ex: Never commit .env]
+- [Ex: Validate all inputs with Zod/Joi]
 `;
+        fs.writeFileSync(guidelinesPath, guidelinesContent);
+    }
 
-    const readmePath = path.join(docsDir, 'README.md');
+    // Conteúdo do README.md
+    const content = `# 🧭 Project Context Dashboard
+
+Este arquivo serve como índice central para a inteligência do projeto.
+Agentes de IA devem consultar este mapa para entender o estado atual.
+
+## 📁 Documentação Viva (v3)
+| Documento | Função | Status (IA check) |
+|-----------|--------|-------------------|
+| [📜 guidelines.md](./guidelines.md) | Leis e Padrões do Projeto | 🛑 **Mandatory** |
+| [🔭 context.md](./context.md) | Relatório de Contexto/Exploração | ℹ️ Optional |
+| [📐 spec.md](./spec.md) | Especificação Unificada (Product + Tech) | ✅ Active |
+| [🗺️ plan.md](./plan.md) | Plano de Execução (Tasks) | ⚡ Dynamic |
+| [📝 work_log.md](../work_log.md) | Diário de Bordo | 📝 Append Only |
+
+---
+
+# 🚀 sdd-toolkit Workflow (v3)
+
+Fluxo simplificado para máxima eficiência.
+
+## 0. 🔭 Explore (@Explorer)
+**Comando:** \`/dev.explore "Analise a autenticação atual"\`
+**Saída:** \`docs/context.md\`
+*Use antes de começar para entender o terreno.*
+
+## 1. 📐 Spec (@Spec Maker)
+**Comando:** \`/dev.spec "Quero um sistema de login"\`
+**Saída:** \`docs/spec.md\`
+*Define O QUE (Negócio) e COMO (Stack).*
+
+## 2. 🗺️ Plan (@Planner)
+**Comando:** \`/dev.plan "Fase 1"\`
+**Saída:** \`docs/plan.md\`
+*Quebra a Spec em tarefas atômicas.*
+
+## 3. 🔨 Build (@Builder)
+**Comando:** \`/dev.build "Task 1"\`
+**Log:** \`work_log.md\`
+*Executa o plano seguindo as guidelines.*
+
+## 4. ⚖️ Check (@Checker)
+**Comando:** \`/dev.check "Task 1"\`
+**Saída:** \`audit_report.md\`
+*Valida qualidade e segurança.*
+
+## 5. 📦 Finish
+**Comando:** \`npm run sdd:archive\`
+*Move Spec/Plan atual para \`docs/archive/\` e limpa o quadro.*
+
+---
+**🎸 Solo Mode:** Use \`/dev.solo\` para alterações independentes ou refatorações rápidas.
+`;
+    
+    // Garante spec.md e context.md vazios se não existirem
+    if (!fs.existsSync(path.join(docsDir, 'spec.md'))) fs.writeFileSync(path.join(docsDir, 'spec.md'), '');
+    if (!fs.existsSync(path.join(docsDir, 'context.md'))) fs.writeFileSync(path.join(docsDir, 'context.md'), '');
+
+
     if (!fs.existsSync(readmePath)) {
         fs.writeFileSync(readmePath, content);
         return true;
