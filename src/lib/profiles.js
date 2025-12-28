@@ -1,12 +1,12 @@
 /**
- * Perfis de Stack Técnica
- * Define regras adicionais que serão injetadas nos agentes
+ * Technical Stack Profiles
+ * Defines additional rules to be injected into agents
  */
 
 const STACK_PROFILES = {
     // --- GENERIC ---
     'generic': {
-        label: '🌐 Genérico / Nenhum',
+        label: '🌐 Generic / None',
         rules: []
     },
 

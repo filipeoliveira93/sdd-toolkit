@@ -6,7 +6,7 @@ const path = require('path');
 const { intro, outro, multiselect, spinner, note, select, text } = require('@clack/prompts');
 const pc = require('picocolors');
 
-// Módulos Internos
+// Internal Modules
 const { loadAgents } = require('./lib/agents');
 const { STACK_PROFILES } = require('./lib/profiles');
 const { 
@@ -25,38 +25,38 @@ async function main() {
     console.clear();
     intro(pc.bgMagenta(pc.white(' UNIVERSAL SPEC CLI ')));
 
-    // 1. Scaffold Automático (Sempre executa)
+    // 1. Automatic Scaffold
     const created = generateWorkflowGuide(process.cwd());
     if (created) {
-        console.log(pc.green('✔ Estrutura de pastas (docs/) verificada.'));
+        console.log(pc.green('✔ Folder structure (docs/) verified.'));
     }
 
-    // 2. Feature 5: Seleção de Stack (Profile)
+    // 2. Feature 5: Stack Selection (Profile)
     const stackOptions = Object.entries(STACK_PROFILES).map(([key, profile]) => ({
         value: key,
         label: profile.label
     }));
 
     const stackProfile = await select({
-        message: 'Qual é o perfil da sua Stack tecnológica?',
+        message: 'What is your technology Stack profile?',
         options: stackOptions,
         initialValue: 'generic'
     });
 
     if (typeof stackProfile === 'symbol') { process.exit(0); } // Handle Cancel
 
-    // 3. Feature 3: Regras Globais (Opcional)
+    // 3. Feature 3: Global Rules (Optional)
     const globalRules = await text({
-        message: 'Deseja adicionar alguma Regra Global para TODOS os agentes?',
-        placeholder: 'Ex: Responda sempre em pt-BR; Use Conventional Commits...',
+        message: 'Do you want to add any Global Rules for ALL agents?',
+        placeholder: 'Ex: Always reply in English; Use Conventional Commits...',
         required: false
     });
 
     if (typeof globalRules === 'symbol') { process.exit(0); } // Handle Cancel
 
-    // 4. Seleção de Ferramentas (Múltipla escolha)
+    // 4. Tool Selection (Multiple choice)
     const tools = await multiselect({
-        message: 'Para quais ferramentas você deseja instalar os Agentes?',
+        message: 'Which tools do you want to install the Agents for?',
         options: [
             { value: 'gemini', label: 'Gemini CLI', hint: '.gemini/commands/dev' },
             { value: 'roo', label: 'Roo Code', hint: '.roo/ & custom_modes.json' },
@@ -70,37 +70,37 @@ async function main() {
             { value: 'opencode', label: 'OpenCode', hint: '.opencode/*.md' },
         ],
         required: true,
-        hint: 'Espaço para selecionar, Enter para confirmar'
+        hint: 'Space to select, Enter to confirm'
     });
 
     if (!tools || tools.length === 0) {
-        outro('Nenhuma ferramenta selecionada. Operação cancelada.');
+        outro('No tools selected. Operation cancelled.');
         process.exit(0);
     }
 
     await processAgentsInstallation(tools, { stackProfile, globalRules });
 
-    outro(pc.green('Configuração concluída com sucesso! 🚀'));
+    outro(pc.green('Setup completed successfully! 🚀'));
 }
 
 async function processAgentsInstallation(tools, options) {
     const s = spinner();
-    s.start('Carregando definições...');
+    s.start('Loading definitions...');
 
     try {
         const validAgents = await loadAgents(options);
 
         if (validAgents.length === 0) {
-            s.stop('Nenhum agente válido encontrado.');
+            s.stop('No valid agents found.');
             return;
         }
 
-        s.message(`Instalando agentes para: ${tools.join(', ')}...`);
+        s.message(`Installing agents for: ${tools.join(', ')}...`);
 
-        // Itera sobre cada ferramenta selecionada
+        // Iterate over each selected tool
         for (const tool of tools) {
             
-            // Instalação Específica por Ferramenta
+            // Tool-Specific Installation
             if (tool === 'gemini') {
                 const targetDir = path.join(process.cwd(), '.gemini', 'commands', 'dev');
                 await fsp.mkdir(targetDir, { recursive: true });
@@ -191,15 +191,15 @@ async function processAgentsInstallation(tools, options) {
             }
         }
         
-        s.stop('Instalação finalizada!');
+        s.stop('Installation finished!');
         
-        // Feedback consolidado
+        // Consolidated feedback
         if (tools.includes('roo') || tools.includes('cline')) {
-            note('Lembre-se de configurar os Custom Modes no settings.json para Roo/Cline.', 'Aviso');
+            note('Remember to configure Custom Modes in settings.json for Roo/Cline.', 'Warning');
         }
 
     } catch (e) {
-        s.stop('Falha');
+        s.stop('Failed');
         console.error(pc.red(e.message));
     }
 }

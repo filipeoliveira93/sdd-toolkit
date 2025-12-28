@@ -6,45 +6,45 @@ const { STACK_PROFILES } = require('./profiles');
 const pc = require('picocolors');
 
 /**
- * Carrega e valida todas as definições de agentes da pasta definitions
- * Suporta sobrescrita local (.sdd/agents) e injeção de regras
+ * Loads and validates all agent definitions from the definitions folder.
+ * Supports local override (sdd-toolkit/agents) and rule injection.
  * 
  * @param {Object} options
- * @param {string} options.stackProfile - Chave do perfil de stack (ex: 'frontend-react')
- * @param {string} options.globalRules - Regras globais separadas por quebra de linha
- * @returns {Promise<Array>} Lista de agentes validados
+ * @param {string} options.stackProfile - Stack profile key (e.g., 'frontend-react')
+ * @param {string} options.globalRules - Global rules separated by newlines
+ * @returns {Promise<Array>} List of validated agents
  */
 async function loadAgents(options = {}) {
     const definitionsDir = path.join(__dirname, '..', '..', 'definitions');
-    const localDefinitionsDir = path.join(process.cwd(), '.sdd', 'agents');
+    const localDefinitionsDir = path.join(process.cwd(), 'sdd-toolkit', 'agents');
     
-    // Verifica diretório padrão
+    // Check default directory
     try {
         await fs.access(definitionsDir);
     } catch {
-        throw new Error(`Pasta de definições padrão não encontrada: ${definitionsDir}`);
+        throw new Error(`Default definitions folder not found: ${definitionsDir}`);
     }
 
-    // Identifica arquivos padrão
+    // Identify default files
     const files = await fs.readdir(definitionsDir);
     const yamlFiles = files.filter(f => f.endsWith('.yaml') || f.endsWith('.yml'));
 
-    // Verifica se existe diretório de sobrescrita local
+    // Check if local override directory exists
     let hasLocalOverrides = false;
     try {
         await fs.access(localDefinitionsDir);
         hasLocalOverrides = true;
     } catch {
-        // Ignora se não existir
+        // Ignore if it doesn't exist
     }
     
-    // Leitura e processamento em paralelo
+    // Parallel reading and processing
     const results = await Promise.all(yamlFiles.map(async (file) => {
         try {
             let content;
             let source = 'default';
 
-            // Feature 2: Sobrescrita Local
+            // Feature 2: Local Override
             if (hasLocalOverrides) {
                 try {
                     const localPath = path.join(localDefinitionsDir, file);
@@ -52,7 +52,7 @@ async function loadAgents(options = {}) {
                     content = await fs.readFile(localPath, 'utf8');
                     source = 'local';
                 } catch {
-                    // Arquivo local não existe, usa padrão
+                    // Local file doesn't exist, use default
                 }
             }
 
@@ -67,19 +67,19 @@ async function loadAgents(options = {}) {
                 return { 
                     success: false, 
                     file, 
-                    error: 'Validação do Schema falhou',
+                    error: 'Schema validation failed',
                     details: parsed.error.format()
                 };
             }
 
             const agent = parsed.data;
             
-            // Normaliza o slug
+            // Normalize slug
             agent.slug = file.replace(/\.ya?ml$/, '').replace(/\./g, '-');
             agent.originalName = file.replace(/\.ya?ml$/, '');
-            agent.source = source; // Metadata útil para logs
+            agent.source = source; // Useful metadata for logs
 
-            // Feature 5: Injeção de Regras de Stack
+            // Feature 5: Stack Rules Injection
             if (options.stackProfile && STACK_PROFILES[options.stackProfile]) {
                 const stackRules = STACK_PROFILES[options.stackProfile].rules;
                 if (stackRules && stackRules.length > 0) {
@@ -87,7 +87,7 @@ async function loadAgents(options = {}) {
                 }
             }
 
-            // Feature 3: Injeção de Regras Globais
+            // Feature 3: Global Rules Injection
             if (options.globalRules && typeof options.globalRules === 'string') {
                 const customRules = options.globalRules
                     .split('\n')
@@ -106,7 +106,7 @@ async function loadAgents(options = {}) {
         }
     }));
 
-    // Separa sucessos e falhas
+    // Separate successes and failures
     const validAgents = [];
     const errors = [];
 
@@ -115,7 +115,7 @@ async function loadAgents(options = {}) {
             validAgents.push(res.agent);
         } else {
             errors.push(res);
-            console.warn(pc.yellow(`⚠️  Ignorando ${res.file}: ${res.error}`));
+            console.warn(pc.yellow(`⚠️  Skipping ${res.file}: ${res.error}`));
         }
     });
 
