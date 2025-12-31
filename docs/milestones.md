@@ -1,81 +1,71 @@
 ---
-title: Development Roadmap
+title: Roteiro de Desenvolvimento (Roadmap)
 source_spec: docs/project.md
-last_updated: 2025-12-30
-status: Active
+last_updated: 2025-12-31
+status: Ativo
 ---
 
-# Strategic Roadmap
+# Roteiro Estratégico
 
-## 1. Strategy Summary
-This document reflects the current state of the **sdd-toolkit** project. The foundational infrastructure phases (CLI) and business logic (Definitions Engine) are complete. The current focus is on **Localization** (Milestone 3), followed by **Standardization** (Milestone 4) and **Internationalization** (Milestone 5) to provide a global and customizable experience.
+## 1. Resumo da Estratégia
+Este documento reflete o estado atual do projeto **sdd-toolkit**. As fases de infraestrutura fundamental (CLI) e lógica de negócio (Engine de Definições) estão concluídas. O foco atual é a **Localização e Estabilização** (Milestone 3), seguida pela **Padronização** (Milestone 4) e **Internacionalização** (Milestone 5) para oferecer uma experiência global e personalizável.
 
-## 2. Milestones Detail
+## 2. Detalhes das Milestones
 
-### Milestone 1: Core Foundation & CLI (MVP)
-**Status: ✅ Completed**
-- **Objective:** Establish Node.js project structure, basic CLI interface, and error handling.
-- **Key Deliverables:**
-  - `package.json` setup and dependencies (`@clack/prompts`, `zod`).
-  - Implementation of `src/index.js` (Entry Point).
-  - Basic Interactive Wizard (OS and Tool selection).
-- **Definition of Done (DoD):** Command `npx sdd-toolkit` runs without errors and displays the initial menu.
-- **Priority (MoSCoW):** Must Have
-- **Technical Focus:** Backend (Node.js CLI)
-- **Dependencies:** None
+### Milestone 1: Fundação Core & CLI (MVP)
+**Status: ✅ Concluída**
+- **Objetivo:** Estabelecer a estrutura do projeto Node.js, interface CLI básica e tratamento de erros.
+- **Entregáveis:**
+  - Configuração do `package.json` e dependências (`@clack/prompts`, `zod`).
+  - Implementação do `src/index.js` (Ponto de entrada).
+  - Wizard Interativo básico (Seleção de SO e Ferramentas).
+- **Definição de Pronto (DoD):** O comando `npx sdd-toolkit` executa sem erros e exibe o menu inicial.
+- **Prioridade (MoSCoW):** Must Have
 
-### Milestone 2: Definitions Engine & Transformers
-**Status: ✅ Completed**
-- **Objective:** Implement the "Business Core" logic that reads, validates, and converts agents.
-- **Key Deliverables:**
-  - Creation of all YAML files in `definitions/` (Auditor, Coder, etc.).
-  - Implementation of `src/lib/schema.js` (Zod Validation).
-  - Implementation of `src/lib/transformers.js` (YAML -> TOML/JSON Conversion).
-- **Definition of Done (DoD):** System can read a YAML file and generate a valid configuration string for Gemini CLI.
-- **Priority (MoSCoW):** Must Have
-- **Technical Focus:** Logic / Data Transformation
-- **Dependencies:** Milestone 1
+### Milestone 2: Engine de Definições & Transformadores
+**Status: ✅ Concluída**
+- **Objetivo:** Implementar a lógica central que lê, valida e converte as definições dos agentes.
+- **Entregáveis:**
+  - Criação de arquivos YAML em `definitions/` (Auditor, Coder, etc.).
+  - Implementação de `src/lib/schema.js` (Validação Zod).
+  - Implementação de `src/lib/transformers.js` (Conversão YAML -> TOML/JSON/MDC).
+- **Definição de Pronto (DoD):** O sistema consegue ler um YAML e gerar strings de configuração válidas para Gemini, Roo, Cursor, etc.
+- **Prioridade (MoSCoW):** Must Have
 
-### Milestone 3: Localization & Hardening
-**Status: 🚧 In Progress**
-- **Objective:** Ensure the entire ecosystem (CLI output, Generated Agent Instructions, and Internal Documentation) is strictly in English.
-- **Key Deliverables:**
-  - Updated `transformers.js` to inject "Use English" rules.
-  - Translation of all CLI user-facing strings in `src/index.js`.
-  - Translation of the `docs/` folder ("The Brain") to English.
-- **Definition of Done (DoD):** A user running the tool sees only English; generated agents speak English.
-- **Priority (MoSCoW):** Must Have
-- **Technical Focus:** Refactoring / Content
-- **Dependencies:** Milestone 2
+### Milestone 3: Localização & Estabilização (Hardening)
+**Status: 🚧 Em Andamento**
+- **Objetivo:** Garantir que o ecossistema atual (CLI e Prompts) esteja estável e consistente em Inglês antes de expandir.
+- **Entregáveis:**
+  - **Refatoração de Strings:** Mover strings do CLI para um arquivo de constantes para facilitar tradução futura.
+  - **Injeção de Regras:** Garantir que `transformers.js` injete corretamente regras de idioma nos agentes.
+  - **Correções de UI:** Ajustar o feedback visual e spinners no CLI.
+- **Definição de Pronto (DoD):** Fluxo completo de instalação sem bugs visuais e com prompts gerados de forma consistente.
+- **Prioridade (MoSCoW):** Must Have
 
-### Milestone 4: Standardization & Templates
-**Status: 📅 Planned**
-- **Objective:** Standardize the installation structure and improve the user onboarding experience with document templates.
-- **Key Deliverables:**
-  - **Unified Directory:** Change the default installation/config folder to `.sd-toolkit` (unifying generated assets where applicable or storing toolkit metadata).
-  - **Doc Templates:** Create standard templates for `docs/project.md`, `docs/milestones.md`, and `docs/task.md` with instructional comments.
-  - **Template Engine:** Logic to copy/scaffold these templates if they don't exist.
-- **Definition of Done (DoD):** `npx sdd-toolkit` creates a `.sd-toolkit` folder and populates `docs/` with high-quality starter files.
-- **Priority (MoSCoW):** Should Have
-- **Technical Focus:** File System / DX (Developer Experience)
-- **Dependencies:** Milestone 3
+### Milestone 4: Padronização & Templates
+**Status: 📅 Planejada**
+- **Objetivo:** Padronizar a estrutura de instalação e melhorar a experiência de onboarding com templates de documentos.
+- **Entregáveis:**
+  - **Diretório Unificado:** Criar uma pasta `.sdd-toolkit` para armazenar metadados da instalação local.
+  - **Templates de Docs:** Criar arquivos base reais para `docs/project.md`, `docs/milestones.md` e `docs/task.md` com comentários instrutivos.
+  - **Scaffolding Inteligente:** Lógica para criar esses arquivos apenas se não existirem (preservando o trabalho do usuário).
+- **Definição de Pronto (DoD):** `npx sdd-toolkit` popula a pasta `docs/` com arquivos de alta qualidade que guiam o usuário.
+- **Prioridade (MoSCoW):** Should Have
 
-### Milestone 5: Internationalization (i18n) Support
-**Status: 📅 Planned**
-- **Objective:** Allow users to define the language of the generated documentation and agent instructions during setup.
-- **Key Deliverables:**
-  - **Language Selector:** Add a step in the CLI Wizard to select language (e.g., English, Portuguese, Spanish).
-  - **Locale Logic:** Update `transformers.js` to inject the selected language rule (e.g., "Always reply in Spanish") into the generated agent prompts.
-  - **Docs Translation:** (Optional) Provide translated versions of the `docs/` templates based on selection.
-- **Definition of Done (DoD):** User selects "Portuguese" in the wizard, and the installed agents (Coder, Architect) are instructed to speak Portuguese.
-- **Priority (MoSCoW):** Could Have
-- **Technical Focus:** i18n / CLI Features
-- **Dependencies:** Milestone 4
+### Milestone 5: Suporte a Internacionalização (i18n)
+**Status: 📅 Planejada**
+- **Objetivo:** Permitir que o usuário escolha o idioma da documentação gerada e das instruções dos agentes.
+- **Entregáveis:**
+  - **Seletor de Idioma:** Adicionar etapa no Wizard para selecionar o idioma (ex: Inglês, Português, Espanhol).
+  - **Lógica de Locale:** Atualizar transformadores para injetar a regra de resposta no idioma escolhido.
+  - **Tradução de Templates:** Fornecer versões traduzidas dos templates da Milestone 4.
+- **Definição de Pronto (DoD):** Ao selecionar "Português", os agentes instalados (Coder, Architect) são instruídos a falar em Português.
+- **Prioridade (MoSCoW):** Could Have
 
-## 3. Risk Matrix
-- **Risk:** Translation inconsistencies between code comments and docs.
-- **Mitigation:** Execute a full audit task (M3-T02) to verify consistency.
-- **Risk:** User overwriting existing docs with templates.
-- **Mitigation:** Implement a "safe check" (only create if not exists) for Milestone 4 templates.
-- **Risk:** Maintaining multiple language templates.
-- **Mitigation:** Start with English only for docs templates and only strictly translate the "System Prompt" rules first.
+## 3. Matriz de Riscos
+- **Risco:** Inconsistência entre o idioma do CLI e o idioma dos agentes gerados.
+- **Mitigação:** Implementar um sistema de dicionário centralizado (i18next ou similar).
+- **Risco:** Usuário sobrescrever documentação existente.
+- **Mitigação:** Implementar verificação de existência de arquivo e confirmação (prompt) antes de sobrescrever.
+- **Risco:** Complexidade na manutenção de múltiplos templates de idioma.
+- **Mitigação:** Priorizar a tradução dos System Prompts (regras de sistema) antes de traduzir a documentação de apoio completa.

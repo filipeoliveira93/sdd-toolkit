@@ -66,3 +66,20 @@
     - **Feature 3 (Regras Globais):** Adicionado prompt `text` no CLI para capturar regras personalizadas do usuário. Estas regras são injetadas em todos os agentes carregados.
     - **Feature 5 (Perfis de Stack):** Criado `src/lib/profiles.js` com perfis pré-definidos (React, Node, Python, Go). O usuário seleciona o perfil no início do CLI e as regras específicas da tecnologia são injetadas nos agentes (ex: Coder e Auditor).
 - **Motivo:** Aumentar a flexibilidade do toolkit para diferentes tipos de projeto e permitir que o usuário refine o comportamento da IA sem editar o código fonte do CLI.
+
+## [2025-12-31] - Revisão do Roadmap e Internacionalização
+
+### 13. Revisão das Milestones
+- **Ação:** Atualizado `docs/milestones.md`.
+- **Motivo:** Refinar os objetivos das próximas fases (M3, M4, M5), traduzir o roadmap para Português (Brasil) e alinhar as metas com o estado atual do código (que já possui Stack Profiles e Global Rules).
+- **Detalhes:**
+    - **M3:** Focada em Estabilização, refatoração de strings do CLI e injeção consistente de regras de idioma.
+    - **M4:** Focada na criação de templates oficiais para a metodologia (project, milestones, task) e no diretório de configuração unificado `.sdd-toolkit`.
+    - **M5:** Focada no suporte nativo a multi-idioma (i18n) tanto no CLI quanto no output dos agentes.
+
+### 14. Centralização de Strings (Refatoração)
+- **Ação:** 
+  - Criado `src/lib/messages.js` para armazenar todas as mensagens da interface.
+  - Refatorado `src/index.js` para importar e usar `MESSAGES`.
+- **Motivo:** Preparar o código base para a futura internacionalização (M5), eliminando strings hardcoded e facilitando a tradução.
+- **Status:** M3-T01 Concluída.

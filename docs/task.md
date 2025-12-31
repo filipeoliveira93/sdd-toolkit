@@ -1,33 +1,33 @@
 ---
-title: Tasks Sprint - Localization & Fixes
-milestone_ref: Milestone 3 (Localization)
-tech_stack: Node.js, Clack Prompts, JS-YAML
+title: Tasks Sprint - Milestone 3
+milestone_ref: Milestone 3: Localização & Estabilização (Hardening)
+tech_stack: Node.js, @clack/prompts, picocolors
 ---
 
-# Execution Backlog: Localization & Hardening
+# Execution Backlog: Milestone 3
 
 ## Technical Summary
-(Target Stack: Node.js CLI)
+(Target Stack: Node.js + @clack/prompts)
+The goal is to prepare the codebase for future internationalization (i18n) by centralizing strings and ensuring consistent language rules in generated agents.
 
 ## Tasks Checklist
 
-- [ ] **[M3-T01] Enforce English in Transformers**
-  - [ ] Open `src/lib/transformers.js`.
-  - [ ] Locate `toCopilotInstructions` function.
-  - [ ] Change the injected rule from `Use Portuguese (Brazil)` to `Use English`.
-  - [ ] Translate all internal code comments (e.g., `// Converte para...`) to English.
-  - **DoD:** All generated prompts and internal comments are in English.
+- [x] **[M3-T01] Centralize CLI Strings (Refactoring)**
+  - [x] Create `src/lib/constants.js` (or `messages.js`) to store all user-facing strings from `src/index.js`.
+  - [x] Refactor `src/index.js` to import messages instead of using hardcoded strings.
+  - [x] Ensure all prompts (intro, outro, select, multiselect) use the centralized strings.
+  - **DoD:** `src/index.js` contains no hardcoded English strings in UI calls.
 
-- [ ] **[M3-T02] Audit CLI Output strings**
-  - [ ] Open `src/index.js`.
-  - [ ] Verify all `console.log`, `intro`, `outro`, and `select` messages are in clear English.
-  - [ ] Verify `src/lib/docs.js` (if applicable) for any generated documentation scaffolding text.
-  - **DoD:** User experience is 100% English.
+- [ ] **[M3-T02] Implement Language Injection Logic**
+  - [ ] Update `toGeminiTOML`, `toRooConfig`, etc. in `src/lib/transformers.js` to accept a `locale` option (default: 'en').
+  - [ ] Create a standard rule string: `"Always reply in English unless told otherwise."` (or dynamic based on locale).
+  - [ ] Inject this rule into the `rules` array or directly into the system prompt during transformation.
+  - **DoD:** Generated agent configurations explicitly state the language rule.
 
-- [ ] **[M3-T03] Translate Project Documentation**
-  - [ ] Translate `docs/project.md` content to English.
-  - [ ] Translate `docs/requirements.md` content to English.
-  - [ ] Translate `docs/milestones.md` content to English.
-  - **DoD:** The project's "Brain" (docs folder) is fully in English to support international agents.
+- [ ] **[M3-T03] UI & UX Hardening**
+  - [ ] Standardize the use of `spinner` in `src/index.js` for all async operations.
+  - [ ] Verify error handling in `processAgentsInstallation` to ensure `s.stop()` is called with a descriptive error message using `picocolors`.
+  - [ ] Ensure `intro` and `outro` are used consistently for a polished CLI experience.
+  - **DoD:** CLI flows (success and error) are visually consistent and provide clear feedback.
 
 ---
