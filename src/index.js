@@ -23,7 +23,37 @@ const { generateWorkflowGuide } = require('./lib/docs');
 
 async function main() {
     console.clear();
-    intro(pc.bgMagenta(pc.white(' UNIVERSAL SPEC CLI ')));
+    
+    const args = process.argv.slice(2);
+    const isUpgrade = args.includes('upgrade') || args.includes('--upgrade');
+
+    if (isUpgrade) {
+        intro(pc.bgBlue(pc.white(' SDD TOOLKIT: UPGRADE MODE ')));
+        
+        // Detecção de Ferramentas Existentes
+        const tools = [];
+        if (fs.existsSync(path.join(process.cwd(), '.gemini'))) tools.push('gemini');
+        if (fs.existsSync(path.join(process.cwd(), '.roo'))) tools.push('roo');
+        if (fs.existsSync(path.join(process.cwd(), '.cline'))) tools.push('cline');
+        if (fs.existsSync(path.join(process.cwd(), '.cursor'))) tools.push('cursor');
+        if (fs.existsSync(path.join(process.cwd(), '.windsurfrules'))) tools.push('windsurf');
+        if (fs.existsSync(path.join(process.cwd(), '.trae'))) tools.push('trae');
+        if (fs.existsSync(path.join(process.cwd(), '.kilo'))) tools.push('kilo');
+        if (fs.existsSync(path.join(process.cwd(), '.github'))) tools.push('copilot'); // Assume copilot se .github existir
+        if (fs.existsSync(path.join(process.cwd(), '.opencode'))) tools.push('opencode');
+        if (fs.existsSync(path.join(process.cwd(), 'prompts'))) tools.push('web');
+
+        if (tools.length === 0) {
+            note('No existing configuration detected for upgrade. Starting standard installation.', 'Info');
+        } else {
+            note(`Tools detected: ${tools.join(', ')}`, 'Upgrading...');
+            await processAgentsInstallation(tools);
+            outro(pc.green('Agents updated successfully! 🚀'));
+            process.exit(0);
+        }
+    } else {
+        intro(pc.bgMagenta(pc.white(' UNIVERSAL SPEC CLI ')));
+    }
 
     // 1. Automatic Scaffold
     const created = generateWorkflowGuide(process.cwd());
@@ -71,9 +101,11 @@ async function main() {
         ],
         required: true,
         hint: 'Space to select, Enter to confirm'
+        hint: 'Space to select, Enter to confirm'
     });
 
     if (!tools || tools.length === 0) {
+        outro('No tools selected. Operation cancelled.');
         outro('No tools selected. Operation cancelled.');
         process.exit(0);
     }
@@ -86,15 +118,18 @@ async function main() {
 async function processAgentsInstallation(tools, options) {
     const s = spinner();
     s.start('Loading definitions...');
+    s.start('Loading definitions...');
 
     try {
         const validAgents = await loadAgents(options);
 
         if (validAgents.length === 0) {
             s.stop('No valid agents found.');
+            s.stop('No valid agents found.');
             return;
         }
 
+        s.message(`Installing agents for: ${tools.join(', ')}...`);
         s.message(`Installing agents for: ${tools.join(', ')}...`);
 
         // Iterate over each selected tool
@@ -199,6 +234,7 @@ async function processAgentsInstallation(tools, options) {
         }
 
     } catch (e) {
+        s.stop('Failed');
         s.stop('Failed');
         console.error(pc.red(e.message));
     }
