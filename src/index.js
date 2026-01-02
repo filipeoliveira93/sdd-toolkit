@@ -57,9 +57,18 @@ async function main() {
     }
 
     // 1. Automatic Scaffold
-    const created = generateWorkflowGuide(process.cwd());
-    if (created) {
-        console.log(pc.green(MESSAGES.SCAFFOLD.SUCCESS));
+    const s = spinner();
+    s.start(MESSAGES.SCAFFOLD.LOADING);
+    
+    try {
+        const created = generateWorkflowGuide(process.cwd());
+        if (created) {
+            s.stop(MESSAGES.SCAFFOLD.SUCCESS);
+        } else {
+            s.stop(MESSAGES.SCAFFOLD.ALREADY_EXISTS);
+        }
+    } catch (e) {
+        s.stop(pc.red(MESSAGES.SCAFFOLD.ERROR));
     }
 
     // 2. Feature 5: Stack Selection (Profile)
@@ -74,7 +83,10 @@ async function main() {
         initialValue: 'generic'
     });
 
-    if (typeof stackProfile === 'symbol') { process.exit(0); } // Handle Cancel
+    if (typeof stackProfile === 'symbol') { 
+        outro(pc.yellow(MESSAGES.GENERAL.CANCELLED));
+        process.exit(0); 
+    }
 
     // 3. Feature 3: Global Rules (Optional)
     const globalRules = await text({
@@ -83,7 +95,10 @@ async function main() {
         required: false
     });
 
-    if (typeof globalRules === 'symbol') { process.exit(0); } // Handle Cancel
+    if (typeof globalRules === 'symbol') {
+        outro(pc.yellow(MESSAGES.GENERAL.CANCELLED));
+        process.exit(0);
+    }
 
     // 4. Tool Selection (Multiple choice)
     const tools = await multiselect({
@@ -103,6 +118,11 @@ async function main() {
         required: true,
         hint: MESSAGES.SETUP.TOOL_HINT
     });
+
+    if (typeof tools === 'symbol') {
+        outro(pc.yellow(MESSAGES.GENERAL.CANCELLED));
+        process.exit(0);
+    }
 
     if (!tools || tools.length === 0) {
         outro(MESSAGES.SETUP.NO_TOOLS);
@@ -230,8 +250,8 @@ async function processAgentsInstallation(tools, options) {
         }
 
     } catch (e) {
-        s.stop(MESSAGES.INSTALL.FAILED);
-        console.error(pc.red(e.message));
+        s.stop(pc.red(`${MESSAGES.INSTALL.FAILED}: ${e.message}`));
+        process.exit(1);
     }
 }
 

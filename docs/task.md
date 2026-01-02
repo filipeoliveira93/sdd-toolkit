@@ -24,10 +24,10 @@ The goal is to prepare the codebase for future internationalization (i18n) by ce
   - [x] Inject this rule into the `rules` array or directly into the system prompt during transformation.
   - **DoD:** Generated agent configurations explicitly state the language rule.
 
-- [ ] **[M3-T03] UI & UX Hardening**
-  - [ ] Standardize the use of `spinner` in `src/index.js` for all async operations.
-  - [ ] Verify error handling in `processAgentsInstallation` to ensure `s.stop()` is called with a descriptive error message using `picocolors`.
-  - [ ] Ensure `intro` and `outro` are used consistently for a polished CLI experience.
+- [x] **[M3-T03] UI & UX Hardening**
+  - [x] Standardize the use of `spinner` in `src/index.js` for all async operations.
+  - [x] Verify error handling in `processAgentsInstallation` to ensure `s.stop()` is called with a descriptive error message using `picocolors`.
+  - [x] Ensure `intro` and `outro` are used consistently for a polished CLI experience.
   - **DoD:** CLI flows (success and error) are visually consistent and provide clear feedback.
 
 ---

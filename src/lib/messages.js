@@ -8,6 +8,9 @@ const MESSAGES = {
         TITLE: ' UNIVERSAL SPEC CLI ',
         UPGRADE_TITLE: ' SDD TOOLKIT: UPGRADE MODE ',
     },
+    GENERAL: {
+        CANCELLED: 'Operation cancelled.',
+    },
     UPGRADE: {
         NO_CONFIG: 'No existing configuration detected for upgrade. Starting standard installation.',
         NO_CONFIG_TITLE: 'Info',
@@ -16,7 +19,10 @@ const MESSAGES = {
         SUCCESS: 'Agents updated successfully! 🚀',
     },
     SCAFFOLD: {
-        SUCCESS: '✔ Folder structure (docs/) verified.',
+        LOADING: 'Checking workspace structure...',
+        SUCCESS: '✔ Folder structure (docs/) created.',
+        ALREADY_EXISTS: '✔ Folder structure (docs/) verified.',
+        ERROR: 'Failed to verify workspace structure.',
     },
     SETUP: {
         STACK_SELECT: 'What is your technology Stack profile?',
