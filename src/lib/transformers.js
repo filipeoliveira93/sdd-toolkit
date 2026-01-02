@@ -1,13 +1,25 @@
-const { MESSAGES } = require('./messages');
+const { TRANSLATIONS } = require('./messages');
 
 /**
  * Returns the language rule based on the locale
- * @param {string} locale - 'en', 'pt-br', etc.
+ * @param {string} locale - 'en', 'pt-br', 'es', etc.
  */
 function getLanguageRule(locale = 'en') {
-    const normalized = locale.toLowerCase();
-    if (normalized === 'pt-br') return MESSAGES.LANGUAGE_RULES.PT_BR;
-    return MESSAGES.LANGUAGE_RULES.EN;
+    const normalized = locale.toLowerCase().replace('-', '_');
+    
+    // Mapping locale slug to property key in messages
+    const keyMap = {
+        'en': 'EN',
+        'pt_br': 'PT_BR',
+        'es': 'ES'
+    };
+
+    const ruleKey = keyMap[normalized] || 'EN';
+    
+    // Get dictionary for the target locale or fallback to EN
+    const dict = TRANSLATIONS[normalized] || TRANSLATIONS['en'];
+    
+    return dict.LANGUAGE_RULES[ruleKey];
 }
 
 /**

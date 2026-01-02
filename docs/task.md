@@ -1,33 +1,34 @@
 ---
-title: Tasks Sprint - Milestone 3
-milestone_ref: Milestone 3: Localização & Estabilização (Hardening)
-tech_stack: Node.js, @clack/prompts, picocolors
+title: Tasks Sprint - Milestone 5
+milestone_ref: Milestone 5: Suporte a Internacionalização (i18n)
+tech_stack: Node.js, @clack/prompts
 ---
 
-# Execution Backlog: Milestone 3
+# Execution Backlog: Milestone 5
 
 ## Technical Summary
-(Target Stack: Node.js + @clack/prompts)
-The goal is to prepare the codebase for future internationalization (i18n) by centralizing strings and ensuring consistent language rules in generated agents.
+(Target Stack: Native Node.js + internal i18n logic)
+The goal is to enable the user to select their preferred language (English, Portuguese, Spanish) and have both the CLI interface and the generated AI Agents adapt to that language.
 
 ## Tasks Checklist
 
-- [x] **[M3-T01] Centralize CLI Strings (Refactoring)**
-  - [x] Create `src/lib/constants.js` (or `messages.js`) to store all user-facing strings from `src/index.js`.
-  - [x] Refactor `src/index.js` to import messages instead of using hardcoded strings.
-  - [x] Ensure all prompts (intro, outro, select, multiselect) use the centralized strings.
-  - **DoD:** `src/index.js` contains no hardcoded English strings in UI calls.
+- [x] **[M5-T01] Implement Internal I18n Engine**
+  - [x] Refactor `src/lib/messages.js` to export a dictionary object (EN, PT_BR, ES).
+  - [x] Create `src/lib/i18n.js` with a simple `t(key)` or `getMessage(key, locale)` function.
+  - [x] **DoD:** Unit test (or manual run) proves we can retrieve strings in different languages.
 
-- [x] **[M3-T02] Implement Language Injection Logic**
-  - [x] Update `toGeminiTOML`, `toRooConfig`, etc. in `src/lib/transformers.js` to accept a `locale` option (default: 'en').
-  - [x] Create a standard rule string: `"Always reply in English unless told otherwise."` (or dynamic based on locale).
-  - [x] Inject this rule into the `rules` array or directly into the system prompt during transformation.
-  - **DoD:** Generated agent configurations explicitly state the language rule.
+- [x] **[M5-T02] Update CLI Wizard (Language Selection)**
+  - [x] Update `src/index.js` to ask for "Select Language" as the **first step**.
+  - [x] Replace all direct `MESSAGES` usage with the new i18n helper.
+  - [x] Store selected locale in the execution context.
+  - **DoD:** User sees the CLI in Portuguese if they select PT-BR.
 
-- [x] **[M3-T03] UI & UX Hardening**
-  - [x] Standardize the use of `spinner` in `src/index.js` for all async operations.
-  - [x] Verify error handling in `processAgentsInstallation` to ensure `s.stop()` is called with a descriptive error message using `picocolors`.
-  - [x] Ensure `intro` and `outro` are used consistently for a polished CLI experience.
-  - **DoD:** CLI flows (success and error) are visually consistent and provide clear feedback.
+- [x] **[M5-T03] Connect Locale to Transformers**
+  - [x] Pass the `locale` from `src/index.js` down to `processAgentsInstallation` and `loadAgents`.
+  - [x] Ensure `src/lib/transformers.js` uses this locale to inject the correct "System Rule" (e.g., "Always reply in Portuguese").
+  - **DoD:** Generated agent config files (e.g., `coder.toml`) contain the language instruction.
+
+- [ ] **[M5-T04] Localize Documentation Templates** (CANCELLED)
+  - [ ] *Skipped:* Templates and System Prompts will remain in English to ensure LLM performance. The output language is controlled via System Rules only.
 
 ---

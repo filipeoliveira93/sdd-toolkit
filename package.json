@@ -21,6 +21,7 @@
     "files": [
         "src",
         "definitions",
+        "templates",
         "README.md"
     ],
     "keywords": [

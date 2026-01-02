@@ -33,7 +33,7 @@ Este documento reflete o estado atual do projeto **sdd-toolkit**. As fases de in
 - **Prioridade (MoSCoW):** Must Have
 
 ### Milestone 3: Localização & Estabilização (Hardening)
-**Status: 🚧 Em Andamento**
+**Status: ✅ Concluída**
 - **Objetivo:** Garantir que o ecossistema atual (CLI e Prompts) esteja estável e consistente em Inglês antes de expandir.
 - **Entregáveis:**
   - **Refatoração de Strings:** Mover strings do CLI para um arquivo de constantes para facilitar tradução futura.
@@ -43,7 +43,7 @@ Este documento reflete o estado atual do projeto **sdd-toolkit**. As fases de in
 - **Prioridade (MoSCoW):** Must Have
 
 ### Milestone 4: Padronização & Templates
-**Status: 📅 Planejada**
+**Status: ✅ Concluída**
 - **Objetivo:** Padronizar a estrutura de instalação e melhorar a experiência de onboarding com templates de documentos.
 - **Entregáveis:**
   - **Diretório Unificado:** Criar uma pasta `.sdd-toolkit` para armazenar metadados da instalação local.
@@ -53,7 +53,7 @@ Este documento reflete o estado atual do projeto **sdd-toolkit**. As fases de in
 - **Prioridade (MoSCoW):** Should Have
 
 ### Milestone 5: Suporte a Internacionalização (i18n)
-**Status: 📅 Planejada**
+**Status: ✅ Concluída**
 - **Objetivo:** Permitir que o usuário escolha o idioma da documentação gerada e das instruções dos agentes.
 - **Entregáveis:**
   - **Seletor de Idioma:** Adicionar etapa no Wizard para selecionar o idioma (ex: Inglês, Português, Espanhol).

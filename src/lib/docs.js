@@ -3,49 +3,66 @@ const path = require('path');
 
 /**
  * Generates the necessary folder structure for the agents
+ * Implements Smart Scaffolding: Only creates missing files/folders.
  */
 function generateWorkflowGuide(baseDir) {
     const docsDir = path.join(baseDir, 'docs');
-    const logsDir = path.join(docsDir, 'logs');
     
-    let created = false;
+    // 1. Define folder structure based on new logging architecture
+    const folders = [
+        path.join(docsDir, 'logs'),
+        path.join(docsDir, 'logs', 'executions'),
+        path.join(docsDir, 'logs', 'reviews'),
+        path.join(docsDir, 'logs', 'archive'),
+    ];
 
-    // Create folder structure recursively
-    if (!fs.existsSync(logsDir)) {
-        fs.mkdirSync(logsDir, { recursive: true });
-        created = true;
-    }
+    let stats = { created: 0, verified: 0 };
 
-    const guidelinesPath = path.join(docsDir, 'guidelines.md');
+    // Create folders
+    folders.forEach(dir => {
+        if (!fs.existsSync(dir)) {
+            fs.mkdirSync(dir, { recursive: true });
+            stats.created++;
+        } else {
+            stats.verified++;
+        }
+    });
 
-    if (!fs.existsSync(guidelinesPath)) {
-        const guidelinesContent = `# 📜 Project Guidelines
-
-This document defines the "Universal Laws" of the project. All agents must read this file before executing tasks.
-
----
-
-## 🏗️ Architecture Patterns
-- [Ex: Use Clean Architecture]
-- [Ex: Layers: Entities, UseCases, Repositories]
-
-## 💻 Code Conventions
-- [Ex: Use ESModules (import/export)]
-- [Ex: Semicolons: true]
-- [Ex: Naming: camelCase for variables, PascalCase for classes]
-
-## 🛠️ Tech Stack & Versions
-- Node.js: >=18.0.0
-
-## 🛡️ Security & Performance
-- [Ex: Never commit .env]
-- [Ex: Validate all inputs with Zod/Joi]
-`;
-        fs.writeFileSync(guidelinesPath, guidelinesContent);
-        created = true;
-    }
+    // 2. Define Templates Mapping
+    // Assumes templates are located in project_root/templates/
+    // __dirname is src/lib/, so templates is ../../templates
+    const templatesDir = path.join(__dirname, '..', '..', 'templates');
     
-    return created;
+    const templateFiles = [
+        { src: 'guidelines.md', dest: 'guidelines.md' },
+        { src: 'project.md', dest: 'project.md' },
+        { src: 'requirements.md', dest: 'requirements.md' },
+        { src: 'milestones.md', dest: 'milestones.md' },
+        { src: 'task.md', dest: 'task.md' }
+    ];
+
+    // Create files if they don't exist
+    templateFiles.forEach(tpl => {
+        const destPath = path.join(docsDir, tpl.dest);
+        if (!fs.existsSync(destPath)) {
+            try {
+                // Ensure template exists before reading
+                const templatePath = path.join(templatesDir, tpl.src);
+                if (fs.existsSync(templatePath)) {
+                    const content = fs.readFileSync(templatePath, 'utf8');
+                    fs.writeFileSync(destPath, content);
+                    stats.created++;
+                }
+            } catch (e) {
+                // Fail silently/warn, do not crash the installer
+                console.warn(`Warning: Could not scaffold ${tpl.dest}`);
+            }
+        } else {
+            stats.verified++;
+        }
+    });
+    
+    return stats;
 }
 
 module.exports = { generateWorkflowGuide };

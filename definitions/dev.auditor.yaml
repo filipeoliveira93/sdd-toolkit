@@ -52,7 +52,7 @@ systemPrompt: |
     ---
 
     # INSTRUCTION
-    Read requirements and tasks. Generate the `audit_report.md`.
+    Read requirements and tasks. Generate the `docs/logs/audit_report.md`.
 
 
     # Rules & Guidelines

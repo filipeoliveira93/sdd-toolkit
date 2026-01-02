@@ -9,7 +9,7 @@ const pc = require('picocolors');
 // Internal Modules
 const { loadAgents } = require('./lib/agents');
 const { STACK_PROFILES } = require('./lib/profiles');
-const { MESSAGES } = require('./lib/messages');
+const { setLocale, t, getLocale } = require('./lib/i18n');
 const { 
     toGeminiTOML, 
     toRooConfig, 
@@ -28,8 +28,35 @@ async function main() {
     const args = process.argv.slice(2);
     const isUpgrade = args.includes('upgrade') || args.includes('--upgrade');
 
+    // 0. Language Selection (Always first unless forced upgrade silent mode - but upgrade has interaction)
+    // We show this before Upgrade title to ensure upgrade messages are localized too if possible
+    // But typically flags like --lang would be better. For now, interactive.
+    
+    if (!isUpgrade) {
+        intro(pc.bgMagenta(pc.white(' UNIVERSAL SPEC CLI ')));
+        
+        const lang = await select({
+            message: 'Select Language / Selecione o Idioma / Seleccione el Idioma',
+            options: [
+                { value: 'en', label: 'English' },
+                { value: 'pt_br', label: 'Português (Brasil)' },
+                { value: 'es', label: 'Español' }
+            ]
+        });
+
+        if (typeof lang === 'symbol') {
+            outro(pc.yellow('Operation cancelled.'));
+            process.exit(0);
+        }
+        
+        setLocale(lang);
+    } else {
+        // Default EN for upgrade for now
+        setLocale('en'); 
+    }
+
     if (isUpgrade) {
-        intro(pc.bgBlue(pc.white(MESSAGES.INTRO.UPGRADE_TITLE)));
+        intro(pc.bgBlue(pc.white(t('INTRO.UPGRADE_TITLE'))));
         
         // Detecção de Ferramentas Existentes
         const tools = [];
@@ -45,30 +72,28 @@ async function main() {
         if (fs.existsSync(path.join(process.cwd(), 'prompts'))) tools.push('web');
 
         if (tools.length === 0) {
-            note(MESSAGES.UPGRADE.NO_CONFIG, MESSAGES.UPGRADE.NO_CONFIG_TITLE);
+            note(t('UPGRADE.NO_CONFIG'), t('UPGRADE.NO_CONFIG_TITLE'));
         } else {
-            note(MESSAGES.UPGRADE.DETECTED_TOOLS(tools.join(', ')), MESSAGES.UPGRADE.DETECTED_TITLE);
-            await processAgentsInstallation(tools);
-            outro(pc.green(MESSAGES.UPGRADE.SUCCESS));
+            note(t('UPGRADE.DETECTED_TOOLS', tools.join(', ')), t('UPGRADE.DETECTED_TITLE'));
+            await processAgentsInstallation(tools, { locale: getLocale() });
+            outro(pc.green(t('UPGRADE.SUCCESS')));
             process.exit(0);
         }
-    } else {
-        intro(pc.bgMagenta(pc.white(MESSAGES.INTRO.TITLE)));
-    }
+    } 
 
     // 1. Automatic Scaffold
     const s = spinner();
-    s.start(MESSAGES.SCAFFOLD.LOADING);
+    s.start(t('SCAFFOLD.LOADING'));
     
     try {
-        const created = generateWorkflowGuide(process.cwd());
-        if (created) {
-            s.stop(MESSAGES.SCAFFOLD.SUCCESS);
+        const stats = generateWorkflowGuide(process.cwd());
+        if (stats.created > 0) {
+            s.stop(`${t('SCAFFOLD.SUCCESS')} (${stats.created} new, ${stats.verified} verified)`);
         } else {
-            s.stop(MESSAGES.SCAFFOLD.ALREADY_EXISTS);
+            s.stop(t('SCAFFOLD.ALREADY_EXISTS'));
         }
     } catch (e) {
-        s.stop(pc.red(MESSAGES.SCAFFOLD.ERROR));
+        s.stop(pc.red(t('SCAFFOLD.ERROR')));
     }
 
     // 2. Feature 5: Stack Selection (Profile)
@@ -78,75 +103,76 @@ async function main() {
     }));
 
     const stackProfile = await select({
-        message: MESSAGES.SETUP.STACK_SELECT,
+        message: t('SETUP.STACK_SELECT'),
         options: stackOptions,
         initialValue: 'generic'
     });
 
     if (typeof stackProfile === 'symbol') { 
-        outro(pc.yellow(MESSAGES.GENERAL.CANCELLED));
+        outro(pc.yellow(t('GENERAL.CANCELLED')));
         process.exit(0); 
     }
 
     // 3. Feature 3: Global Rules (Optional)
     const globalRules = await text({
-        message: MESSAGES.SETUP.GLOBAL_RULES,
-        placeholder: MESSAGES.SETUP.GLOBAL_RULES_HINT,
+        message: t('SETUP.GLOBAL_RULES'),
+        placeholder: t('SETUP.GLOBAL_RULES_HINT'),
         required: false
     });
 
     if (typeof globalRules === 'symbol') {
-        outro(pc.yellow(MESSAGES.GENERAL.CANCELLED));
+        outro(pc.yellow(t('GENERAL.CANCELLED')));
         process.exit(0);
     }
 
     // 4. Tool Selection (Multiple choice)
     const tools = await multiselect({
-        message: MESSAGES.SETUP.TOOL_SELECT,
+        message: t('SETUP.TOOL_SELECT'),
         options: [
-            { value: 'gemini', label: MESSAGES.TOOLS.GEMINI, hint: '.gemini/commands/dev' },
-            { value: 'roo', label: MESSAGES.TOOLS.ROO, hint: '.roo/ & custom_modes.json' },
-            { value: 'cline', label: MESSAGES.TOOLS.CLINE, hint: '.cline/ & custom_modes.json' },
-            { value: 'cursor', label: MESSAGES.TOOLS.CURSOR, hint: '.cursor/rules/*.mdc' },
-            { value: 'windsurf', label: MESSAGES.TOOLS.WINDSURF, hint: '.windsurfrules' },
-            { value: 'trae', label: MESSAGES.TOOLS.TRAE, hint: '.trae/instructions.md' },
-            { value: 'kilo', label: MESSAGES.TOOLS.KILO, hint: '.kilo/prompts/*.md' },
-            { value: 'copilot', label: MESSAGES.TOOLS.COPILOT, hint: '.github/copilot-instructions.md' },
-            { value: 'web', label: MESSAGES.TOOLS.WEB, hint: 'prompts/*.txt' },
-            { value: 'opencode', label: MESSAGES.TOOLS.OPENCODE, hint: '.opencode/*.md' },
+            { value: 'gemini', label: t('TOOLS.GEMINI'), hint: '.gemini/commands/dev' },
+            { value: 'roo', label: t('TOOLS.ROO'), hint: '.roo/ & custom_modes.json' },
+            { value: 'cline', label: t('TOOLS.CLINE'), hint: '.cline/ & custom_modes.json' },
+            { value: 'cursor', label: t('TOOLS.CURSOR'), hint: '.cursor/rules/*.mdc' },
+            { value: 'windsurf', label: t('TOOLS.WINDSURF'), hint: '.windsurfrules' },
+            { value: 'trae', label: t('TOOLS.TRAE'), hint: '.trae/instructions.md' },
+            { value: 'kilo', label: t('TOOLS.KILO'), hint: '.kilo/prompts/*.md' },
+            { value: 'copilot', label: t('TOOLS.COPILOT'), hint: '.github/copilot-instructions.md' },
+            { value: 'web', label: t('TOOLS.WEB'), hint: 'prompts/*.txt' },
+            { value: 'opencode', label: t('TOOLS.OPENCODE'), hint: '.opencode/*.md' },
         ],
         required: true,
-        hint: MESSAGES.SETUP.TOOL_HINT
+        hint: t('SETUP.TOOL_HINT')
     });
 
     if (typeof tools === 'symbol') {
-        outro(pc.yellow(MESSAGES.GENERAL.CANCELLED));
+        outro(pc.yellow(t('GENERAL.CANCELLED')));
         process.exit(0);
     }
 
     if (!tools || tools.length === 0) {
-        outro(MESSAGES.SETUP.NO_TOOLS);
+        outro(t('SETUP.NO_TOOLS'));
         process.exit(0);
     }
 
-    await processAgentsInstallation(tools, { stackProfile, globalRules });
+    // Pass locale to installation process
+    await processAgentsInstallation(tools, { stackProfile, globalRules, locale: getLocale() });
 
-    outro(pc.green(MESSAGES.SETUP.SUCCESS));
+    outro(pc.green(t('SETUP.SUCCESS')));
 }
 
 async function processAgentsInstallation(tools, options) {
     const s = spinner();
-    s.start(MESSAGES.INSTALL.LOADING);
+    s.start(t('INSTALL.LOADING'));
 
     try {
         const validAgents = await loadAgents(options);
 
         if (validAgents.length === 0) {
-            s.stop(MESSAGES.INSTALL.NO_AGENTS);
+            s.stop(t('INSTALL.NO_AGENTS'));
             return;
         }
 
-        s.message(MESSAGES.INSTALL.INSTALLING(tools.join(', ')));
+        s.message(t('INSTALL.INSTALLING', tools.join(', ')));
 
         // Iterate over each selected tool
         for (const tool of tools) {
@@ -242,15 +268,15 @@ async function processAgentsInstallation(tools, options) {
             }
         }
         
-        s.stop(MESSAGES.INSTALL.FINISHED);
+        s.stop(t('INSTALL.FINISHED'));
         
         // Consolidated feedback
         if (tools.includes('roo') || tools.includes('cline')) {
-            note(MESSAGES.INSTALL.ROO_WARNING, MESSAGES.INSTALL.ROO_WARNING_TITLE);
+            note(t('INSTALL.ROO_WARNING'), t('INSTALL.ROO_WARNING_TITLE'));
         }
 
     } catch (e) {
-        s.stop(pc.red(`${MESSAGES.INSTALL.FAILED}: ${e.message}`));
+        s.stop(pc.red(`${t('INSTALL.FAILED')}: ${e.message}`));
         process.exit(1);
     }
 }

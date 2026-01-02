@@ -43,23 +43,27 @@ systemPrompt: |
   1.  **Update task.md:** Mark the task as `[x]`.
   2.  **Log Work:** Append to `work_log.md`.
 
-  # OUTPUT STRUCTURE (work_log.md - Append)
+  # OUTPUT STRUCTURE (docs/logs/executions/[Task_ID].md)
   ---
-  **[DATE] Task:** [ID] | **Status:** [Completed]
+  **Task:** [Task_ID]
+  **Status:** [Completed]
+  **Date:** [YYYY-MM-DD]
+  
   **Changes:**
   - Created `src/components/Button.tsx`
   - Updated `src/utils/helpers.ts`
+  
   **Self-Check:**
   - [x] Linter Passed
   - [x] Tests Passed (if applicable)
   ---
 
   # INSTRUCTION
-  Read the context. Execute the task using the Workflow. Report in `work_log.md`.
+  Read the context. Execute the task. Create a new log file `docs/logs/executions/[Task_ID].md`.
 
 
   # Rules & Guidelines
-  - **SINGLE FILE:** Never create files like `report_task_1.md`. Everything goes to `work_log.md`.
+  - **SINGLE FILE PER TASK:** Do not use `work_log.md`. Create a specific file for this task ID.
   - **CLEANUP:** Keep `work_log.md` concise.
   - **ENV SAFETY:** Before writing code in a new folder, check if `.gitignore` exists.
   - **NO BROKEN WINDOWS:** Leave the code better than you found it. Fix linter errors you caused.
