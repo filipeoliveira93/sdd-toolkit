@@ -137,7 +137,7 @@ async function processAgentsInstallation(tools, options) {
                 await fsp.mkdir(targetDir, { recursive: true });
 
                 await Promise.all(validAgents.map(agent => {
-                    const toml = toGeminiTOML(agent);
+                    const toml = toGeminiTOML(agent, options);
                     const fileName = `${agent.originalName}.toml`; 
                     return fsp.writeFile(path.join(targetDir, fileName), toml);
                 }));
@@ -148,11 +148,11 @@ async function processAgentsInstallation(tools, options) {
                 await fsp.mkdir(targetDir, { recursive: true });
 
                 await Promise.all(validAgents.map(agent => {
-                    const md = toKiloMarkdown(agent);
+                    const md = toKiloMarkdown(agent, options);
                     return fsp.writeFile(path.join(targetDir, `${agent.slug}.md`), md);
                 }));
 
-                const modes = validAgents.map(agent => toRooConfig(agent, agent.slug));
+                const modes = validAgents.map(agent => toRooConfig(agent, agent.slug, options));
                 const jsonContent = JSON.stringify({ customModes: modes }, null, 2);
                 const fileName = `${tool}_custom_modes.json`;
                 await fsp.writeFile(path.join(process.cwd(), fileName), jsonContent);
@@ -162,7 +162,7 @@ async function processAgentsInstallation(tools, options) {
                 await fsp.mkdir(targetDir, { recursive: true });
 
                 await Promise.all(validAgents.map(agent => {
-                    const md = toKiloMarkdown(agent);
+                    const md = toKiloMarkdown(agent, options);
                     return fsp.writeFile(path.join(targetDir, `${agent.slug}.md`), md);
                 }));
             }
@@ -172,12 +172,12 @@ async function processAgentsInstallation(tools, options) {
                 await fsp.mkdir(agentsDir, { recursive: true });
 
                 await Promise.all(validAgents.map(agent => {
-                    const md = toCopilotInstructions(agent);
+                    const md = toCopilotInstructions(agent, options);
                     return fsp.writeFile(path.join(agentsDir, `${agent.slug}.md`), md);
                 }));
 
                 const mainAgent = validAgents.find(a => a.slug.includes('coder')) || validAgents[0];
-                const mainInstructions = toCopilotInstructions(mainAgent);
+                const mainInstructions = toCopilotInstructions(mainAgent, options);
                 await fsp.writeFile(path.join(githubDir, 'copilot-instructions.md'), mainInstructions);
             }
             else if (tool === 'cursor') {
@@ -185,13 +185,13 @@ async function processAgentsInstallation(tools, options) {
                 await fsp.mkdir(rulesDir, { recursive: true });
 
                 await Promise.all(validAgents.map(agent => {
-                    const mdc = toCursorMDC(agent);
+                    const mdc = toCursorMDC(agent, options);
                     return fsp.writeFile(path.join(rulesDir, `${agent.slug}.mdc`), mdc);
                 }));
             }
             else if (tool === 'windsurf') {
                 const mainAgent = validAgents.find(a => a.slug.includes('coder')) || validAgents[0];
-                const rules = toWindsurfRules(mainAgent);
+                const rules = toWindsurfRules(mainAgent, options);
                 await fsp.writeFile(path.join(process.cwd(), '.windsurfrules'), rules);
             }
             else if (tool === 'trae') {
@@ -199,7 +199,7 @@ async function processAgentsInstallation(tools, options) {
                 await fsp.mkdir(traeDir, { recursive: true });
                 
                 const mainAgent = validAgents.find(a => a.slug.includes('coder')) || validAgents[0];
-                const rules = toTraeRules(mainAgent);
+                const rules = toTraeRules(mainAgent, options);
                 await fsp.writeFile(path.join(traeDir, 'instructions.md'), rules);
             }
             else if (tool === 'web') {
@@ -207,7 +207,7 @@ async function processAgentsInstallation(tools, options) {
                 await fsp.mkdir(targetDir, { recursive: true });
 
                 await Promise.all(validAgents.map(agent => {
-                    const txt = toPlainSystemPrompt(agent);
+                    const txt = toPlainSystemPrompt(agent, options);
                     return fsp.writeFile(path.join(targetDir, `${agent.slug}.txt`), txt);
                 }));
             }
@@ -216,7 +216,7 @@ async function processAgentsInstallation(tools, options) {
                 await fsp.mkdir(targetDir, { recursive: true });
 
                 await Promise.all(validAgents.map(agent => {
-                    const md = toKiloMarkdown(agent);
+                    const md = toKiloMarkdown(agent, options);
                     return fsp.writeFile(path.join(targetDir, `${agent.slug}.md`), md);
                 }));
             }

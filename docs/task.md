@@ -18,10 +18,10 @@ The goal is to prepare the codebase for future internationalization (i18n) by ce
   - [x] Ensure all prompts (intro, outro, select, multiselect) use the centralized strings.
   - **DoD:** `src/index.js` contains no hardcoded English strings in UI calls.
 
-- [ ] **[M3-T02] Implement Language Injection Logic**
-  - [ ] Update `toGeminiTOML`, `toRooConfig`, etc. in `src/lib/transformers.js` to accept a `locale` option (default: 'en').
-  - [ ] Create a standard rule string: `"Always reply in English unless told otherwise."` (or dynamic based on locale).
-  - [ ] Inject this rule into the `rules` array or directly into the system prompt during transformation.
+- [x] **[M3-T02] Implement Language Injection Logic**
+  - [x] Update `toGeminiTOML`, `toRooConfig`, etc. in `src/lib/transformers.js` to accept a `locale` option (default: 'en').
+  - [x] Create a standard rule string: `"Always reply in English unless told otherwise."` (or dynamic based on locale).
+  - [x] Inject this rule into the `rules` array or directly into the system prompt during transformation.
   - **DoD:** Generated agent configurations explicitly state the language rule.
 
 - [ ] **[M3-T03] UI & UX Hardening**

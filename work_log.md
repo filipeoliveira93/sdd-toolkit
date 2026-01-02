@@ -83,3 +83,11 @@
   - Refatorado `src/index.js` para importar e usar `MESSAGES`.
 - **Motivo:** Preparar o código base para a futura internacionalização (M5), eliminando strings hardcoded e facilitando a tradução.
 - **Status:** M3-T01 Concluída.
+
+### 15. Injeção de Lógica de Idioma
+- **Ação:**
+  - Atualizado `src/lib/messages.js` com regras de idioma (EN/PT-BR).
+  - Atualizado `src/lib/transformers.js` para aceitar `options.locale` e injetar a regra correta.
+  - Atualizado `src/index.js` para repassar o objeto `options` para os transformadores.
+- **Motivo:** Garantir que os agentes gerados saibam em qual idioma devem responder.
+- **Status:** M3-T02 Concluída.

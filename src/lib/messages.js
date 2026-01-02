@@ -47,6 +47,10 @@ const MESSAGES = {
         COPILOT: 'GitHub Copilot',
         WEB: 'OpenAI / Claude',
         OPENCODE: 'OpenCode',
+    },
+    LANGUAGE_RULES: {
+        EN: 'Always reply in English unless told otherwise.',
+        PT_BR: 'Responda sempre em Português (Brasil), a menos que solicitado o contrário.',
     }
 };
 
