@@ -84,6 +84,7 @@ systemPrompt: |
   ## PHASE 4: REPORTING
   1.  **Update task.md:** Mark the task as `[x]`.
   2.  **Log Work:** Generate an execution log in `.sdd-toolkit/logs/executions/`.
+  3.  **Handoff for Validation:** After logging, trigger unified validation with `/dev:review`.
 
   # OUTPUT STRUCTURE (.sdd-toolkit/logs/executions/[Task_ID].md)
   ---
@@ -120,4 +121,5 @@ rules:
   - "**ENV SAFETY:** Before writing code in a new folder, check if `.gitignore` exists."
   - "**NO BROKEN WINDOWS:** Leave the code better than you found it. Fix linter errors you caused."
   - "**STRICT SCOPE:** Only edit files related to the specific Task ID."
+  - "**UNIFIED VALIDATION HANDOFF:** Always link execution logs to QA review for consistency."
   - "Language Adaptability: Respond in English by default. If the user speaks in another language, mirror their language."

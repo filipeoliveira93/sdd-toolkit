@@ -75,6 +75,53 @@ sdd-toolkit
 2.  **Agent Building:** It reads the "Thinking Protocols" (YAML) and compiles them into your AI tool's native format.
 3.  **Execution:** You interact with the agents using the `/dev:*` commands or the new `/flow:*` triggers.
 
+## Complete Development Flow
+
+The sdd-toolkit implements a **unified hybrid workflow** that adapts to your needs, combining structured planning for new projects with agile execution for quick fixes. It ensures traceability, justification, and quality through AI-human collaboration.
+
+### Unified Hybrid Workflow Overview
+
+- **Adaptive Initiation:** Start with `/dev:start "Descrição"` for intelligent routing. The system checks existing docs and decides between quick or structured paths.
+- **Conditional Planning:** If needed, escalates to full planning (Project Architect → Requirements Engineer → Milestone Manager → Task Planner).
+- **Standardized Execution:** Coders implement tasks with logs, followed by unified validation (QA and Auditor).
+- **Finalization:** Release Manager consolidates into changelog with human confirmation.
+
+### Detailed Flow Steps
+
+#### 1. Initiation (Inteligente)
+- Command: `/dev:start "Build a login system"`
+- Action: Project Architect checks for existing `.sdd-toolkit/project.md`.
+  - If none: Enters interview mode for basics.
+  - If exists: Confirms proceed or restart.
+- Output: Updates `project.md` with hybrid notes (e.g., approval points).
+
+#### 2. Planning (Condicional)
+- If hotfix: Feature Manager routes directly to task creation.
+- If project: Milestone Manager generates roadmap with human approval.
+- Commands: `/dev:requirements`, `/dev:milestone`, `/dev:tasks`.
+- Output: `requirements.md`, `milestones.md`, `task.md`.
+
+#### 3. Execution (Padronizada)
+- Command: `/dev:coder`
+- Action: Coder reads context, implements, logs in `executions/`, marks tasks as done.
+- Modes: `/flow:debug`, `/flow:refactor`, `/flow:tdd`, etc.
+- Output: Code changes + execution logs.
+
+#### 4. Validation (Unificada)
+- Commands: `/dev:review`, `/dev:auditor`
+- Action: QA reviews code, Auditor checks consistency. Pauses for human input on ambiguities.
+- Output: Review reports in `logs/reviews/`.
+
+#### 5. Finalization (Com Confirmação)
+- Command: `/dev:release` or implicit after approval.
+- Action: Release Manager updates `changelog.md` and archives logs after human confirmation.
+- Output: Clean changelog and archived logs.
+
+### Agent Interactions
+Agents share context via `.sdd-toolkit/` files, ensuring no hallucinations. Power commands enable specialized modes. The flow promotes justification (e.g., "Why this decision?") and human-AI handoffs for reliability.
+
+For examples, see the workflow guides generated in `.sdd-toolkit/`.
+
 ## Project Structure
 
 -   `src/`: CLI source code.
@@ -84,3 +131,7 @@ sdd-toolkit
 ## License
 
 MIT
+
+---
+
+**Nota:** Uma versão em português deste README está disponível em [README.pt.md](README.pt.md).
