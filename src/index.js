@@ -10,31 +10,36 @@ const pc = require('picocolors');
 const { loadAgents } = require('./lib/agents');
 const { STACK_PROFILES } = require('./lib/profiles');
 const { setLocale, t, getLocale } = require('./lib/i18n');
-const { 
-    toGeminiTOML, 
-    toRooConfig, 
-    toKiloMarkdown, 
+const {
+    toGeminiTOML,
+    toRooConfig,
+    toKiloMarkdown,
     toCopilotInstructions,
     toCursorMDC,
     toWindsurfRules,
+    toClaudeCommand,
     toPlainSystemPrompt,
     toTraeRules
 } = require('./lib/transformers');
 const { generateWorkflowGuide } = require('./lib/docs');
+const { view } = require('./commands/view');
 
 async function main() {
     console.clear();
-    
+
     const args = process.argv.slice(2);
+
+    if (args[0] === 'view') {
+        await view();
+        process.exit(0);
+    }
+
     const isUpgrade = args.includes('upgrade') || args.includes('--upgrade');
 
-    // 0. Language Selection (Always first unless forced upgrade silent mode - but upgrade has interaction)
-    // We show this before Upgrade title to ensure upgrade messages are localized too if possible
-    // But typically flags like --lang would be better. For now, interactive.
-    
+    // 0. Language Selection
     if (!isUpgrade) {
         intro(pc.bgMagenta(pc.white(' UNIVERSAL SPEC CLI ')));
-        
+
         const lang = await select({
             message: 'Select Language / Selecione o Idioma / Seleccione el Idioma',
             options: [
@@ -48,26 +53,25 @@ async function main() {
             outro(pc.yellow('Operation cancelled.'));
             process.exit(0);
         }
-        
+
         setLocale(lang);
     } else {
-        // Default EN for upgrade for now
-        setLocale('en'); 
+        setLocale('en');
     }
 
     if (isUpgrade) {
         intro(pc.bgBlue(pc.white(t('INTRO.UPGRADE_TITLE'))));
-        
-        // Detecção de Ferramentas Existentes
+
         const tools = [];
         if (fs.existsSync(path.join(process.cwd(), '.gemini'))) tools.push('gemini');
         if (fs.existsSync(path.join(process.cwd(), '.roo'))) tools.push('roo');
         if (fs.existsSync(path.join(process.cwd(), '.cline'))) tools.push('cline');
         if (fs.existsSync(path.join(process.cwd(), '.cursor'))) tools.push('cursor');
-        if (fs.existsSync(path.join(process.cwd(), '.windsurfrules'))) tools.push('windsurf');
+        if (fs.existsSync(path.join(process.cwd(), '.windsurf'))) tools.push('windsurf');
+        if (fs.existsSync(path.join(process.cwd(), '.claude'))) tools.push('claude');
         if (fs.existsSync(path.join(process.cwd(), '.trae'))) tools.push('trae');
         if (fs.existsSync(path.join(process.cwd(), '.kilo'))) tools.push('kilo');
-        if (fs.existsSync(path.join(process.cwd(), '.github'))) tools.push('copilot'); // Assume copilot se .github existir
+        if (fs.existsSync(path.join(process.cwd(), '.github'))) tools.push('copilot');
         if (fs.existsSync(path.join(process.cwd(), '.opencode'))) tools.push('opencode');
         if (fs.existsSync(path.join(process.cwd(), 'prompts'))) tools.push('web');
 
@@ -79,12 +83,12 @@ async function main() {
             outro(pc.green(t('UPGRADE.SUCCESS')));
             process.exit(0);
         }
-    } 
+    }
 
     // 1. Automatic Scaffold
     const s = spinner();
     s.start(t('SCAFFOLD.LOADING'));
-    
+
     try {
         const stats = generateWorkflowGuide(process.cwd());
         if (stats.created > 0) {
@@ -96,7 +100,7 @@ async function main() {
         s.stop(pc.red(t('SCAFFOLD.ERROR')));
     }
 
-    // 2. Feature 5: Stack Selection (Profile)
+    // 2. Feature 5: Stack Selection
     const stackOptions = Object.entries(STACK_PROFILES).map(([key, profile]) => ({
         value: key,
         label: profile.label
@@ -108,12 +112,12 @@ async function main() {
         initialValue: 'generic'
     });
 
-    if (typeof stackProfile === 'symbol') { 
+    if (typeof stackProfile === 'symbol') {
         outro(pc.yellow(t('GENERAL.CANCELLED')));
-        process.exit(0); 
+        process.exit(0);
     }
 
-    // 3. Feature 3: Global Rules (Optional)
+    // 3. Feature 3: Global Rules
     const globalRules = await text({
         message: t('SETUP.GLOBAL_RULES'),
         placeholder: t('SETUP.GLOBAL_RULES_HINT'),
@@ -125,7 +129,7 @@ async function main() {
         process.exit(0);
     }
 
-    // 4. Tool Selection (Multiple choice)
+    // 4. Tool Selection
     const tools = await multiselect({
         message: t('SETUP.TOOL_SELECT'),
         options: [
@@ -133,12 +137,13 @@ async function main() {
             { value: 'roo', label: t('TOOLS.ROO'), hint: '.roo/ & custom_modes.json' },
             { value: 'cline', label: t('TOOLS.CLINE'), hint: '.cline/ & custom_modes.json' },
             { value: 'cursor', label: t('TOOLS.CURSOR'), hint: '.cursor/rules/*.mdc' },
-            { value: 'windsurf', label: t('TOOLS.WINDSURF'), hint: '.windsurfrules' },
+            { value: 'windsurf', label: t('TOOLS.WINDSURF'), hint: '.windsurf/workflows/*.md' },
+            { value: 'claude', label: 'Claude Code', hint: '.claude/commands/openspec/*.md' },
             { value: 'trae', label: t('TOOLS.TRAE'), hint: '.trae/instructions.md' },
             { value: 'kilo', label: t('TOOLS.KILO'), hint: '.kilo/prompts/*.md' },
             { value: 'copilot', label: t('TOOLS.COPILOT'), hint: '.github/copilot-instructions.md' },
             { value: 'web', label: t('TOOLS.WEB'), hint: 'prompts/*.txt' },
-            { value: 'opencode', label: t('TOOLS.OPENCODE'), hint: '.opencode/*.md' },
+            { value: 'opencode', label: t('TOOLS.OPENCODE'), hint: '.opencode/*.md' }
         ],
         required: true,
         hint: t('SETUP.TOOL_HINT')
@@ -154,7 +159,6 @@ async function main() {
         process.exit(0);
     }
 
-    // Pass locale to installation process
     await processAgentsInstallation(tools, { stackProfile, globalRules, locale: getLocale() });
 
     outro(pc.green(t('SETUP.SUCCESS')));
@@ -174,107 +178,153 @@ async function processAgentsInstallation(tools, options) {
 
         s.message(t('INSTALL.INSTALLING', tools.join(', ')));
 
-        // Iterate over each selected tool
-        for (const tool of tools) {
-            
-            // Tool-Specific Installation
-            if (tool === 'gemini') {
+        const toolHandlers = {
+            gemini: async (validAgents, options) => {
                 const targetDir = path.join(process.cwd(), '.gemini', 'commands', 'dev');
                 await fsp.mkdir(targetDir, { recursive: true });
 
-                await Promise.all(validAgents.map(agent => {
-                    const toml = toGeminiTOML(agent, options);
-                    const fileName = `${agent.originalName}.toml`; 
-                    return fsp.writeFile(path.join(targetDir, fileName), toml);
-                }));
-            } 
-            else if (tool === 'roo' || tool === 'cline') {
-                const configDir = tool === 'roo' ? '.roo' : '.cline';
-                const targetDir = path.join(process.cwd(), configDir);
+                await Promise.all(
+                    validAgents.map((agent) => {
+                        const toml = toGeminiTOML(agent, options);
+                        const fileName = `${agent.originalName}.toml`;
+                        return fsp.writeFile(path.join(targetDir, fileName), toml);
+                    })
+                );
+            },
+            roo: async (validAgents, options) => {
+                const targetDir = path.join(process.cwd(), '.roo');
                 await fsp.mkdir(targetDir, { recursive: true });
 
-                await Promise.all(validAgents.map(agent => {
-                    const md = toKiloMarkdown(agent, options);
-                    return fsp.writeFile(path.join(targetDir, `${agent.slug}.md`), md);
-                }));
+                await Promise.all(
+                    validAgents.map((agent) => {
+                        const md = toKiloMarkdown(agent, options);
+                        return fsp.writeFile(path.join(targetDir, `${agent.slug}.md`), md);
+                    })
+                );
 
-                const modes = validAgents.map(agent => toRooConfig(agent, agent.slug, options));
+                const modes = validAgents.map((agent) => toRooConfig(agent, agent.slug, options));
                 const jsonContent = JSON.stringify({ customModes: modes }, null, 2);
-                const fileName = `${tool}_custom_modes.json`;
-                await fsp.writeFile(path.join(process.cwd(), fileName), jsonContent);
-            } 
-            else if (tool === 'kilo') {
+                await fsp.writeFile(path.join(process.cwd(), 'roo_custom_modes.json'), jsonContent);
+            },
+            cline: async (validAgents, options) => {
+                const targetDir = path.join(process.cwd(), '.cline');
+                await fsp.mkdir(targetDir, { recursive: true });
+
+                await Promise.all(
+                    validAgents.map((agent) => {
+                        const md = toKiloMarkdown(agent, options);
+                        return fsp.writeFile(path.join(targetDir, `${agent.slug}.md`), md);
+                    })
+                );
+
+                const modes = validAgents.map((agent) => toRooConfig(agent, agent.slug, options));
+                const jsonContent = JSON.stringify({ customModes: modes }, null, 2);
+                await fsp.writeFile(path.join(process.cwd(), 'cline_custom_modes.json'), jsonContent);
+            },
+            windsurf: async (validAgents, options) => {
+                const targetDir = path.join(process.cwd(), '.windsurf', 'workflows');
+                await fsp.mkdir(targetDir, { recursive: true });
+
+                await Promise.all(
+                    validAgents.map((agent) => {
+                        const md = toWindsurfRules(agent, options);
+                        return fsp.writeFile(path.join(targetDir, `${agent.slug}.md`), md);
+                    })
+                );
+            },
+            claude: async (validAgents, options) => {
+                const targetDir = path.join(process.cwd(), '.claude', 'commands', 'openspec');
+                await fsp.mkdir(targetDir, { recursive: true });
+
+                await Promise.all(
+                    validAgents.map((agent) => {
+                        const md = toClaudeCommand(agent, options);
+                        return fsp.writeFile(path.join(targetDir, `${agent.slug}.md`), md);
+                    })
+                );
+            },
+            cursor: async (validAgents, options) => {
+                const rulesDir = path.join(process.cwd(), '.cursor', 'rules');
+                await fsp.mkdir(rulesDir, { recursive: true });
+
+                await Promise.all(
+                    validAgents.map((agent) => {
+                        const mdc = toCursorMDC(agent, options);
+                        return fsp.writeFile(path.join(rulesDir, `${agent.slug}.mdc`), mdc);
+                    })
+                );
+            },
+            kilo: async (validAgents, options) => {
                 const targetDir = path.join(process.cwd(), '.kilo', 'prompts');
                 await fsp.mkdir(targetDir, { recursive: true });
 
-                await Promise.all(validAgents.map(agent => {
-                    const md = toKiloMarkdown(agent, options);
-                    return fsp.writeFile(path.join(targetDir, `${agent.slug}.md`), md);
-                }));
-            }
-            else if (tool === 'copilot') {
+                await Promise.all(
+                    validAgents.map((agent) => {
+                        const md = toKiloMarkdown(agent, options);
+                        return fsp.writeFile(path.join(targetDir, `${agent.slug}.md`), md);
+                    })
+                );
+            },
+            copilot: async (validAgents, options) => {
                 const githubDir = path.join(process.cwd(), '.github');
                 const agentsDir = path.join(githubDir, 'agents');
                 await fsp.mkdir(agentsDir, { recursive: true });
 
-                await Promise.all(validAgents.map(agent => {
-                    const md = toCopilotInstructions(agent, options);
-                    return fsp.writeFile(path.join(agentsDir, `${agent.slug}.md`), md);
-                }));
+                await Promise.all(
+                    validAgents.map((agent) => {
+                        const md = toCopilotInstructions(agent, options);
+                        return fsp.writeFile(path.join(agentsDir, `${agent.slug}.md`), md);
+                    })
+                );
 
-                const mainAgent = validAgents.find(a => a.slug.includes('coder')) || validAgents[0];
+                const mainAgent = validAgents.find((a) => a.slug.includes('coder')) || validAgents[0];
                 const mainInstructions = toCopilotInstructions(mainAgent, options);
                 await fsp.writeFile(path.join(githubDir, 'copilot-instructions.md'), mainInstructions);
-            }
-            else if (tool === 'cursor') {
-                const rulesDir = path.join(process.cwd(), '.cursor', 'rules');
-                await fsp.mkdir(rulesDir, { recursive: true });
-
-                await Promise.all(validAgents.map(agent => {
-                    const mdc = toCursorMDC(agent, options);
-                    return fsp.writeFile(path.join(rulesDir, `${agent.slug}.mdc`), mdc);
-                }));
-            }
-            else if (tool === 'windsurf') {
-                const mainAgent = validAgents.find(a => a.slug.includes('coder')) || validAgents[0];
-                const rules = toWindsurfRules(mainAgent, options);
-                await fsp.writeFile(path.join(process.cwd(), '.windsurfrules'), rules);
-            }
-            else if (tool === 'trae') {
+            },
+            trae: async (validAgents, options) => {
                 const traeDir = path.join(process.cwd(), '.trae');
                 await fsp.mkdir(traeDir, { recursive: true });
-                
-                const mainAgent = validAgents.find(a => a.slug.includes('coder')) || validAgents[0];
+
+                const mainAgent = validAgents.find((a) => a.slug.includes('coder')) || validAgents[0];
                 const rules = toTraeRules(mainAgent, options);
                 await fsp.writeFile(path.join(traeDir, 'instructions.md'), rules);
-            }
-            else if (tool === 'web') {
+            },
+            web: async (validAgents, options) => {
                 const targetDir = path.join(process.cwd(), 'prompts');
                 await fsp.mkdir(targetDir, { recursive: true });
 
-                await Promise.all(validAgents.map(agent => {
-                    const txt = toPlainSystemPrompt(agent, options);
-                    return fsp.writeFile(path.join(targetDir, `${agent.slug}.txt`), txt);
-                }));
-            }
-            else if (tool === 'opencode') {
+                await Promise.all(
+                    validAgents.map((agent) => {
+                        const txt = toPlainSystemPrompt(agent, options);
+                        return fsp.writeFile(path.join(targetDir, `${agent.slug}.txt`), txt);
+                    })
+                );
+            },
+            opencode: async (validAgents, options) => {
                 const targetDir = path.join(process.cwd(), '.opencode');
                 await fsp.mkdir(targetDir, { recursive: true });
 
-                await Promise.all(validAgents.map(agent => {
-                    const md = toKiloMarkdown(agent, options);
-                    return fsp.writeFile(path.join(targetDir, `${agent.slug}.md`), md);
-                }));
+                await Promise.all(
+                    validAgents.map((agent) => {
+                        const md = toKiloMarkdown(agent, options);
+                        return fsp.writeFile(path.join(targetDir, `${agent.slug}.md`), md);
+                    })
+                );
+            }
+        };
+
+        for (const tool of tools) {
+            const handler = toolHandlers[tool];
+            if (handler) {
+                await handler(validAgents, options);
             }
         }
-        
+
         s.stop(t('INSTALL.FINISHED'));
-        
-        // Consolidated feedback
+
         if (tools.includes('roo') || tools.includes('cline')) {
             note(t('INSTALL.ROO_WARNING'), t('INSTALL.ROO_WARNING_TITLE'));
         }
-
     } catch (e) {
         s.stop(pc.red(`${t('INSTALL.FAILED')}: ${e.message}`));
         process.exit(1);

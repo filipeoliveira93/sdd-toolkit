@@ -17,9 +17,12 @@ The main idea is to stop creating prompts from scratch and install a proven, str
 
 ### 2. "Power Commands"
 Agents come equipped with special execution modes triggered by commands:
-- **`/flow:debug`**: Paste an error log, and the Coder enters "Surgical Mode" to fix it immediately without theoretical explanations.
+- **`/flow:debug`**: Paste an error log, and the Coder enters "Surgical Mode" to fix it immediately.
 - **`/flow:tdd`**: Forces the Red-Green-Refactor cycle for high-quality code.
-- **`/flow:docs`**: Automatically generates JSDoc/Comments for existing files.
+- **`/flow:refactor`**: Applies Clean Code principles to an existing file.
+- **`/flow:gen-tests`**: Automatically generates unit tests for your code.
+- **`/flow:security`**: Scans your code/plan for vulnerabilities (OWASP).
+- **`/flow:sync`**: Updates the documentation (`project.md`) to match the actual code (Reverse Engineering).
 
 ### 3. AI Agent Installation
 Reads agnostic definitions (YAML) and converts them to specific formats:
@@ -44,7 +47,7 @@ The system installs a team of specialized agents:
 ### ⚡ Execution Agents
 - **@Task Planner:** Breaks down milestones into atomic tasks.
 - **@Feature Manager:** The agile entry point. Handles requests like "Add Google Login" and decides the best path (Hotfix vs Milestone).
-- **@Coder:** The senior developer. Supports TDD and Debug modes.
+- **@Coder:** The senior developer. Supports TDD, Debug, Refactor, and Test Generation modes.
 
 ### 🛡️ Quality Agents
 - **@Auditor:** Checks consistency between requirements and tasks.

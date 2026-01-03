@@ -38,9 +38,25 @@ Some agents have special modes to speed up your work. Use them to skip conversat
 -   **`/flow:tdd`**
     -   **Usage:** `/flow:tdd <Feature Description>`
     -   **Action:** Initiates the Red-Green-Refactor cycle. It first creates the failing test, waits for you to run it, and only then writes the code.
+-   **`/flow:refactor`**
+    -   **Usage:** `/flow:refactor` (with a file open)
+    -   **Action:** Applies Clean Code and SOLID principles without changing business logic.
+-   **`/flow:gen-tests`**
+    -   **Usage:** `/flow:gen-tests`
+    -   **Action:** Scans the code and generates a comprehensive test suite (unit/integration) using the project's stack.
 -   **`/flow:docs`**
     -   **Usage:** `/flow:docs` (with a file open)
     -   **Action:** Adds JSDoc/Comments to existing code without changing the logic.
+
+### `@Auditor`
+-   **`/flow:security`**
+    -   **Usage:** `/flow:security`
+    -   **Action:** Scans the code/plan against OWASP Top 10 vulnerabilities (SQL Injection, XSS, etc.).
+
+### `@Project Architect`
+-   **`/flow:sync`**
+    -   **Usage:** `/flow:sync`
+    -   **Action:** Reads the actual source code and updates `project.md` to reflect the reality (Reverse Engineering).
 
 ---
 
@@ -67,42 +83,42 @@ The agents have been upgraded to be smarter and more transparent.
 ### 🏗️ 1. Project Architect
 **Role:** The Visionary.
 **Goal:** Translate your idea into a Specification.
-- **Output:** `.sdd-toolkit/project.md`
+-   **Output:** `.sdd-toolkit/project.md`
 
 ### 🧱 2. Requirements Engineer
 **Role:** The Tech Lead.
 **Goal:** Lock in technical decisions and Stack.
-- **Feature:** *Config Scan* (Reads your stack automatically).
-- **Output:** `.sdd-toolkit/requirements.md`
+-   **Feature:** *Config Scan* (Reads your stack automatically).
+-   **Output:** `.sdd-toolkit/requirements.md`
 
 ### 🗺️ 3. Milestone Manager
 **Role:** The Strategist.
 **Goal:** Generate the delivery roadmap.
-- **Output:** `.sdd-toolkit/milestones.md`
+-   **Output:** `.sdd-toolkit/milestones.md`
 
 ### 📋 4. Task Planner
 **Role:** The Project Manager.
 **Goal:** Break down Milestones into atomic tasks.
-- **Feature:** *Update Mode* (Allows adding tasks without recreating the file).
-- **Output:** `.sdd-toolkit/task.md`
+-   **Feature:** *Update Mode* (Allows adding tasks without recreating the file).
+-   **Output:** `.sdd-toolkit/task.md`
 
 ### ✨ 5. Feature Manager
 **Role:** The Facilitator.
 **Goal:** Inject new demands without bureaucracy.
-- **Action:** Decides if a new feature is a Task, Milestone, or Project Change.
+-   **Action:** Decides if a new feature is a Task, Milestone, or Project Change.
 
 ### 💻 6. Coder
 **Role:** The Builder.
 **Goal:** Execute code with quality.
-- **Modes:** Standard, TDD, Debug, Docs.
-- **Buffer:** `work_log.md`
+-   **Modes:** Standard, TDD, Debug, Refactor, Gen-Tests, Docs.
+-   **Buffer:** `.sdd-toolkit/logs/executions/` (Separate files)
 
 ### ⚖️ 7. QA Engineer
 **Role:** The Inspector.
 **Goal:** Validate implementation against Requirements.
-- **Output:** `.sdd-toolkit/logs/review_log.md`
+-   **Output:** `.sdd-toolkit/logs/reviews/`
 
 ### 🏗️ 8. DevOps Engineer
 **Role:** Infrastructure Specialist.
 **Goal:** Docker, CI/CD, Linters, Configs.
-- **Protocol:** *Security First* (Never commits secrets).
+-   **Protocol:** *Security First* (Never commits secrets).

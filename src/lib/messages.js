@@ -58,6 +58,22 @@ const EN = {
         EN: 'Always reply in English unless told otherwise.',
         PT_BR: 'Responda sempre em Português (Brasil), a menos que solicitado o contrário.',
         ES: 'Responda siempre en Español, a menos que se solicite lo contrario.',
+    },
+    DASHBOARD: {
+        TITLE: '🚀 PROJECT:',
+        PHASE: '📅 PHASE:',
+        STATUS: '📡 STATUS:',
+        OVERALL: 'OVERALL STATUS',
+        COMPLETED: 'Completed',
+        PENDING: 'Pending',
+        RECENT: 'RECENT ACTIVITY',
+        NO_ACTIVITY: 'No recent activity recorded.',
+        ACTION: ' 👉 ACTION: ',
+        HINT: 'Use',
+        HINT_SUFFIX: 'to work.',
+        LOADING: 'Loading Dashboard...',
+        SUCCESS: 'Dashboard updated.',
+        ERROR: 'Error loading dashboard.'
     }
 };
 
@@ -115,7 +131,23 @@ const PT_BR = {
     LANGUAGE_RULES: {
         EN: 'Always reply in English unless told otherwise.',
         PT_BR: 'Responda sempre em Português (Brasil), a menos que solicitado o contrário.',
-        ES: 'Responda siempre en Español, a menos que se solicite lo contrario.',
+        ES: 'Responda sempre en Español, a menos que se solicite lo contrario.',
+    },
+    DASHBOARD: {
+        TITLE: '🚀 PROJETO:',
+        PHASE: '📅 FASE:',
+        STATUS: '📡 STATUS:',
+        OVERALL: 'STATUS GERAL',
+        COMPLETED: 'Concluídas',
+        PENDING: 'Pendentes',
+        RECENT: 'ATIVIDADE RECENTE',
+        NO_ACTIVITY: 'Nenhuma atividade recente registrada.',
+        ACTION: ' 👉 AÇÃO: ',
+        HINT: 'Use',
+        HINT_SUFFIX: 'para trabalhar.',
+        LOADING: 'Carregando Dashboard...',
+        SUCCESS: 'Dashboard atualizado.',
+        ERROR: 'Erro ao carregar dashboard.'
     }
 };
 
@@ -134,12 +166,13 @@ const ES = {
         DETECTED_TITLE: 'Actualizando...',
         SUCCESS: '¡Agentes actualizados con éxito! 🚀',
     },
-        SCAFFOLD: {
-            LOADING: 'Verificando estrutura del espacio de trabajo...', 
-            SUCCESS: '✔ Estructura de carpetas (.sdd-toolkit/) creada.',
-            ALREADY_EXISTS: '✔ Estructura de carpetas (.sdd-toolkit/) verificada.',
-            ERROR: 'Fallo al verificar estructura del espacio de trabalho.',
-        },    SETUP: {
+    SCAFFOLD: {
+        LOADING: 'Verificando estructura del espacio de trabajo...',
+        SUCCESS: '✔ Estructura de carpetas (.sdd-toolkit/) creada.',
+        ALREADY_EXISTS: '✔ Estructura de carpetas (.sdd-toolkit/) verificada.',
+        ERROR: 'Fallo al verificar estructura del espacio de trabajo.',
+    },
+    SETUP: {
         STACK_SELECT: '¿Cuál es su perfil tecnológico (Stack)?',
         GLOBAL_RULES: '¿Desea agregar Reglas Globales para TODOS los agentes?',
         GLOBAL_RULES_HINT: 'Ej: Siempre responda en Español; Use Conventional Commits...',
@@ -171,8 +204,24 @@ const ES = {
     },
     LANGUAGE_RULES: {
         EN: 'Always reply in English unless told otherwise.',
-        PT_BR: 'Responda sempre em Português (Brasil), a menos que solicitado o contrário.',
+        PT_BR: 'Responda siempre em Português (Brasil), a menos que solicitado o contrário.',
         ES: 'Responda siempre en Español, a menos que se solicite lo contrario.',
+    },
+    DASHBOARD: {
+        TITLE: '🚀 PROYECTO:',
+        PHASE: '📅 FASE:',
+        STATUS: '📡 ESTADO:',
+        OVERALL: 'ESTADO GENERAL',
+        COMPLETED: 'Completadas',
+        PENDING: 'Pendientes',
+        RECENT: 'ACTIVIDAD RECIENTE',
+        NO_ACTIVITY: 'No hay actividad reciente registrada.',
+        ACTION: ' 👉 ACCIÓN: ',
+        HINT: 'Use',
+        HINT_SUFFIX: 'para trabajar.',
+        LOADING: 'Cargando Dashboard...',
+        SUCCESS: 'Dashboard actualizado.',
+        ERROR: 'Error al cargar dashboard.'
     }
 };
 

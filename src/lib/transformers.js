@@ -28,7 +28,7 @@ function getLanguageRule(locale = 'en') {
 function toGeminiTOML(agent, options = {}) {
     const languageRule = getLanguageRule(options.locale);
     // Escapa aspas duplas na descrição
-    const description = (agent.description || agent.role).replace(/"/g, '\\"');
+    const description = (agent.description || agent.role).replace(/"/g, '\"');
     
     // Constrói o prompt completo
     const parts = [
@@ -51,7 +51,7 @@ function toGeminiTOML(agent, options = {}) {
     const fullPrompt = parts.join('\n');
     
     // Escapa aspas triplas para o bloco multilinha TOML
-    const escapedPrompt = fullPrompt.replace(/"""/g, '\\"\\\"\\\"');
+    const escapedPrompt = fullPrompt.replace(/"""/g, '\"\"\"');
     
     // Monta o TOML final
     let toml = `description = "${description}"\n`;
@@ -61,7 +61,7 @@ function toGeminiTOML(agent, options = {}) {
     if (allRules.length > 0) {
         toml += 'rules = [\n';
         allRules.forEach(rule => {
-            const escaped = rule.replace(/\\/g, '\\\\').replace(/"/g, '\\"');
+            const escaped = rule.replace(/\\/g, '\\\\').replace(/"/g, '\"');
             toml += `  "${escaped}",\n`;
         });
         toml += ']\n';
@@ -181,7 +181,8 @@ ${allRules.length > 0 ? '## Rules\n' + allRules.map(r => `- ${r}`).join('\n') : 
 }
 
 /**
- * Converte para Windsurf (.windsurfrules)
+ * Converte para Windsurf Workflow (.windsurf/workflows/*.md)
+ * Cascade reconhece esses arquivos como comandos de workflow
  */
 function toWindsurfRules(agent, options = {}) {
     const languageRule = getLanguageRule(options.locale);
@@ -195,6 +196,29 @@ Role: ${agent.role}
 ${agent.systemPrompt.trim()}
 
 ${allRules.length > 0 ? '## Guidelines\n' + allRules.map(r => `- ${r}`).join('\n') : ''}
+`;
+}
+
+/**
+ * Converte para Claude Code Command (.claude/commands/openspec/*.md)
+ */
+function toClaudeCommand(agent, options = {}) {
+    const languageRule = getLanguageRule(options.locale);
+    const allRules = [languageRule, ...(agent.rules || [])];
+
+    return `--- 
+name: OpenSpec: ${agent.name}
+description: ${agent.description || agent.role}
+category: OpenSpec
+---
+# ${agent.name} ${agent.emoji}
+
+Role: ${agent.role}
+
+## Instructions
+${agent.systemPrompt.trim()}
+
+${allRules.length > 0 ? '## Rules\n' + allRules.map(r => `- ${r}`).join('\n') : ''}
 `;
 }
 
@@ -241,6 +265,7 @@ module.exports = {
     toCopilotInstructions,
     toCursorMDC,
     toWindsurfRules,
+    toClaudeCommand,
     toPlainSystemPrompt,
     toTraeRules
 };

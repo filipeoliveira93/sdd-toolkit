@@ -67,3 +67,13 @@
 **Self-Check:**
 - [x] Documentation updated
 ---
+**2026-01-02 Task:** [Feature] Implement Advanced Flow Commands | **Status:** [Completed]
+**Changes:**
+- Implemented `/flow:refactor` and `/flow:gen-tests` in `dev.coder.yaml`.
+- Implemented `/flow:security` in `dev.auditor.yaml`.
+- Implemented `/flow:sync` in `dev.project.yaml`.
+- Updated all documentation to reflect these new capabilities.
+**Self-Check:**
+- [x] Definitions Updated
+- [x] Docs Updated
+---

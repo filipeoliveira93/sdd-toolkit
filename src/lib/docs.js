@@ -10,6 +10,7 @@ function generateWorkflowGuide(baseDir) {
     
     // 1. Define folder structure based on new logging architecture
     const folders = [
+        path.join(docsDir, 'features'),
         path.join(docsDir, 'logs'),
         path.join(docsDir, 'logs', 'executions'),
         path.join(docsDir, 'logs', 'reviews'),
