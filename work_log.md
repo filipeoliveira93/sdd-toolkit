@@ -37,3 +37,33 @@
 **Self-Check:**
 - [x] Definitions Updated
 ---
+**2026-01-02 Task:** [Feature] Implement Debug Flow | **Status:** [Completed]
+**Changes:**
+- Updated `definitions/dev.coder.yaml` to include `# COMMANDS & EXECUTION FLOWS`.
+- Implemented `/flow:debug` trigger for rapid error fixing.
+- Defined protocol: Analyze Stack -> Context Check -> Diagnosis -> Fix.
+**Self-Check:**
+- [x] Definition Updated
+---
+**2026-01-02 Task:** [Improvement] Cognitive Protocol Upgrade | **Status:** [Completed]
+**Changes:**
+- Injected `# THINKING PROCESS` into `dev.auditor.yaml`, `dev.review.yaml`, and `dev.ops.yaml`.
+- Defined strict sequential steps (Extraction -> Mapping -> Verification -> Reporting) to prevent hallucinations.
+**Self-Check:**
+- [x] Definitions Updated
+---
+**2026-01-02 Task:** [Improvement] Justification Protocol | **Status:** [Completed]
+**Changes:**
+- Injected `# JUSTIFICATION PROTOCOL` into `dev.project.yaml`, `dev.requirements.yaml`, `dev.milestone.yaml`, and `dev.coder.yaml`.
+- Mandated the explanation of "Why" for every significant decision (Tech Stack, Architecture, Prioritization).
+**Self-Check:**
+- [x] Definitions Updated
+---
+**2026-01-02 Task:** [Documentation] Overhaul Documentation | **Status:** [Completed]
+**Changes:**
+- Rewrote root `README.md` to highlight new agile features and power commands.
+- Rewrote `.sdd-toolkit/README.md` (Workflow Guide) to explain the new Hybrid Agile flow, commands, and cognitive protocols.
+- Standardized both documents in English for consistency.
+**Self-Check:**
+- [x] Documentation updated
+---

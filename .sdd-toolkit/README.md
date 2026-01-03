@@ -1,75 +1,108 @@
 # 🤖 Agent Workflow Guide
 
-Este documento descreve o fluxo de desenvolvimento padrão usando os Agentes instalados.
-O sistema segue um processo **Waterfall** para planejamento (precisão) e **Iterativo** para execução.
+This document describes how to operate the "AI Squad" installed by `sdd-toolkit`.
+The system adopts a **Hybrid approach**: Structured Planning for large features and Agile Execution for day-to-day tasks.
 
 ---
 
-## 1. 🏗️ Project Spec (@Project Architect)
-**Role:** O Visionário.
-**Goal:** Traduzir sua ideia vaga em uma Especificação concreta com "Project Principles" definidos.
-- **Comando:** \
-/dev:project "Eu quero um App de Todo que..."
-- **Saída:** 
-`.sdd-toolkit/project.md`
+## ⚡ Workflows
 
-## 2. 🧱 Requirements Engineering (@Requirements Engineer)
-**Role:** O Tech Lead.
-**Goal:** Fechar decisões técnicas (Stack, Banco de Dados, Libs).
-- **Why?** Evita que o Coder "invente" arquitetura. Cria o "Contrato".
-- **Comando:** 
-/dev:requirements
-- **Saída:** 
-`.sdd-toolkit/requirements.md`
+### 1. 🟢 Quick Flow (Hotfixes & Small Features)
+Use for bugs, minor improvements, or when you already know what you want.
 
-## 3. 🗺️ Roadmap Strategy (@Milestone Manager)
-**Role:** O Estrategista.
-**Goal:** Fatiar o projeto em fases de entrega (MVPs).
-- **Comando:** 
-/dev:milestone
-- **Saída:** 
-`.sdd-toolkit/milestones.md`
+1.  **Start:** Call the `@Feature Manager`.
+    -   **Command:** `/dev:feature "Fix login error"` or `/dev:feature "Add logout button"`
+2.  **Decision:** The agent will ask if you want to add the task directly to `task.md` (Current Sprint) or create a new Milestone.
+3.  **Execution:** The agent inserts the task into the plan.
+4.  **Code:** Call the `@Coder` to execute the new task.
 
-## 4. 📋 Task Planning (@Task Planner)
-**Role:** O Gerente.
-**Goal:** Quebrar um Milestone específico em tarefas atômicas para desenvolvedores.
-- **Why?** IAs falham com contextos gigantes. Tarefas pequenas = Código perfeito.
-- **Comando:** 
-/dev:tasks <Milestone_ID>
-- **Saída:** 
-`.sdd-toolkit/task.md`
+### 2. 🔵 Structured Flow (New Projects or Large Modules)
+Use to start a project from scratch or for major refactors.
 
-## 5. 🕵️ Blueprint Audit (@Auditor)
-**Role:** O Guardião.
-**Goal:** Validar consistência entre **Requirements** e **Tasks**.
-- **Comando:** 
-/dev:auditor
-- **Saída:** 
-`audit_report.md`
+1.  **Specification:** `/dev:project` (Generates `project.md`)
+2.  **Requirements:** `/dev:requirements` (Defines Stack & Rules)
+3.  **Roadmap:** `/dev:milestone` (Breaks into phases)
+4.  **Planning:** `/dev:tasks` (Generates technical tasks)
+5.  **Execution:** `/dev:coder` (Implements)
 
-## 6. 💻 Implementation (@Coder)
-**Role:** O Construtor.
-**Goal:** Executar *uma tarefa por vez* do arquivo 
-`task.md`.
-- **Comando:** 
-/dev:coder <Task_ID>
-- **Buffer:** 
-`work_log.md`
+---
 
-## 7. ⚖️ Quality Assurance (@QA Engineer)
-**Role:** O Inspetor.
-**Goal:** Verificar se a implementação bate com os Requisitos.
-- **Comando:** 
-/dev:review <Task_ID>
-- **Saída:** 
-`.sdd-toolkit/logs/review_log.md`
+## 🛠️ Power Commands
 
-## 8. 📦 Release Management (@Release Manager)
-**Role:** O Historiador.
-**Goal:** Consolidar o 
-`work_log.md` em um 
-`changelog.md` permanente.
-- **Comando:** 
-/dev:log
-- **Saída:** 
-`changelog.md`
+Some agents have special modes to speed up your work. Use them to skip conversations and get straight to the action.
+
+### `@Coder`
+-   **`/flow:debug`**
+    -   **Usage:** `/flow:debug <Paste Error Log Here>`
+    -   **Action:** The agent skips theoretical explanations, analyzes the stack trace, and provides *only* the corrected code.
+-   **`/flow:tdd`**
+    -   **Usage:** `/flow:tdd <Feature Description>`
+    -   **Action:** Initiates the Red-Green-Refactor cycle. It first creates the failing test, waits for you to run it, and only then writes the code.
+-   **`/flow:docs`**
+    -   **Usage:** `/flow:docs` (with a file open)
+    -   **Action:** Adds JSDoc/Comments to existing code without changing the logic.
+
+---
+
+## 🧠 Cognitive Protocols
+
+The agents have been upgraded to be smarter and more transparent.
+
+1.  **Thinking Process:**
+    -   Agents like `@Auditor`, `@QA`, and `@DevOps` now "think before they speak." They follow a sequential mental checklist to avoid hallucinations.
+    -   *Example:* The Auditor cross-references every Requirement with the Tasks before giving the green light.
+
+2.  **Justification Protocol (The "Why?"):**
+    -   Strategic agents (`@Project`, `@Requirements`, `@Coder`) are required to justify their decisions.
+    -   *Example:* The Coder won't just use a library; it will explain *why* it chose that specific library for your context.
+
+3.  **Smart Context (Config Scan):**
+    -   The `@Requirements Engineer` automatically reads your `package.json`, `Cargo.toml`, or `requirements.txt`.
+    -   You no longer need to explain your stack repeatedly.
+
+---
+
+## 👥 The Squad Roles
+
+### 🏗️ 1. Project Architect
+**Role:** The Visionary.
+**Goal:** Translate your idea into a Specification.
+- **Output:** `.sdd-toolkit/project.md`
+
+### 🧱 2. Requirements Engineer
+**Role:** The Tech Lead.
+**Goal:** Lock in technical decisions and Stack.
+- **Feature:** *Config Scan* (Reads your stack automatically).
+- **Output:** `.sdd-toolkit/requirements.md`
+
+### 🗺️ 3. Milestone Manager
+**Role:** The Strategist.
+**Goal:** Generate the delivery roadmap.
+- **Output:** `.sdd-toolkit/milestones.md`
+
+### 📋 4. Task Planner
+**Role:** The Project Manager.
+**Goal:** Break down Milestones into atomic tasks.
+- **Feature:** *Update Mode* (Allows adding tasks without recreating the file).
+- **Output:** `.sdd-toolkit/task.md`
+
+### ✨ 5. Feature Manager
+**Role:** The Facilitator.
+**Goal:** Inject new demands without bureaucracy.
+- **Action:** Decides if a new feature is a Task, Milestone, or Project Change.
+
+### 💻 6. Coder
+**Role:** The Builder.
+**Goal:** Execute code with quality.
+- **Modes:** Standard, TDD, Debug, Docs.
+- **Buffer:** `work_log.md`
+
+### ⚖️ 7. QA Engineer
+**Role:** The Inspector.
+**Goal:** Validate implementation against Requirements.
+- **Output:** `.sdd-toolkit/logs/review_log.md`
+
+### 🏗️ 8. DevOps Engineer
+**Role:** Infrastructure Specialist.
+**Goal:** Docker, CI/CD, Linters, Configs.
+- **Protocol:** *Security First* (Never commits secrets).
