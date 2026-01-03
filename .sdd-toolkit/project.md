@@ -14,7 +14,7 @@ last_updated: 2025-12-30
 - **Standardize AI Workflows:** Enforce a proven development lifecycle (Spec -> Plan -> Code) across different AI tools to reduce hallucinations and improve code quality.
 - **Portability:** Allow developers to switch between AI tools (e.g., from Cursor to Roo Code) without losing their agent workflow.
 - **Automation:** Eliminate the manual setup of prompts, system instructions, and configuration files for each AI tool.
-- **Context Management:** Automatically structure the project documentation (`docs/`) to serve as the "long-term memory" for AI agents.
+- **Context Management:** Automatically structure the project documentation (`.sdd-toolkit/`) to serve as the "long-term memory" for AI agents.
 
 ## 3. Actors and Personas
 - **Developer (User):** The human operator who runs the toolkit to set up their environment and interacts with the installed AI agents to build software.
@@ -25,7 +25,7 @@ last_updated: 2025-12-30
 ### Module: Core CLI
 - **Installation Wizard:** Interactive command-line interface (using `@clack/prompts`) to guide the user through setup.
 - **Environment Detection:** Detects or asks for the operating system (Windows/Unix) to tailor shell commands in agent instructions.
-- **Docs Scaffolding:** Automatically creates the `docs/` and `docs/logs/` directory structure required by the workflow.
+- **Docs Scaffolding:** Automatically creates the `.sdd-toolkit/` and `.sdd-toolkit/logs/` directory structure required by the workflow.
 
 ### Module: Definitions Engine
 - **YAML Loader:** Reads agent definitions from the internal `definitions/` library or a local `agents.md` file.
@@ -54,13 +54,13 @@ graph TD
     H & I --> J[Read Agent Definitions]
     J --> K[Transform Definitions to Target Format]
     K --> L[Generate Configuration Files]
-    L --> M[Scaffold docs/ folder]
+    L --> M[Scaffold .sdd-toolkit/ folder]
     M --> N[End: Agents Ready]
 ```
 
 ## 6. Business Rules
 - **[BR01] Agnostic Definitions:** Agents must be defined in a tool-agnostic YAML format to ensure portability.
-- **[BR02] Structure Enforcement:** The toolkit must verify or create the `docs/` folder structure, as the agents rely on specific file paths (`docs/project.md`, `docs/requirements.md`, etc.).
+- **[BR02] Structure Enforcement:** The toolkit must verify or create the `.sdd-toolkit/` folder structure, as the agents rely on specific file paths (`.sdd-toolkit/project.md`, `.sdd-toolkit/requirements.md`, etc.).
 - **[BR03] Non-Destructive Installation:** The toolkit should prioritize safety, ensuring it doesn't accidentally wipe out unrelated user configurations (though it may overwrite specific agent files it manages).
 - **[BR04] Role Separation:** Each agent must have a distinct responsibility and restricted context where possible (e.g., "Coder" focuses on execution, "Architect" on planning).
 
@@ -88,6 +88,6 @@ graph TD
 - `format`: Enum (TOML, JSON, Markdown)
 
 ## 10. Project Principles (Constitution)
-- **[P1] "Context is King":** The system relies on file-based context (`docs/*.md`). The toolkit's job is to enable this context mechanism.
+- **[P1] "Context is King":** The system relies on file-based context (`.sdd-toolkit/*.md`). The toolkit's job is to enable this context mechanism.
 - **[P2] Tool Agnostic:** The core logic must never be coupled to a specific AI tool's API; it only generates configuration files.
 - **[P3] Simplicity:** The user interface should be a simple "Wizard" style flow.

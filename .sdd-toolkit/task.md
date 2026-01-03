@@ -28,6 +28,12 @@ The goal is to enable the user to select their preferred language (English, Port
   - [x] Ensure `src/lib/transformers.js` uses this locale to inject the correct "System Rule" (e.g., "Always reply in Portuguese").
   - **DoD:** Generated agent config files (e.g., `coder.toml`) contain the language instruction.
 
+- [x] **[M4-T05] Rename root folder from docs/ to .sdd-toolkit/**
+  - [x] Update `src/lib/docs.js` to create `.sdd-toolkit`.
+  - [x] Update all agent definitions and messages.
+  - [x] Update scripts and templates.
+  - [x] Move existing docs to the new folder.
+
 - [ ] **[M5-T04] Localize Documentation Templates** (CANCELLED)
   - [ ] *Skipped:* Templates and System Prompts will remain in English to ensure LLM performance. The output language is controlled via System Rules only.
 

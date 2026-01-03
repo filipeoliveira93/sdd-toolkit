@@ -12,7 +12,7 @@ let pc = {
 };
 try { pc = require('picocolors'); } catch (e) {}
 
-const docsDir = path.join(process.cwd(), 'docs');
+const docsDir = path.join(process.cwd(), '.sdd-toolkit');
 
 function checkFile(name) {
     const p = path.join(docsDir, name);
@@ -28,21 +28,21 @@ console.log(pc.bgBlue(pc.bold(' 📊 SDD PROJECT STATUS ')));
 console.log('');
 
 // 1. Spec Status
-const spec = checkFile('spec.md');
+const spec = checkFile('project.md');
 if (spec.exists && spec.size > 100) {
     console.log(`${pc.green('✔ Spec Defined')} (Last update: ${spec.mtime.toLocaleString()})`);
 } else {
-    console.log(`${pc.red('✖ Spec Missing')} (Run /dev.spec)`);
+    console.log(`${pc.red('✖ Spec Missing')} (Run /dev.project)`);
 }
 
 // 2. Plan Status
-const plan = checkFile('plan.md');
+const plan = checkFile('task.md');
 if (plan.exists && plan.size > 100) {
     console.log(`${pc.green('✔ Plan Active')} (Last update: ${plan.mtime.toLocaleString()})`);
     
     // Tenta ler progresso simples
     try {
-        const content = fs.readFileSync(path.join(docsDir, 'plan.md'), 'utf-8');
+        const content = fs.readFileSync(path.join(docsDir, 'task.md'), 'utf-8');
         const total = (content.match(/- \[ \]/g) || []).length + (content.match(/- \[x\]/g) || []).length;
         const done = (content.match(/- \[x\]/g) || []).length;
         if (total > 0) {
@@ -51,7 +51,7 @@ if (plan.exists && plan.size > 100) {
         }
     } catch (e) {}
 } else {
-    console.log(`${pc.yellow('⚠ Plan Missing')} (Run /dev.plan)`);
+    console.log(`${pc.yellow('⚠ Plan Missing')} (Run /dev.tasks)`);
 }
 
 console.log('');

@@ -14,9 +14,9 @@ systemPrompt: |
   Your goal is to implement the task from `task.md` with **Zero Regression**.
 
   # INPUT CONTEXT
-  1. **Mandatory:** Read `docs/task.md` (The Task).
-  2. **Mandatory:** Read `docs/requirements.md` (The Stack & Rules).
-  3. **Mandatory:** Read `docs/project.md` (The Principles).
+  1. **Mandatory:** Read `.sdd-toolkit/task.md` (The Task).
+  2. **Mandatory:** Read `.sdd-toolkit/requirements.md` (The Stack & Rules).
+  3. **Mandatory:** Read `.sdd-toolkit/project.md` (The Principles).
 
   # EXECUTION WORKFLOW
 
@@ -43,7 +43,7 @@ systemPrompt: |
   1.  **Update task.md:** Mark the task as `[x]`.
   2.  **Log Work:** Append to `work_log.md`.
 
-  # OUTPUT STRUCTURE (docs/logs/executions/[Task_ID].md)
+  # OUTPUT STRUCTURE (.sdd-toolkit/logs/executions/[Task_ID].md)
   ---
   **Task:** [Task_ID]
   **Status:** [Completed]
@@ -59,7 +59,7 @@ systemPrompt: |
   ---
 
   # INSTRUCTION
-  Read the context. Execute the task. Create a new log file `docs/logs/executions/[Task_ID].md`.
+  Read the context. Execute the task. Create a new log file `.sdd-toolkit/logs/executions/[Task_ID].md`.
 
 
   # Rules & Guidelines

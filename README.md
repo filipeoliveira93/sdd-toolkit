@@ -26,11 +26,11 @@ Reads agnostic definitions (YAML) and converts them to specific formats:
 
 ### 2. Workflow Configuration
 
-Automates the creation of the documentation structure (`docs/` and `docs/logs/`) to support the agents' workflow.
+Automates the creation of the documentation structure (`.sdd-toolkit/` and `.sdd-toolkit/logs/`) to support the agents' workflow.
 
 ## 👥 The Squad (Agent Roles)
 
-The system works best when you follow the defined pipeline. Each agent saves its "Brain" (context) in the `docs/` folder, which serves as the base for the next agent in the chain.
+The system works best when you follow the defined pipeline. Each agent saves its "Brain" (context) in the `.sdd-toolkit/` folder, which serves as the base for the next agent in the chain.
 
 ### 🏗️ 1. Project Architect
 
@@ -39,7 +39,7 @@ Transforms your raw idea into a professional specification. Acts as an interview
 
 -   **Trigger:** `/dev.project "I want an Uber clone for dog walking"`
 -   **Action:** Asks clarifying questions about features, target audience, and constraints.
--   **Output:** `docs/project.md` (Scope, User Stories, Fundamental Principles).
+-   **Output:** `.sdd-toolkit/project.md` (Scope, User Stories, Fundamental Principles).
 
 ### 🧱 2. Requirements Engineer
 
@@ -48,7 +48,7 @@ Decides _how_ to build. Defines the technology stack, database schema, and techn
 
 -   **Trigger:** `/dev.requirements`
 -   **Action:** Selects libraries (e.g., "Prisma vs TypeORM"), defines API contracts and security rules.
--   **Output:** `docs/requirements.md` (The "Technical Contract" the Coder must obey).
+-   **Output:** `.sdd-toolkit/requirements.md` (The "Technical Contract" the Coder must obey).
 
 ### 🗺️ 3. Milestone Manager
 
@@ -56,7 +56,7 @@ Decides _how_ to build. Defines the technology stack, database schema, and techn
 Prevents you from trying to build everything at once. Breaks the project into logical "MVPs" (Phases).
 
 -   **Trigger:** `/dev.milestone`
--   **Output:** `docs/milestones.md` (e.g., Phase 1: Auth, Phase 2: Payment, Phase 3: GPS).
+-   **Output:** `.sdd-toolkit/milestones.md` (e.g., Phase 1: Auth, Phase 2: Payment, Phase 3: GPS).
 
 ### 📋 4. Task Planner
 
@@ -65,7 +65,7 @@ Takes **ONE Milestone** and breaks it down into small, atomic tasks for the AI C
 
 -   **Reasoning:** AI Coders hallucinate less when the context is small.
 -   **Trigger:** `/dev.tasks 1` (Plan Milestone 1)
--   **Output:** `docs/task.md` (A checklist of 5-10 specific file operations).
+-   **Output:** `.sdd-toolkit/task.md` (A checklist of 5-10 specific file operations).
 
 ### 🕵️ 5. Auditor
 
@@ -132,7 +132,7 @@ sdd-toolkit
 
 When you run `npx sdd-toolkit`, the installation wizard starts:
 
-1.  **Initialization:** The wizard asks which shell you use (Windows or Unix) and generates a custom workflow guide in the `docs/` folder.
+1.  **Initialization:** The wizard asks which shell you use (Windows or Unix) and generates a custom workflow guide in the `.sdd-toolkit/` folder.
 2.  **Agent Building:** The wizard reads agent definitions (either from the `definitions/` folder or a local `agents.md` file) and "compiles" them into your chosen AI assistant's format.
 3.  **Supported Destinations:**
 

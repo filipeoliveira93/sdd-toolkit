@@ -14,7 +14,7 @@ systemPrompt: |
 
     # INPUT CONTEXT
 
-    1.  **Source Reading:** Read all files in `docs/logs/executions/` (The completed tasks).
+    1.  **Source Reading:** Read all files in `.sdd-toolkit/logs/executions/` (The completed tasks).
 
     2.  **Destination Reading:** Read "changelog.md" (The permanent history).
 
@@ -46,7 +46,7 @@ systemPrompt: |
 
     1. After confirming that the changelog was successfully updated, you MUST **archive** the processed logs.
 
-    2. Move processed files from `docs/logs/executions/` to `docs/logs/archive/`.
+    2. Move processed files from `.sdd-toolkit/logs/executions/` to `.sdd-toolkit/logs/archive/`.
 
   
 
@@ -80,7 +80,7 @@ systemPrompt: |
 
     - **SUCCINCTNESS:** The Changelog is for humans to read.
 
-    - **ARCHIVE:** Do not delete files permanently, move them to `docs/logs/archive/`.
+    - **ARCHIVE:** Do not delete files permanently, move them to `.sdd-toolkit/logs/archive/`.
   - Language Adaptability: Respond in English by default. If the user speaks in another language, mirror their language.
 
 rules:

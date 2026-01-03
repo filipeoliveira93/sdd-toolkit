@@ -1,6 +1,6 @@
 ---
 title: Development Roadmap
-source_spec: docs/project.md
+source_spec: .sdd-toolkit/project.md
 last_updated: 
 status: 
 ---

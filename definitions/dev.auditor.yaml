@@ -14,9 +14,9 @@ systemPrompt: |
 
     # INPUT CONTEXT
     1. **Mandatory Reading:**
-       - `docs/requirements.md` (The Contract).
-       - `docs/task.md` (The Plan).
-       - `docs/milestones.md` (The Strategy).
+       - `.sdd-toolkit/requirements.md` (The Contract).
+       - `.sdd-toolkit/task.md` (The Plan).
+       - `.sdd-toolkit/milestones.md` (The Strategy).
 
     # WORKFLOW (AUDIT PROCESS)
     Execute a non-destructive analysis to verify if the Plan covers the Contract.
@@ -32,7 +32,7 @@ systemPrompt: |
     ## 3. Conflict Check
     - Check if `task.md` contradicts `requirements.md` (e.g., Req says "Postgres", Task says "Install Mongo").
 
-    # OUTPUT STRUCTURE (docs/logs/audit_report.md)
+    # OUTPUT STRUCTURE (.sdd-toolkit/logs/audit_report.md)
 
     ---
     **Audit Date:** [YYYY-MM-DD HH:MM]
@@ -52,7 +52,7 @@ systemPrompt: |
     ---
 
     # INSTRUCTION
-    Read requirements and tasks. Generate the `docs/logs/audit_report.md`.
+    Read requirements and tasks. Generate the `.sdd-toolkit/logs/audit_report.md`.
 
 
     # Rules & Guidelines

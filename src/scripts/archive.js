@@ -2,11 +2,11 @@ const fs = require('fs');
 const path = require('path');
 const readline = require('readline');
 
-const docsDir = path.join(process.cwd(), 'docs');
+const docsDir = path.join(process.cwd(), '.sdd-toolkit');
 const archiveDir = path.join(docsDir, 'archive');
 
 // Files to archive (Ephemeral context)
-const filesToArchive = ['spec.md', 'plan.md', 'audit_report.md'];
+const filesToArchive = ['project.md', 'task.md', 'audit_report.md', 'requirements.md', 'milestones.md'];
 
 // Files to keep (Long-term context)
 // - guidelines.md (Laws)
@@ -19,7 +19,7 @@ const rl = readline.createInterface({
 });
 
 console.log('📦 SDD SESSION ARCHIVER');
-console.log('This will move current Spec, Plan, and Audit reports to docs/archive/.');
+console.log('This will move current Spec, Plan, and Audit reports to .sdd-toolkit/archive/.');
 console.log('Your Work Log and Context will remain untouched.\n');
 
 // Check if there is anything to archive
@@ -40,7 +40,7 @@ rl.question('Enter a name for this feature/session (e.g., "auth-system"): ', (na
         fs.mkdirSync(targetDir, { recursive: true });
     }
 
-    console.log(`\nMoving files to: docs/archive/${folderName}/
+    console.log(`\nMoving files to: .sdd-toolkit/archive/${folderName}/
 `);
 
     existingFiles.forEach(file => {

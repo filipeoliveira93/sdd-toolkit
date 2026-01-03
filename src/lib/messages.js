@@ -20,8 +20,8 @@ const EN = {
     },
     SCAFFOLD: {
         LOADING: 'Checking workspace structure...',
-        SUCCESS: '✔ Folder structure (docs/) created.',
-        ALREADY_EXISTS: '✔ Folder structure (docs/) verified.',
+        SUCCESS: '✔ Folder structure (.sdd-toolkit/) created.',
+        ALREADY_EXISTS: '✔ Folder structure (.sdd-toolkit/) verified.',
         ERROR: 'Failed to verify workspace structure.',
     },
     SETUP: {
@@ -78,8 +78,8 @@ const PT_BR = {
     },
     SCAFFOLD: {
         LOADING: 'Verificando estrutura do workspace...',
-        SUCCESS: '✔ Estrutura de pastas (docs/) criada.',
-        ALREADY_EXISTS: '✔ Estrutura de pastas (docs/) verificada.',
+        SUCCESS: '✔ Estrutura de pastas (.sdd-toolkit/) criada.',
+        ALREADY_EXISTS: '✔ Estrutura de pastas (.sdd-toolkit/) verificada.',
         ERROR: 'Falha ao verificar estrutura do workspace.',
     },
     SETUP: {
@@ -134,13 +134,12 @@ const ES = {
         DETECTED_TITLE: 'Actualizando...',
         SUCCESS: '¡Agentes actualizados con éxito! 🚀',
     },
-    SCAFFOLD: {
-        LOADING: 'Verificando estructura del espacio de trabajo...',
-        SUCCESS: '✔ Estructura de carpetas (docs/) creada.',
-        ALREADY_EXISTS: '✔ Estructura de carpetas (docs/) verificada.',
-        ERROR: 'Fallo al verificar estructura del espacio de trabajo.',
-    },
-    SETUP: {
+        SCAFFOLD: {
+            LOADING: 'Verificando estrutura del espacio de trabajo...', 
+            SUCCESS: '✔ Estructura de carpetas (.sdd-toolkit/) creada.',
+            ALREADY_EXISTS: '✔ Estructura de carpetas (.sdd-toolkit/) verificada.',
+            ERROR: 'Fallo al verificar estructura del espacio de trabalho.',
+        },    SETUP: {
         STACK_SELECT: '¿Cuál es su perfil tecnológico (Stack)?',
         GLOBAL_RULES: '¿Desea agregar Reglas Globales para TODOS los agentes?',
         GLOBAL_RULES_HINT: 'Ej: Siempre responda en Español; Use Conventional Commits...',

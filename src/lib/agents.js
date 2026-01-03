@@ -16,7 +16,7 @@ const pc = require('picocolors');
  */
 async function loadAgents(options = {}) {
     const definitionsDir = path.join(__dirname, '..', '..', 'definitions');
-    const localDefinitionsDir = path.join(process.cwd(), 'sdd-toolkit', 'agents');
+    const localDefinitionsDir = path.join(process.cwd(), '.sdd-toolkit', 'agents');
     
     // Check default directory
     try {

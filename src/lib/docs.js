@@ -6,7 +6,7 @@ const path = require('path');
  * Implements Smart Scaffolding: Only creates missing files/folders.
  */
 function generateWorkflowGuide(baseDir) {
-    const docsDir = path.join(baseDir, 'docs');
+    const docsDir = path.join(baseDir, '.sdd-toolkit');
     
     // 1. Define folder structure based on new logging architecture
     const folders = [

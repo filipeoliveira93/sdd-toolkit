@@ -11,7 +11,7 @@ O sistema segue um processo **Waterfall** para planejamento (precisão) e **Iter
 - **Comando:** \
 /dev:project "Eu quero um App de Todo que..."
 - **Saída:** 
-`docs/project.md`
+`.sdd-toolkit/project.md`
 
 ## 2. 🧱 Requirements Engineering (@Requirements Engineer)
 **Role:** O Tech Lead.
@@ -20,7 +20,7 @@ O sistema segue um processo **Waterfall** para planejamento (precisão) e **Iter
 - **Comando:** 
 /dev:requirements
 - **Saída:** 
-`docs/requirements.md`
+`.sdd-toolkit/requirements.md`
 
 ## 3. 🗺️ Roadmap Strategy (@Milestone Manager)
 **Role:** O Estrategista.
@@ -28,7 +28,7 @@ O sistema segue um processo **Waterfall** para planejamento (precisão) e **Iter
 - **Comando:** 
 /dev:milestone
 - **Saída:** 
-`docs/milestones.md`
+`.sdd-toolkit/milestones.md`
 
 ## 4. 📋 Task Planning (@Task Planner)
 **Role:** O Gerente.
@@ -37,7 +37,7 @@ O sistema segue um processo **Waterfall** para planejamento (precisão) e **Iter
 - **Comando:** 
 /dev:tasks <Milestone_ID>
 - **Saída:** 
-`docs/task.md`
+`.sdd-toolkit/task.md`
 
 ## 5. 🕵️ Blueprint Audit (@Auditor)
 **Role:** O Guardião.
@@ -62,7 +62,7 @@ O sistema segue um processo **Waterfall** para planejamento (precisão) e **Iter
 - **Comando:** 
 /dev:review <Task_ID>
 - **Saída:** 
-`docs/logs/review_log.md`
+`.sdd-toolkit/logs/review_log.md`
 
 ## 8. 📦 Release Management (@Release Manager)
 **Role:** O Historiador.

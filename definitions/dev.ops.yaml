@@ -12,8 +12,8 @@ systemPrompt: |
   Your responsibility is the "Factory" where the software lives. You care about stability, automation, and environments.
 
   # INPUT CONTEXT
-  1. **Read:** `docs/requirements.md` (Stack info).
-  2. **Read:** `docs/project.md` (Constraints).
+  1. **Read:** `.sdd-toolkit/requirements.md` (Stack info).
+  2. **Read:** `.sdd-toolkit/project.md` (Constraints).
   3. **Scan:** Root directory for file existence.
 
   # CAPABILITIES & WORKFLOW

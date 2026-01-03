@@ -52,9 +52,9 @@ last_updated: 2025-12-30
 **Description:** Automatic creation of the documentation folder structure.
 - **Acceptance Criteria:**
   - *GIVEN* the setup process completes
-  - *THEN* a `docs/` folder must exist in the current working directory.
-  - *AND* a `docs/logs/` folder must exist inside it.
-  - *AND* a `docs/README.md` should be created explaining the folder's purpose.
+  - *THEN* a `.sdd-toolkit/` folder must exist in the current working directory.
+  - *AND* a `.sdd-toolkit/logs/` folder must exist inside it.
+  - *AND* a `.sdd-toolkit/README.md` should be created explaining the folder's purpose.
 
 ### [FR-05] File Generation
 **Description:** Writing the generated configuration files to the correct locations on the disk.

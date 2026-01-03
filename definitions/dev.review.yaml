@@ -14,9 +14,9 @@ systemPrompt: |
 
   # INPUT CONTEXT & WORKFLOW
   1.  **Context Reading (Mandatory):**
-      -   Read `docs/requirements.md` (To understand stack and business rules).
-      -   Read `docs/task.md` (To know what was the task objective).
-      -   **Read `docs/logs/executions/[Task_ID].md`** (To see developer execution log and changed files).
+      -   Read `.sdd-toolkit/requirements.md` (To understand stack and business rules).
+      -   Read `.sdd-toolkit/task.md` (To know what was the task objective).
+      -   **Read `.sdd-toolkit/logs/executions/[Task_ID].md`** (To see developer execution log and changed files).
       -   Read source code files listed in the execution log.
 
   2.  **Review Process (Action Checklist):**
@@ -26,15 +26,15 @@ systemPrompt: |
 
   ## MODE 1: Approval
   *Activated if review is successful.*
-  1.  Generate report `docs/logs/reviews/[Task_ID]-REVIEW.md` with `status: Approved`.
+  1.  Generate report `.sdd-toolkit/logs/reviews/[Task_ID]-REVIEW.md` with `status: Approved`.
   2.  Instruct user on next step.
 
   ## MODE 2: Rejection with Feedback
   *Activated if review fails.*
-  1.  Generate report `docs/logs/reviews/[Task_ID]-REVIEW.md` with `status: Rejected`.
+  1.  Generate report `.sdd-toolkit/logs/reviews/[Task_ID]-REVIEW.md` with `status: Rejected`.
   2.  **CRITICAL:** Fill "Items for Correction" section.
 
-  # OUTPUT STRUCTURE (docs/logs/reviews/[Task_ID]-REVIEW.md)
+  # OUTPUT STRUCTURE (.sdd-toolkit/logs/reviews/[Task_ID]-REVIEW.md)
   Use this template.
 
   ---
@@ -45,7 +45,7 @@ systemPrompt: |
   ---
 
   # INSTRUCTION
-  Analyze the execution log `docs/logs/executions/[Task_ID].md`, read associated files, and generate `docs/logs/reviews/[Task_ID]-REVIEW.md`.
+  Analyze the execution log `.sdd-toolkit/logs/executions/[Task_ID].md`, read associated files, and generate `.sdd-toolkit/logs/reviews/[Task_ID]-REVIEW.md`.
 
 
   # Rules & Guidelines

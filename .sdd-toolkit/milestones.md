@@ -1,6 +1,6 @@
 ---
 title: Roteiro de Desenvolvimento (Roadmap)
-source_spec: docs/project.md
+source_spec: .sdd-toolkit/project.md
 last_updated: 2025-12-31
 status: Ativo
 ---
@@ -46,10 +46,10 @@ Este documento reflete o estado atual do projeto **sdd-toolkit**. As fases de in
 **Status: ✅ Concluída**
 - **Objetivo:** Padronizar a estrutura de instalação e melhorar a experiência de onboarding com templates de documentos.
 - **Entregáveis:**
-  - **Diretório Unificado:** Criar uma pasta `.sdd-toolkit` para armazenar metadados da instalação local.
-  - **Templates de Docs:** Criar arquivos base reais para `docs/project.md`, `docs/milestones.md` e `docs/task.md` com comentários instrutivos.
+- [x] **Diretório Unificado:** Criar uma pasta `.sdd-toolkit` para armazenar metadados da instalação local.
+  - **Templates de Docs:** Criar arquivos base reais para `.sdd-toolkit/project.md`, `.sdd-toolkit/milestones.md` e `.sdd-toolkit/task.md` com comentários instrutivos.
   - **Scaffolding Inteligente:** Lógica para criar esses arquivos apenas se não existirem (preservando o trabalho do usuário).
-- **Definição de Pronto (DoD):** `npx sdd-toolkit` popula a pasta `docs/` com arquivos de alta qualidade que guiam o usuário.
+- **Definição de Pronto (DoD):** `npx sdd-toolkit` popula a pasta `.sdd-toolkit/` com arquivos de alta qualidade que guiam o usuário.
 - **Prioridade (MoSCoW):** Should Have
 
 ### Milestone 5: Suporte a Internacionalização (i18n)
