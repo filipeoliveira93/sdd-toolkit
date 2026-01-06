@@ -53,6 +53,7 @@ The system installs a team of specialized agents:
 - **@Auditor:** Checks consistency between requirements and tasks.
 - **@QA Engineer:** Reviews code against the spec.
 - **@DevOps Engineer:** Handles Docker, CI/CD, and Configs.
+- **@Release Manager:** Consolidates logs and manages the changelog.
 
 ## Installation and Usage
 

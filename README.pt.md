@@ -53,6 +53,7 @@ O sistema instala uma equipe de agentes especializados:
 - **@Auditores:** Verifica consistência entre requisitos e tarefas.
 - **@QA Engineers:** Revisa código contra a especificação.
 - **@DevOps Engineers:** Trata Docker, CI/CD e Configs.
+- **@Gerenciadores de Releases:** Consolida logs e gerencia o changelog.
 
 ## Instalação e Uso
 
