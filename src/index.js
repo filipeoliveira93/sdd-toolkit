@@ -19,7 +19,8 @@ const {
     toWindsurfRules,
     toClaudeCommand,
     toPlainSystemPrompt,
-    toTraeRules
+    toTraeRules,
+    toOpenCodeAgent
 } = require('./lib/transformers');
 const { generateWorkflowGuide } = require('./lib/docs');
 const { view } = require('./commands/view');
@@ -301,12 +302,12 @@ async function processAgentsInstallation(tools, options) {
                 );
             },
             opencode: async (validAgents, options) => {
-                const targetDir = path.join(process.cwd(), '.opencode');
+                const targetDir = path.join(process.cwd(), '.opencode', 'agent');
                 await fsp.mkdir(targetDir, { recursive: true });
 
                 await Promise.all(
                     validAgents.map((agent) => {
-                        const md = toKiloMarkdown(agent, options);
+                        const md = toOpenCodeAgent(agent, options);
                         return fsp.writeFile(path.join(targetDir, `${agent.slug}.md`), md);
                     })
                 );

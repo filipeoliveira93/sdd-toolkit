@@ -258,14 +258,75 @@ ${allRules.length > 0 ? '## Constraints\n' + allRules.map(r => `- ${r}`).join('\
 `;
 }
 
-module.exports = { 
-    toGeminiTOML, 
-    toRooConfig, 
-    toKiloMarkdown, 
+/**
+ * Converte para OpenCode Agent (.opencode/agent/*.md)
+ */
+function toOpenCodeAgent(agent, options = {}) {
+    const languageRule = getLanguageRule(options.locale);
+    const allRules = [languageRule, ...(agent.rules || [])];
+
+    // Configurar permissões baseado no tipo de agente
+    const isReadOnly = agent.slug.includes('review') || agent.slug.includes('audit') || agent.name.includes('Architect') || agent.role.includes('QA') || agent.role.includes('Review');
+    const tools = {
+        write: !isReadOnly,
+        edit: !isReadOnly,
+        bash: !isReadOnly
+    };
+
+    const frontmatter = {
+        description: agent.description || agent.role,
+        mode: 'subagent',
+        temperature: 0.3,
+        tools
+    };
+
+    const frontmatterStr = Object.entries(frontmatter)
+        .map(([key, value]) => `${key}: ${JSON.stringify(value)}`)
+        .join('\n');
+
+    return `---
+${frontmatterStr}
+---
+
+# ${agent.name} ${agent.emoji}
+
+**Role**: ${agent.role}
+
+${agent.systemPrompt.trim()}
+
+## Rules
+${allRules.map(rule => `- ${rule}`).join('\n')}
+`;
+}
+
+/**
+ * Converte para Trae Instructions
+ */
+function toTraeRules(agent, options = {}) {
+    const languageRule = getLanguageRule(options.locale);
+    const allRules = [languageRule, ...(agent.rules || [])];
+
+    return `<!-- Trae Workspace Rules -->
+# ${agent.name} ${agent.emoji}
+
+**Role**: ${agent.role}
+
+## Context & Instructions
+${agent.systemPrompt.trim()}
+
+${allRules.length > 0 ? '## Constraints\n' + allRules.map(r => `- ${r}`).join('\n') : ''}
+`;
+}
+
+module.exports = {
+    toGeminiTOML,
+    toRooConfig,
+    toKiloMarkdown,
     toCopilotInstructions,
     toCursorMDC,
     toWindsurfRules,
     toClaudeCommand,
     toPlainSystemPrompt,
-    toTraeRules
+    toTraeRules,
+    toOpenCodeAgent
 };
