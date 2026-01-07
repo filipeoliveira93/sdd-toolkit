@@ -17,6 +17,7 @@ The main idea is to stop creating prompts from scratch and install a proven, str
 
 ### 2. "Power Commands"
 Agents come equipped with special execution modes triggered by commands:
+- **`/sdd`**: Access help and list all available agents.
 - **`/flow:debug`**: Paste an error log, and the Coder enters "Surgical Mode" to fix it immediately.
 - **`/flow:tdd`**: Forces the Red-Green-Refactor cycle for high-quality code.
 - **`/flow:refactor`**: Applies Clean Code principles to an existing file.
@@ -50,10 +51,10 @@ The system installs a team of specialized agents:
 - **@Coder:** The senior developer. Supports TDD, Debug, Refactor, and Test Generation modes.
 
 ### 🛡️ Quality Agents
-- **@Auditor:** Checks consistency between requirements and tasks.
-- **@QA Engineer:** Reviews code against the spec.
+- **@QA Engineer:** Reviews code against the spec (Auditor role).
 - **@DevOps Engineer:** Handles Docker, CI/CD, and Configs.
 - **@Release Manager:** Consolidates logs and manages the changelog.
+- **@SDD Helper:** Provides access to all agents and help.
 
 ## Installation and Usage
 
@@ -74,7 +75,7 @@ sdd-toolkit
 
 1.  **Initialization:** The wizard detects your tools and sets up the hidden `.sdd-toolkit/` context folder.
 2.  **Agent Building:** It reads the "Thinking Protocols" (YAML) and compiles them into your AI tool's native format.
-3.  **Execution:** You interact with the agents using the `/dev:*` commands or the new `/flow:*` triggers.
+3.  **Execution:** You interact with the agents using simplified commands (e.g., `/project`, `/coder`) or the new `/flow:*` triggers.
 
 ## Complete Development Flow
 
@@ -82,7 +83,7 @@ The sdd-toolkit implements a **unified hybrid workflow** that adapts to your nee
 
 ### Unified Hybrid Workflow Overview
 
-- **Adaptive Initiation:** Start with `/dev:start "Descrição"` for intelligent routing. The system checks existing docs and decides between quick or structured paths.
+- **Adaptive Initiation:** Start with `/start "Descrição"` for intelligent routing. The system checks existing docs and decides between quick or structured paths.
 - **Conditional Planning:** If needed, escalates to full planning (Project Architect → Requirements Engineer → Milestone Manager → Task Planner).
 - **Standardized Execution:** Coders implement tasks with logs, followed by unified validation (QA and Auditor).
 - **Finalization:** Release Manager consolidates into changelog with human confirmation.
@@ -90,7 +91,7 @@ The sdd-toolkit implements a **unified hybrid workflow** that adapts to your nee
 ### Detailed Flow Steps
 
 #### 1. Initiation (Inteligente)
-- Command: `/dev:start "Build a login system"`
+- Command: `/start "Build a login system"`
 - Action: Project Architect checks for existing `.sdd-toolkit/project.md`.
   - If none: Enters interview mode for basics.
   - If exists: Confirms proceed or restart.
@@ -99,22 +100,22 @@ The sdd-toolkit implements a **unified hybrid workflow** that adapts to your nee
 #### 2. Planning (Condicional)
 - If hotfix: Feature Manager routes directly to task creation.
 - If project: Milestone Manager generates roadmap with human approval.
-- Commands: `/dev:requirements`, `/dev:milestone`, `/dev:tasks`.
+- Commands: `/requirements`, `/milestone`, `/tasks`.
 - Output: `requirements.md`, `milestones.md`, `task.md`.
 
 #### 3. Execution (Padronizada)
-- Command: `/dev:coder`
+- Command: `/coder`
 - Action: Coder reads context, implements, logs in `executions/`, marks tasks as done.
 - Modes: `/flow:debug`, `/flow:refactor`, `/flow:tdd`, etc.
 - Output: Code changes + execution logs.
 
 #### 4. Validation (Unificada)
-- Commands: `/dev:review`, `/dev:auditor`
-- Action: QA reviews code, Auditor checks consistency. Pauses for human input on ambiguities.
+- Commands: `/review`
+- Action: QA Engineer reviews code against the spec. Pauses for human input on ambiguities.
 - Output: Review reports in `logs/reviews/`.
 
 #### 5. Finalization (Com Confirmação)
-- Command: `/dev:release` or implicit after approval.
+- Command: `/release` or implicit after approval.
 - Action: Release Manager updates `changelog.md` and archives logs after human confirmation.
 - Output: Clean changelog and archived logs.
 

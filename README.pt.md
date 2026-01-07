@@ -17,6 +17,7 @@ A ideia principal é parar de criar prompts do zero e instalar um workflow compr
 
 ### 2. "Comandos de Potência"
 Os agentes vêm equipados com modos de execução especiais acionados por comandos:
+- **`/sdd`**: Acesso a ajuda e lista de todos os agentes disponíveis.
 - **`/flow:debug`**: Cole um log de erro e o Coder entra no "Modo Cirúrgico" para corrigir imediatamente.
 - **`/flow:tdd`**: Força o ciclo Red-Green-Refactor para código de alta qualidade.
 - **`/flow:refactor`**: Aplica princípios de Clean Code a um arquivo existente.
@@ -73,8 +74,8 @@ sdd-toolkit
 ## Como Funciona
 
 1.  **Inicialização:** O assistente detecta suas ferramentas e configura a pasta de contexto oculta `.sdd-toolkit/`.
-2.  **Construção de Agentes:** Lê os "Protocolos de Pensamento" (YAML) e os compila no formato nativo de sua ferramenta de IA.
-3.  **Execução:** Você interage com os agentes usando os comandos `/dev:*` ou os novos gatilhos `/flow:*`.
+2.  **Construção de Agentes:** Lê os "Protocolos de Pensamento" (YAML) e os compila no formato nativo da sua ferramenta de IA.
+3.  **Execução:** Você interage com os agentes usando comandos simplificados (ex.: `/project`, `/coder`) ou os novos gatilhos `/flow:*`.
 
 ## Fluxo Completo de Desenvolvimento
 
@@ -90,31 +91,31 @@ O sdd-toolkit implementa um **fluxo de trabalho híbrido unificado** que se adap
 ### Passos Detalhados do Fluxo
 
 #### 1. Iniciação (Inteligente)
-- Comando: `/dev:start "Construir um sistema de login"`
-- Ação: Arquitetos de Projeto verifica se `.sdd-toolkit/project.md` existe.
-  - Se não: Entra no modo entrevista para básicos.
+- Comando: `/start "Construir um sistema de login"`
+- Ação: Arquitetos de Projeto verificam `.sdd-toolkit/project.md` existente.
+  - Se nenhum: Entra no modo de entrevista para o básico.
   - Se existe: Confirma prosseguir ou reiniciar.
 - Saída: Atualiza `project.md` com notas híbridas (ex.: pontos de aprovação).
 
 #### 2. Planejamento (Condicional)
 - Se hotfix: Gerenciadores de Recursos roteia diretamente para criação de tarefas.
 - Se projeto: Gerenciadores de Marcos gera roadmap com aprovação humana.
-- Comandos: `/dev:requirements`, `/dev:milestone`, `/dev:tasks`.
+- Comandos: `/requirements`, `/milestone`, `/tasks`.
 - Saída: `requirements.md`, `milestones.md`, `task.md`.
 
 #### 3. Execução (Padronizada)
-- Comando: `/dev:coder`
+- Comando: `/coder`
 - Ação: Codificador lê contexto, implementa, registra logs em `executions/`, marca tarefas como concluídas.
 - Modos: `/flow:debug`, `/flow:refactor`, `/flow:tdd`, etc.
 - Saída: Mudanças no código + logs de execução.
 
 #### 4. Validação (Unificada)
-- Comandos: `/dev:review`, `/dev:auditor`
+- Comando: `/review`
 - Ação: QA revisa código, Auditores verificam consistência. Pausa para entrada humana em ambiguidades.
 - Saída: Relatórios de revisão em `logs/reviews/`.
 
 #### 5. Finalização (Com Confirmação)
-- Comando: `/dev:release` ou implícito após aprovação.
+- Comando: `/release` ou implícito após aprovação.
 - Ação: Gerenciadores de Releases atualiza `changelog.md` e arquiva logs após confirmação humana.
 - Saída: Changelog limpo e logs arquivados.
 
