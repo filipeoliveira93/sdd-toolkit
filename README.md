@@ -28,13 +28,14 @@ Agents come equipped with special execution modes triggered by commands:
 ### 3. AI Agent Installation
 Reads agnostic definitions (YAML) and converts them to specific formats:
 - **Gemini CLI:** Generates `.toml` configuration files.
--   **Roo Code / Cline:** Generates custom modes (`_custom_modes.json`) and context rules in `.roo/` or `.cline/`.
--   **GitHub Copilot:** Generates instructions in `.github/copilot-instructions.md` and agents in `.github/agents/`.
--   **Cursor:** Generates rules in `.cursor/rules/*.mdc`.
--   **Windsurf:** Generates rules in `.windsurfrules`.
+-   **Roo Code:** Generates agents in `.roo/commands/*.md`.
+-   **Cline:** Generates custom modes (`_custom_modes.json`) and context rules in `.cline/`.
+-   **GitHub Copilot:** Generates instructions in `.github/prompts.md` and agents in `.github/prompts/*.md`.
+-   **Cursor:** Generates rules in `.cursor/commands/*.mdc`.
+-   **Windsurf:** Generates workflows in `.windsurf/workflows/*.md`.
 -   **Trae:** Generates instructions in `.trae/instructions.md`.
--   **OpenCode:** Generates agents in `.opencode/`.
--   **Kilo Code:** Generates Markdown prompts (`.kilo/prompts/*.md`).
+-   **OpenCode:** Generates agents in `.opencode/commands/*.md`.
+-   **Kilo Code:** Generates Markdown prompts (`.kilocode/workflows/*.md`).
 
 ## 👥 The Squad (Agent Roles)
 
