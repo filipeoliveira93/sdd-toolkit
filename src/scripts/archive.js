@@ -51,6 +51,6 @@ rl.question('Enter a name for this feature/session (e.g., "auth-system"): ', (na
     });
 
     console.log('\n✅ Session archived successfully!');
-    console.log('You are ready to start a new feature with /dev.spec');
+    console.log('You are ready to start a new feature with /spec');
     rl.close();
 });

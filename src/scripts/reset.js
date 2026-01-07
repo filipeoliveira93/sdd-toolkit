@@ -15,5 +15,5 @@ if (process.argv.includes('--force')) {
             console.log(`Deleted: .sdd-toolkit/${file}`);
         }
     });
-    console.log('✅ Wipe complete. You can start fresh with /dev.explore');
+    console.log('✅ Wipe complete. You can start fresh with /explore');
 }

@@ -32,7 +32,7 @@ const spec = checkFile('project.md');
 if (spec.exists && spec.size > 100) {
     console.log(`${pc.green('✔ Spec Defined')} (Last update: ${spec.mtime.toLocaleString()})`);
 } else {
-    console.log(`${pc.red('✖ Spec Missing')} (Run /dev.project)`);
+    console.log(`${pc.red('✖ Spec Missing')} (Run /project)`);
 }
 
 // 2. Plan Status
@@ -51,8 +51,8 @@ if (plan.exists && plan.size > 100) {
         }
     } catch (e) {}
 } else {
-    console.log(`${pc.yellow('⚠ Plan Missing')} (Run /dev.tasks)`);
+    console.log(`${pc.yellow('⚠ Plan Missing')} (Run /tasks)`);
 }
 
 console.log('');
-console.log('Use /dev.build to continue work.');
+console.log('Use /build to continue work.');
