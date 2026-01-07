@@ -139,12 +139,12 @@ async function main() {
             { value: 'cline', label: t('TOOLS.CLINE'), hint: '.cline/ & custom_modes.json' },
             { value: 'cursor', label: t('TOOLS.CURSOR'), hint: '.cursor/rules/*.mdc' },
             { value: 'windsurf', label: t('TOOLS.WINDSURF'), hint: '.windsurf/workflows/*.md' },
-            { value: 'claude', label: 'Claude Code', hint: '.claude/commands/openspec/*.md' },
+            { value: 'claude', label: 'Claude Code', hint: '.claude/commands/agents/*.md' },
             { value: 'trae', label: t('TOOLS.TRAE'), hint: '.trae/instructions.md' },
             { value: 'kilo', label: t('TOOLS.KILO'), hint: '.kilo/prompts/*.md' },
             { value: 'copilot', label: t('TOOLS.COPILOT'), hint: '.github/copilot-instructions.md' },
             { value: 'web', label: t('TOOLS.WEB'), hint: 'prompts/*.txt' },
-            { value: 'opencode', label: t('TOOLS.OPENCODE'), hint: '.opencode/*.md' }
+            { value: 'opencode', label: t('TOOLS.OPENCODE'), hint: '.opencode/agents/*.md' }
         ],
         required: true,
         hint: t('SETUP.TOOL_HINT')
@@ -234,7 +234,7 @@ async function processAgentsInstallation(tools, options) {
                 );
             },
             claude: async (validAgents, options) => {
-                const targetDir = path.join(process.cwd(), '.claude', 'commands', 'openspec');
+                const targetDir = path.join(process.cwd(), '.claude', 'commands', 'agents');
                 await fsp.mkdir(targetDir, { recursive: true });
 
                 await Promise.all(
@@ -302,7 +302,7 @@ async function processAgentsInstallation(tools, options) {
                 );
             },
             opencode: async (validAgents, options) => {
-                const targetDir = path.join(process.cwd(), '.opencode', 'agent');
+                const targetDir = path.join(process.cwd(), '.opencode', 'agents');
                 await fsp.mkdir(targetDir, { recursive: true });
 
                 await Promise.all(
@@ -311,6 +311,27 @@ async function processAgentsInstallation(tools, options) {
                         return fsp.writeFile(path.join(targetDir, `${agent.slug}.md`), md);
                     })
                 );
+
+                // Generate AGENTS.md with interaction rules and agent location
+                const agentsMdPath = path.join(process.cwd(), '.opencode', 'AGENTS.md');
+                const agentsMdContent = `# Interaction Rules
+
+- Always respond to the user in the language they initially interact in; if they interact in English, respond in English, if they interact in Portuguese, respond in Portuguese.
+- If possible, display reasoning in the user's language as well.
+- Be didactic when explaining things, focus on providing complete responses and not just summaries.
+- Whenever possible, provide examples to illustrate concepts.
+
+# Allowed Commands
+
+- Never execute rm or rm -rf commands without confirming with the user.
+- Whenever possible, use more specific commands instead of generic ones.
+- Be cautious when using commands that may affect critical systems, such as shutdown or reboot.
+- For commands that may affect files or directories, always confirm with the user before executing.
+
+# Agent Location
+
+Custom agents are located in .opencode/agents/`;
+                await fsp.writeFile(agentsMdPath, agentsMdContent);
             }
         };
 
