@@ -1,6 +1,6 @@
 {
     "name": "sdd-toolkit",
-    "version": "1.6.0",
+    "version": "1.7.0",
     "description": "Instalador automático dos agentes de desenvolvimento",
     "main": "src/index.js",
     "bin": {
@@ -22,7 +22,8 @@
         "src",
         "definitions",
         "templates",
-        "README.md"
+        "README.md",
+        "README.pt.md"
     ],
     "keywords": [
         "ai",
