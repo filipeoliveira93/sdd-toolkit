@@ -138,12 +138,12 @@ Once agents are installed, use these commands in your AI coding assistant:
 
 ### Access Agents
 - **`/sdd`** - Display available agents and help
-- **`/project`** - Activate Project Architect
-- **`/requirements`** - Activate Requirements Engineer
-- **`/feature`** - Activate Feature Manager
-- **`/coder`** - Activate Coder
-- **`/review`** - Activate QA Engineer
-- **`/log`** - Activate Release Manager
+- **`/sdd.project`** - Activate Project Architect
+- **`/sdd.requirements`** - Activate Requirements Engineer
+- **`/sdd.feature`** - Activate Feature Manager
+- **`/sdd.coder`** - Activate Coder
+- **`/sdd.review`** - Activate QA Engineer
+- **`/sdd.log`** - Activate Release Manager
 
 ### Special Commands
 - **`/dev:review [Task_ID]`** - Trigger code review for a specific task
@@ -181,52 +181,52 @@ After running `sdd-toolkit`, the following structure is created in your project:
 
 1. **Define project:**
    ```
-   /project
+   /sdd.project
    ```
    Creates `.sdd-toolkit/project.md` with scope and principles.
 
 2. **Define technical requirements:**
    ```
-   /requirements
+   /sdd.requirements
    ```
    Analyzes your `package.json`/`go.mod` and creates `.sdd-toolkit/requirements.md`.
 
 3. **Plan a new feature:**
    ```
-   /feature
+   /sdd.feature
    ```
    Specify your feature (e.g., "Add user authentication"). Creates `.sdd-toolkit/features/auth.md`.
 
 4. **Implement tasks:**
    ```
-   /coder MT01-task-1
+   /sdd.coder MT01-task-1
    ```
    Coder implements task following SOLID principles and logs work.
 
 5. **Review implementation:**
    ```
-   /review MT01-task-1
+   /sdd.review MT01-task-1
    ```
    QA Engineer validates implementation against requirements.
 
 6. **Release changes:**
    ```
-   /log
+   /sdd.log
    ```
    Consolidates logs into changelog and archives completed work.
 
 ### Quick Bug Fix
 
 1. **Use Coder directly:**
-   ```
-   /coder fix-login-bug
-   ```
+    ```
+   /sdd.coder fix-login-bug
+    ```
    Coder analyzes, fixes, and documents change.
 
 2. **Review fix:**
-   ```
-   /review fix-login-bug
-   ```
+    ```
+   /sdd.review fix-login-bug
+    ```
    Validates that fix meets requirements.
 
 ## License

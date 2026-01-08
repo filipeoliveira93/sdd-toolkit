@@ -137,12 +137,12 @@ Uma vez que os agentes estejam instalados, use estes comandos no seu assistente 
 
 ### Acessar Agentes
 - **`/sdd`** - Exibe os agentes disponíveis e ajuda
-- **`/project`** - Ativa o Arquiteto de Projeto
-- **`/requirements`** - Ativa o Engenheiro de Requisitos
-- **`/feature`** - Ativa o Gerente de Features
-- **`/coder`** - Ativa o Codificador
-- **`/review`** - Ativa o QA Engineer
-- **`/log`** - Ativa o Gerente de Releases
+- **`/sdd.project`** - Ativa o Arquiteto de Projeto
+- **`/sdd.requirements`** - Ativa o Engenheiro de Requisitos
+- **`/sdd.feature`** - Ativa o Gerente de Features
+- **`/sdd.coder`** - Ativa o Codificador
+- **`/sdd.review`** - Ativa o QA Engineer
+- **`/sdd.log`** - Ativa o Gerente de Releases
 
 ### Comandos Especiais
 - **`/dev:review [Task_ID]`** - Aciona revisão de código para uma tarefa específica
@@ -179,53 +179,53 @@ Após executar `sdd-toolkit`, a seguinte estrutura é criada em seu projeto:
 ### Fluxo Completo: Nova Feature
 
 1. **Definir projeto:**
-   ```
-   /project
-   ```
+    ```
+   /sdd.project
+    ```
    Cria `.sdd-toolkit/project.md` com escopo e princípios.
 
 2. **Definir requisitos técnicos:**
-   ```
-   /requirements
-   ```
+    ```
+   /sdd.requirements
+    ```
    Analisa seu `package.json`/`go.mod` e cria `.sdd-toolkit/requirements.md`.
 
 3. **Planejar uma nova feature:**
-   ```
-   /feature
-   ```
+    ```
+   /sdd.feature
+    ```
    Especifique sua feature (ex: "Adicionar autenticação de usuário"). Cria `.sdd-toolkit/features/auth.md`.
 
 4. **Implementar tarefas:**
-   ```
-   /coder MT01-task-1
-   ```
+    ```
+   /sdd.coder MT01-task-1
+    ```
    Codificador implementa a tarefa seguindo princípios SOLID e registra o trabalho.
 
 5. **Revisar implementação:**
-   ```
-   /review MT01-task-1
-   ```
+    ```
+   /sdd.review MT01-task-1
+    ```
    QA Engineer valida a implementação contra os requisitos.
 
 6. **Release das mudanças:**
-   ```
-   /log
-   ```
+    ```
+   /sdd.log
+    ```
    Consolida logs no changelog e arquiva o trabalho concluído.
 
 ### Correção Rápida de Bug
 
 1. **Usar Codificador diretamente:**
-   ```
-   /coder fixar-bug-login
-   ```
+    ```
+   /sdd.coder fixar-bug-login
+    ```
    Codificador analisa, corrige e documenta a mudança.
 
 2. **Revisar correção:**
-   ```
-   /review fixar-bug-login
-   ```
+    ```
+   /sdd.review fixar-bug-login
+    ```
    Valida que a correção atende os requisitos.
 
 ## Licença
