@@ -1,136 +1,72 @@
-# sdd-toolkit (Universal Spec CLI)
+# sdd-toolkit (Ferramenta de Instalação de Agentes de Desenvolvimento)
 
-CLI tool to automatically set up the development environment and install AI agents (Auditor, Coder, etc.) for various modern AI tools.
+Ferramenta para instalar agentes de desenvolvimento pré-definidos em ferramentas de IA, formatando-os no formato correto para cada uma.
 
-## Overview
+## Visão Geral
 
-**sdd-toolkit** is an "AI Agent Package Manager". It defines a standard squad of AI Developers and installs them directly into the context of your favorite AI Coding Assistant (such as Gemini, Roo Code, Kilo Code, OpenCode).
+O **sdd-toolkit** instala agentes de desenvolvimento pré-definidos (definidos em YAML) em ferramentas de IA como Gemini, Roo Code, Cursor, etc. Ele converte as definições agnósticas em configurações específicas, permitindo que os agentes sejam chamados diretamente nessas ferramentas. Não executa workflows próprios – apenas prepara os agentes para uso.
 
-The main idea is to stop creating prompts from scratch and install a proven, structured workflow.
+## 🚀 Recursos Principais
 
-## 🚀 Key Features
+### 1. Instalação de Agentes
 
-### 1. Smart & Agile Workflow
-- **Hybrid Flow:** Supports both "Waterfall" planning (for new projects) and "Agile" execution (for hotfixes/features).
-- **Smart Context:** Agents automatically scan your `package.json`, `go.mod`, or `requirements.txt` to understand your stack. No more explaining "I use React" every time.
-- **Unified Memory:** All context is stored in a hidden `.sdd-toolkit/` folder, keeping your root directory clean.
+- Agentes prontos: Coder, Feature Manager, Project Architect, etc.
+- Formatação automática: Converte YAML para formatos como .toml (Gemini), .mdc (Cursor), .md (Roo Code), etc.
+- Instalação em pastas do projeto: Coloca os arquivos nas localizações corretas para que as ferramentas reconheçam e ativem os agentes.
 
-### 2. "Power Commands"
-Agents come equipped with special execution modes triggered by commands:
-- **`/sdd`**: Access help and list all available agents.
-- **`/flow:debug`**: Paste an error log, and the Coder enters "Surgical Mode" to fix it immediately.
-- **`/flow:tdd`**: Forces the Red-Green-Refactor cycle for high-quality code.
-- **`/flow:refactor`**: Applies Clean Code principles to an existing file.
-- **`/flow:gen-tests`**: Automatically generates unit tests for your code.
-- **`/flow:security`**: Scans your code/plan for vulnerabilities (OWASP).
-- **`/flow:sync`**: Updates the documentation (`project.md`) to match the actual code (Reverse Engineering).
+### 2. Estruturação de Documentação
 
-### 3. AI Agent Installation
-Reads agnostic definitions (YAML) and converts them to specific formats:
-- **Gemini CLI:** Generates `.toml` configuration files.
--   **Roo Code / Cline:** Generates custom modes (`_custom_modes.json`) and context rules in `.roo/` or `.cline/`.
--   **GitHub Copilot:** Generates instructions in `.github/copilot-instructions.md` and agents in `.github/agents/`.
--   **Cursor:** Generates rules in `.cursor/rules/*.mdc`.
--   **Windsurf:** Generates rules in `.windsurfrules`.
--   **Trae:** Generates instructions in `.trae/instructions.md`.
--   **OpenCode:** Generates agents in `.opencode/`.
--   **Kilo Code:** Generates Markdown prompts (`.kilo/prompts/*.md`).
+- Cria `.sdd-toolkit/` com templates (project.md, requirements.md) e pastas para logs/features.
+- Suporte a stacks detectadas automaticamente (React, Node, etc.).
 
-## 👥 The Squad (Agent Roles)
+### 3. Dashboard e Atualização
 
-The system installs a team of specialized agents:
+- Comando `view`: Mostra progresso baseado nos arquivos scaffolded.
+- Modo `upgrade`: Atualiza agentes instalados.
 
-### 🏗️ Strategic Agents
-- **@Project Architect:** Defines the scope and principles.
-- **@Requirements Engineer:** Defines the tech stack (Auto-detected).
-- **@Milestone Manager:** Creates the roadmap.
+## 👥 Agentes Disponíveis
 
-### ⚡ Execution Agents
-- **@Task Planner:** Breaks down milestones into atomic tasks.
-- **@Feature Manager:** The agile entry point. Handles requests like "Add Google Login" and decides the best path (Hotfix vs Milestone).
-- **@Coder:** The senior developer. Supports TDD, Debug, Refactor, and Test Generation modes.
+Agentes pré-definidos prontos para instalação:
 
-### 🛡️ Quality Agents
-- **@QA Engineer:** Reviews code against the spec (Auditor role).
-- **@DevOps Engineer:** Handles Docker, CI/CD, and Configs.
-- **@Release Manager:** Consolidates logs and manages the changelog.
-- **@SDD Helper:** Provides access to all agents and help.
+- **Coder:** Agente de implementação e codificação.
+- **Feature Manager:** Gerenciamento de funcionalidades.
+- **Project Architect:** Definição de escopo e princípios.
+- **Requirements Engineer:** Definição de stack técnica.
+- **Milestone Manager:** Criação de roadmap.
+- **Task Planner:** Quebra de tarefas.
+- **QA Engineer:** Revisão de código.
+- **DevOps Engineer:** Configurações de infraestrutura.
+- **Release Manager:** Gerenciamento de releases.
+- **SDD Helper:** Acesso e ajuda.
 
-## Installation and Usage
+## Instalação e Uso
 
-You can run the tool directly via `npx` without prior installation:
+Você pode executar a ferramenta diretamente via `npx` sem instalação prévia:
 
 ```bash
 npx sdd-toolkit
 ```
 
-Or install globally:
+Ou instalar globalmente:
 
 ```bash
 npm install -g sdd-toolkit
 sdd-toolkit
 ```
 
-## How it Works
+## Como Funciona
 
-1.  **Initialization:** The wizard detects your tools and sets up the hidden `.sdd-toolkit/` context folder.
-2.  **Agent Building:** It reads the "Thinking Protocols" (YAML) and compiles them into your AI tool's native format.
-3.  **Execution:** You interact with the agents using simplified commands (e.g., `/project`, `/coder`) or the new `/flow:*` triggers.
+1.  **Inicialização:** O wizard detecta suas ferramentas e configura a pasta `.sdd-toolkit/` para documentação.
+2.  **Instalação de Agentes:** Lê definições YAML e converte para formatos específicos das ferramentas de IA escolhidas.
+3.  **Uso:** Os agentes ficam prontos nas ferramentas alvo para serem chamados diretamente.
 
-## Complete Development Flow
+## Estrutura do Projeto
 
-The sdd-toolkit implements a **unified hybrid workflow** that adapts to your needs, combining structured planning for new projects with agile execution for quick fixes. It ensures traceability, justification, and quality through AI-human collaboration.
+- `src/`: Código da ferramenta de instalação.
+- `definitions/`: YAML dos agentes prontos.
+- `templates/`: Modelos de documentação.
 
-### Unified Hybrid Workflow Overview
-
-- **Adaptive Initiation:** Start with `/start "Descrição"` for intelligent routing. The system checks existing docs and decides between quick or structured paths.
-- **Conditional Planning:** If needed, escalates to full planning (Project Architect → Requirements Engineer → Milestone Manager → Task Planner).
-- **Standardized Execution:** Coders implement tasks with logs, followed by unified validation (QA and Auditor).
-- **Finalization:** Release Manager consolidates into changelog with human confirmation.
-
-### Detailed Flow Steps
-
-#### 1. Initiation (Inteligente)
-- Command: `/start "Build a login system"`
-- Action: Project Architect checks for existing `.sdd-toolkit/project.md`.
-  - If none: Enters interview mode for basics.
-  - If exists: Confirms proceed or restart.
-- Output: Updates `project.md` with hybrid notes (e.g., approval points).
-
-#### 2. Planning (Condicional)
-- If hotfix: Feature Manager routes directly to task creation.
-- If project: Milestone Manager generates roadmap with human approval.
-- Commands: `/requirements`, `/milestone`, `/tasks`.
-- Output: `requirements.md`, `milestones.md`, `task.md`.
-
-#### 3. Execution (Padronizada)
-- Command: `/coder`
-- Action: Coder reads context, implements, logs in `executions/`, marks tasks as done.
-- Modes: `/flow:debug`, `/flow:refactor`, `/flow:tdd`, etc.
-- Output: Code changes + execution logs.
-
-#### 4. Validation (Unificada)
-- Commands: `/review`
-- Action: QA Engineer reviews code against the spec. Pauses for human input on ambiguities.
-- Output: Review reports in `logs/reviews/`.
-
-#### 5. Finalization (Com Confirmação)
-- Command: `/release` or implicit after approval.
-- Action: Release Manager updates `changelog.md` and archives logs after human confirmation.
-- Output: Clean changelog and archived logs.
-
-### Agent Interactions
-Agents share context via `.sdd-toolkit/` files, ensuring no hallucinations. Power commands enable specialized modes. The flow promotes justification (e.g., "Why this decision?") and human-AI handoffs for reliability.
-
-For examples, see the workflow guides generated in `.sdd-toolkit/`.
-
-## Project Structure
-
--   `src/`: CLI source code.
--   `definitions/`: YAML agent definitions (agnostic).
--   `templates/`: Documentation templates.
-
-## License
+## Licença
 
 MIT
 
