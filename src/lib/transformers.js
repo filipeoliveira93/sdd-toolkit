@@ -200,16 +200,16 @@ ${allRules.length > 0 ? '## Guidelines\n' + allRules.map(r => `- ${r}`).join('\n
 }
 
 /**
- * Converte para Claude Code Command (.claude/commands/openspec/*.md)
+ * Converte para Claude Code Command (.claude/commands/agents/*.md)
  */
 function toClaudeCommand(agent, options = {}) {
     const languageRule = getLanguageRule(options.locale);
     const allRules = [languageRule, ...(agent.rules || [])];
 
-    return `--- 
-name: OpenSpec: ${agent.name}
+    return `---
+name: Agent: ${agent.name}
 description: ${agent.description || agent.role}
-category: OpenSpec
+category: Agents
 ---
 # ${agent.name} ${agent.emoji}
 

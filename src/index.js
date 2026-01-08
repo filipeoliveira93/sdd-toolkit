@@ -71,8 +71,9 @@ async function main() {
         if (fs.existsSync(path.join(process.cwd(), '.windsurf'))) tools.push('windsurf');
         if (fs.existsSync(path.join(process.cwd(), '.claude'))) tools.push('claude');
         if (fs.existsSync(path.join(process.cwd(), '.trae'))) tools.push('trae');
-        if (fs.existsSync(path.join(process.cwd(), '.kilo'))) tools.push('kilo');
+        if (fs.existsSync(path.join(process.cwd(), '.kilocode'))) tools.push('kilo');
         if (fs.existsSync(path.join(process.cwd(), '.github'))) tools.push('copilot');
+        if (fs.existsSync(path.join(process.cwd(), '.roo'))) tools.push('roo');
         if (fs.existsSync(path.join(process.cwd(), '.opencode'))) tools.push('opencode');
         if (fs.existsSync(path.join(process.cwd(), 'prompts'))) tools.push('web');
 
@@ -135,16 +136,16 @@ async function main() {
         message: t('SETUP.TOOL_SELECT'),
         options: [
             { value: 'gemini', label: t('TOOLS.GEMINI'), hint: '.gemini/commands/dev' },
-            { value: 'roo', label: t('TOOLS.ROO'), hint: '.roo/ & custom_modes.json' },
+            { value: 'roo', label: t('TOOLS.ROO'), hint: '.roo/commands/*.md' },
             { value: 'cline', label: t('TOOLS.CLINE'), hint: '.cline/ & custom_modes.json' },
-            { value: 'cursor', label: t('TOOLS.CURSOR'), hint: '.cursor/rules/*.mdc' },
+            { value: 'cursor', label: t('TOOLS.CURSOR'), hint: '.cursor/commands/*.mdc' },
             { value: 'windsurf', label: t('TOOLS.WINDSURF'), hint: '.windsurf/workflows/*.md' },
-            { value: 'claude', label: 'Claude Code', hint: '.claude/commands/openspec/*.md' },
+            { value: 'claude', label: 'Claude Code', hint: '.claude/commands/agents/*.md' },
             { value: 'trae', label: t('TOOLS.TRAE'), hint: '.trae/instructions.md' },
-            { value: 'kilo', label: t('TOOLS.KILO'), hint: '.kilo/prompts/*.md' },
-            { value: 'copilot', label: t('TOOLS.COPILOT'), hint: '.github/copilot-instructions.md' },
+            { value: 'kilo', label: t('TOOLS.KILO'), hint: '.kilocode/workflows/*.md' },
+            { value: 'copilot', label: t('TOOLS.COPILOT'), hint: '.github/prompts/*.md' },
             { value: 'web', label: t('TOOLS.WEB'), hint: 'prompts/*.txt' },
-            { value: 'opencode', label: t('TOOLS.OPENCODE'), hint: '.opencode/*.md' }
+            { value: 'opencode', label: t('TOOLS.OPENCODE'), hint: '.opencode/commands/*.md' }
         ],
         required: true,
         hint: t('SETUP.TOOL_HINT')
@@ -193,19 +194,15 @@ async function processAgentsInstallation(tools, options) {
                 );
             },
             roo: async (validAgents, options) => {
-                const targetDir = path.join(process.cwd(), '.roo');
+                const targetDir = path.join(process.cwd(), '.roo', 'commands');
                 await fsp.mkdir(targetDir, { recursive: true });
 
                 await Promise.all(
                     validAgents.map((agent) => {
-                        const md = toKiloMarkdown(agent, options);
+                        const md = toOpenCodeAgent(agent, options);
                         return fsp.writeFile(path.join(targetDir, `${agent.slug}.md`), md);
                     })
                 );
-
-                const modes = validAgents.map((agent) => toRooConfig(agent, agent.slug, options));
-                const jsonContent = JSON.stringify({ customModes: modes }, null, 2);
-                await fsp.writeFile(path.join(process.cwd(), 'roo_custom_modes.json'), jsonContent);
             },
             cline: async (validAgents, options) => {
                 const targetDir = path.join(process.cwd(), '.cline');
@@ -234,7 +231,7 @@ async function processAgentsInstallation(tools, options) {
                 );
             },
             claude: async (validAgents, options) => {
-                const targetDir = path.join(process.cwd(), '.claude', 'commands', 'openspec');
+                const targetDir = path.join(process.cwd(), '.claude', 'commands', 'agents');
                 await fsp.mkdir(targetDir, { recursive: true });
 
                 await Promise.all(
@@ -245,18 +242,18 @@ async function processAgentsInstallation(tools, options) {
                 );
             },
             cursor: async (validAgents, options) => {
-                const rulesDir = path.join(process.cwd(), '.cursor', 'rules');
-                await fsp.mkdir(rulesDir, { recursive: true });
+                const commandsDir = path.join(process.cwd(), '.cursor', 'commands');
+                await fsp.mkdir(commandsDir, { recursive: true });
 
                 await Promise.all(
                     validAgents.map((agent) => {
                         const mdc = toCursorMDC(agent, options);
-                        return fsp.writeFile(path.join(rulesDir, `${agent.slug}.mdc`), mdc);
+                        return fsp.writeFile(path.join(commandsDir, `${agent.slug}.mdc`), mdc);
                     })
                 );
             },
             kilo: async (validAgents, options) => {
-                const targetDir = path.join(process.cwd(), '.kilo', 'prompts');
+                const targetDir = path.join(process.cwd(), '.kilocode', 'workflows');
                 await fsp.mkdir(targetDir, { recursive: true });
 
                 await Promise.all(
@@ -268,19 +265,19 @@ async function processAgentsInstallation(tools, options) {
             },
             copilot: async (validAgents, options) => {
                 const githubDir = path.join(process.cwd(), '.github');
-                const agentsDir = path.join(githubDir, 'agents');
-                await fsp.mkdir(agentsDir, { recursive: true });
+                const promptsDir = path.join(githubDir, 'prompts');
+                await fsp.mkdir(promptsDir, { recursive: true });
 
                 await Promise.all(
                     validAgents.map((agent) => {
                         const md = toCopilotInstructions(agent, options);
-                        return fsp.writeFile(path.join(agentsDir, `${agent.slug}.md`), md);
+                        return fsp.writeFile(path.join(promptsDir, `${agent.slug}.md`), md);
                     })
                 );
 
                 const mainAgent = validAgents.find((a) => a.slug.includes('coder')) || validAgents[0];
                 const mainInstructions = toCopilotInstructions(mainAgent, options);
-                await fsp.writeFile(path.join(githubDir, 'copilot-instructions.md'), mainInstructions);
+                await fsp.writeFile(path.join(githubDir, 'prompts.md'), mainInstructions);
             },
             trae: async (validAgents, options) => {
                 const traeDir = path.join(process.cwd(), '.trae');
@@ -302,7 +299,7 @@ async function processAgentsInstallation(tools, options) {
                 );
             },
             opencode: async (validAgents, options) => {
-                const targetDir = path.join(process.cwd(), '.opencode', 'agent');
+                const targetDir = path.join(process.cwd(), '.opencode', 'commands');
                 await fsp.mkdir(targetDir, { recursive: true });
 
                 await Promise.all(
@@ -311,6 +308,40 @@ async function processAgentsInstallation(tools, options) {
                         return fsp.writeFile(path.join(targetDir, `${agent.slug}.md`), md);
                     })
                 );
+
+                // Generate AGENTS.md with interaction rules and agent location
+                const agentsMdPath = path.join(process.cwd(), 'AGENTS.md');
+                let agentsMdContent = `# Interaction Rules
+
+- Always respond to the user in the language they initially interact in; if they interact in English, respond in English, if they interact in Portuguese, respond in Portuguese.
+- If possible, display reasoning in the user's language as well.
+- Be didactic when explaining things, focus on providing complete responses and not just summaries.
+- Whenever possible, provide examples to illustrate concepts.
+
+# Allowed Commands
+
+- Never execute rm or rm -rf commands without confirming with the user.
+- Whenever possible, use more specific commands instead of generic ones.
+- Be cautious when using commands that may affect critical systems, such as shutdown or reboot.
+- For commands that may affect files or directories, always confirm with the user before executing.
+- Never execute commands that require administrative privileges (sudo, admin) without explicit permission from the user.
+- Avoid running background processes or daemons unless explicitly requested.
+- Be cautious when using commands that alter network settings, firewall configurations, or external connections.
+- Always quote file paths that contain spaces to avoid interpretation errors.
+- For package installation commands (npm install, pip install, etc.), confirm that the user has control over dependencies and versions.
+- Avoid irreversible git operations (such as force push or reset --hard) without confirmation.
+
+# Agent Location
+
+Custom agents are located in .opencode/commands/`;
+
+                let userRules = '';
+                if (options.globalRules && options.globalRules.trim()) {
+                    userRules = '\n\n# User Specified Rules\n\n' + options.globalRules.split('\n').filter(line => line.trim()).map(line => '- ' + line.trim()).join('\n');
+                }
+                agentsMdContent += userRules;
+
+                await fsp.writeFile(agentsMdPath, agentsMdContent);
             }
         };
 
