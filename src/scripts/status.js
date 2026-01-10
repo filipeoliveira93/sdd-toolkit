@@ -35,24 +35,16 @@ if (spec.exists && spec.size > 100) {
     console.log(`${pc.red('✖ Spec Missing')} (Run /project)`);
 }
 
-// 2. Plan Status
-const plan = checkFile('task.md');
-if (plan.exists && plan.size > 100) {
-    console.log(`${pc.green('✔ Plan Active')} (Last update: ${plan.mtime.toLocaleString()})`);
-    
-    // Tenta ler progresso simples
-    try {
-        const content = fs.readFileSync(path.join(docsDir, 'task.md'), 'utf-8');
-        const total = (content.match(/- \[ \]/g) || []).length + (content.match(/- \[x\]/g) || []).length;
-        const done = (content.match(/- \[x\]/g) || []).length;
-        if (total > 0) {
-            const percent = Math.round((done / total) * 100);
-            console.log(`   Progress: [${'#'.repeat(Math.floor(percent/10))}${'-'.repeat(10 - Math.floor(percent/10))}] ${percent}% (${done}/${total} tasks)`);
-        }
-    } catch (e) {}
+// 2. Plan Status - Check for new structure
+const contextFile = checkFile('context.md');
+const stateFiles = fs.readdirSync(path.join(docsDir, 'features')).filter(f => f.endsWith('state.md'));
+const featuresCount = stateFiles.length;
+
+if (featuresCount > 0) {
+    console.log(`${pc.green('✔ Features Active')} (${featuresCount} features)`);
 } else {
-    console.log(`${pc.yellow('⚠ Plan Missing')} (Run /tasks)`);
+    console.log(`${pc.yellow('⚠ No Features Found')} (Run /feature)`);
 }
 
 console.log('');
-console.log('Use /build to continue work.');
+console.log('Use /coder <Task_ID> to continue work.');

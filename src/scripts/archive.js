@@ -3,15 +3,14 @@ const path = require('path');
 const readline = require('readline');
 
 const docsDir = path.join(process.cwd(), '.sdd-toolkit');
-const archiveDir = path.join(docsDir, 'archive');
+const archiveDir = path.join(docsDir, 'logs', 'archive');
 
 // Files to archive (Ephemeral context)
 const filesToArchive = ['project.md', 'task.md', 'audit_report.md', 'requirements.md', 'milestones.md'];
 
 // Files to keep (Long-term context)
-// - guidelines.md (Laws)
 // - context.md (Project Reality)
-// - work_log.md (History)
+// - system.md (System State)
 
 const rl = readline.createInterface({
     input: process.stdin,
@@ -19,8 +18,8 @@ const rl = readline.createInterface({
 });
 
 console.log('📦 SDD SESSION ARCHIVER');
-console.log('This will move current Spec, Plan, and Audit reports to .sdd-toolkit/archive/.');
-console.log('Your Work Log and Context will remain untouched.\n');
+console.log('This will move current Spec, Plan, and Audit reports to .sdd-toolkit/logs/archive/.');
+console.log('Your Context and System files will remain untouched.\n');
 
 // Check if there is anything to archive
 const existingFiles = filesToArchive.filter(f => fs.existsSync(path.join(docsDir, f)));
@@ -40,7 +39,7 @@ rl.question('Enter a name for this feature/session (e.g., "auth-system"): ', (na
         fs.mkdirSync(targetDir, { recursive: true });
     }
 
-    console.log(`\nMoving files to: .sdd-toolkit/archive/${folderName}/
+    console.log(`\nMoving files to: .sdd-toolkit/logs/archive/${folderName}/
 `);
 
     existingFiles.forEach(file => {
@@ -51,6 +50,6 @@ rl.question('Enter a name for this feature/session (e.g., "auth-system"): ', (na
     });
 
     console.log('\n✅ Session archived successfully!');
-    console.log('You are ready to start a new feature with /spec');
+    console.log('You are ready to start a new feature with /feature');
     rl.close();
 });

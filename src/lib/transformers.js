@@ -23,7 +23,6 @@ function getLanguageRule(locale = 'en') {
 }
 
 /**
- * Converte definição do agente para TOML do Gemini CLI
  */
 function toGeminiTOML(agent, options = {}) {
     const languageRule = getLanguageRule(options.locale);
@@ -49,15 +48,12 @@ function toGeminiTOML(agent, options = {}) {
     }
 
     const fullPrompt = parts.join('\n');
-    
-    // Escapa aspas triplas para o bloco multilinha TOML
     const escapedPrompt = fullPrompt.replace(/"""/g, '\"\"\"');
     
     // Monta o TOML final
     let toml = `description = "${description}"\n`;
     toml += `prompt = """\n${escapedPrompt}\n"""\n`;
     
-    // Mantém rules como array separado se a ferramenta suportar (Gemini CLI suporta)
     if (allRules.length > 0) {
         toml += 'rules = [\n';
         allRules.forEach(rule => {
@@ -75,29 +71,25 @@ function toGeminiTOML(agent, options = {}) {
  */
 function toRooConfig(agent, slug, options = {}) {
     const languageRule = getLanguageRule(options.locale);
-    const promptParts = [
+    const parts = [
         `# ${agent.name} (${agent.role})`,
         `\n${agent.systemPrompt.trim()}\n`
     ];
 
     const allRules = [languageRule, ...(agent.rules || [])];
 
-    if (allRules.length > 0) {
-        promptParts.push(`## Rules & Guidelines`);
-        allRules.forEach(rule => promptParts.push(`- ${rule}`));
+        parts.push(`## Rules & Guidelines`);
     }
 
     return {
         slug: slug,
-        name: `${agent.emoji} ${agent.name}`,
-        roleDefinition: promptParts.join('\n'),
+        roleDefinition: parts.join('\n'),
         groups: ["read", "edit", "browser", "command", "mcp"]
     };
 }
 
 /**
  * Converte para Markdown do Kilo Code
- */
 function toKiloMarkdown(agent, options = {}) {
     const languageRule = getLanguageRule(options.locale);
     const parts = [
@@ -315,7 +307,6 @@ function toTraeRules(agent, options = {}) {
 ${agent.systemPrompt.trim()}
 
 ${allRules.length > 0 ? '## Constraints\n' + allRules.map(r => `- ${r}`).join('\n') : ''}
-`;
 }
 
 module.exports = {
@@ -327,6 +318,5 @@ module.exports = {
     toWindsurfRules,
     toClaudeCommand,
     toPlainSystemPrompt,
-    toTraeRules,
     toOpenCodeAgent
 };
