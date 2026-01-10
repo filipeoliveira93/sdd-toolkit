@@ -38,6 +38,8 @@ function generateWorkflowGuide(baseDir) {
         { src: 'guidelines.md', dest: 'guidelines.md' },
         { src: 'project.md', dest: 'project.md' },
         { src: 'requirements.md', dest: 'requirements.md' },
+        { src: 'context.md', dest: 'context.md' },
+        { src: 'system.md', dest: 'system.md' },
         { src: 'milestones.md', dest: 'milestones.md' },
         { src: 'task.md', dest: 'task.md' }
     ];
