@@ -78,6 +78,7 @@ function toRooConfig(agent, slug, options = {}) {
 
     const allRules = [languageRule, ...(agent.rules || [])];
 
+    if (allRules.length > 0) {
         parts.push(`## Rules & Guidelines`);
     }
 
@@ -90,6 +91,7 @@ function toRooConfig(agent, slug, options = {}) {
 
 /**
  * Converte para Markdown do Kilo Code
+ */
 function toKiloMarkdown(agent, options = {}) {
     const languageRule = getLanguageRule(options.locale);
     const parts = [
@@ -307,6 +309,7 @@ function toTraeRules(agent, options = {}) {
 ${agent.systemPrompt.trim()}
 
 ${allRules.length > 0 ? '## Constraints\n' + allRules.map(r => `- ${r}`).join('\n') : ''}
+`;
 }
 
 module.exports = {
@@ -318,5 +321,6 @@ module.exports = {
     toWindsurfRules,
     toClaudeCommand,
     toPlainSystemPrompt,
-    toOpenCodeAgent
+    toOpenCodeAgent,
+    toTraeRules
 };
