@@ -25,9 +25,24 @@ systemPrompt: |
   5. Read `.sdd-toolkit/features/[feature-slug]/state.md` (Progress + context + files)
   6. Read `.sdd-toolkit/features/[feature-slug]/[MILESTONE].md` (Tasks from Task_ID)
 
+  ## L2.1 Validate Feature Files Existence (BEFORE READING)
+  Before reading L2 files, verify that feature structure exists:
+  - Check if `.sdd-toolkit/features/[feature-slug]/index.md` exists
+  - Check if `.sdd-toolkit/features/[feature-slug]/state.md` exists
+  - Check if `.sdd-toolkit/features/[feature-slug]/[MILESTONE].md` exists
+  - If any missing: Warn user and suggest running `/feature` to create structure first
+
   ## L3: Task Context (READ ON DEMAND)
   7. Read `.sdd-toolkit/logs/executions/[Task_ID].md` (Previous execution log)
   8. Read `.sdd-toolkit/logs/reviews/[Task_ID]-REVIEW.md` (Previous review)
+
+  ## L3.1 Error Handling (CRITICAL - Graceful Degradation)
+  If reading any file in L3 fails:
+  - **File not found:** "Warning: [file] not found. Continue with available context."
+  - **Permission denied:** "Error: Cannot read [file]. Check file permissions."
+  - **Parse error:** "Error: Could not parse [file]. It may be corrupted. Using available context only."
+  - Always inform user of the error and continue with available context
+  - Do not fail task execution due to missing logs
 
   ## Extract Milestone from Task_ID
   - Task_ID format: "MT01-task 1"
@@ -57,34 +72,54 @@ systemPrompt: |
 
   ## PHASE 4: REPORTING
 
-  ### 4.1 Update Milestone File
+  ### 4.1 Update Milestone File (WITH VALIDATION)
   1. Identify Milestone from Task_ID (e.g., "MT01" from "MT01-task-1")
   2. Read `.sdd-toolkit/features/[feature-slug]/[MILESTONE].md`
-  3. Mark task as `[x]` (completed)
+  3. **Validate file exists before updating:**
+     - If milestone file doesn't exist:
+       - Read `index.md` and `state.md` from feature instead
+       - Inform user: "⚠️ Warning: Milestone [MILESTONE].md not found. Reading from feature overview and state."
+     - Do not fail task execution
 
-  ### 4.2 Update Feature State File (⭐ CRITICAL - AUTOMATIC)
+   ### 4.2 Update Feature State File (⭐ CRITICAL - AUTOMATIC)
   1. Read `.sdd-toolkit/features/[feature-slug]/state.md`
-  2. Update these sections:
+  2. Update these sections with STRICT format:
 
   **Progress:**
-  - Mark milestone/task progress (e.g., "MT01: 2/5 tasks")
+   - MT01: ⏳ Not Started (0/0 tasks)
+   - MT02: 🔄 In Progress (1/5 tasks)
+   - MT03: ⏳ Not Started (0/4 tasks)
 
   **Current Work:**
-  - Update "Last Task" to current Task_ID
-  - Update "Status" (e.g., "Working on MT02-task 3")
+   - **Last Task Completed:** [Task_ID]
+   - **Current Task:** [Next Task ID]
+   - **Status:** [Working on MTXX-task Y]
 
   **Technical Context (Files Created):**
-  - Add all files created/modified in this task
-  - Use tree format if needed
+   - Add all files created/modified in this task
+   - Use tree format for multiple files:
+     ```
+     src/
+     ├── [module]/
+     │   ├── file1.ts
+     │   └── file2.ts
+     ```
 
   **Key Decisions:**
-  - Add any technical decisions made during implementation
+   - Add any technical decisions made during implementation
+   - Format: `[YYYY-MM-DD] [DT] Decision description`
 
   **Known Issues:**
-  - Add any issues discovered
+   - Add any issues discovered
+   - Format: `[YYYY-MM-DD] [ISSUE] Issue description`
+
+  **Files History (Most Recent Changes):**
+   - List only the 5-10 most recent file modifications
+   - Format: `- [YYYY-MM-DD] Created/Updated: [file path]`
+   - Example: `- [2025-01-10] Created: src/auth/User.ts`
 
   **Next Steps:**
-  - Update next task
+   - List all pending tasks for current milestone
 
   ### 4.3 Update Global Context File (⭐ CRITICAL - AUTOMATIC)
   1. Read `.sdd-toolkit/context.md`
