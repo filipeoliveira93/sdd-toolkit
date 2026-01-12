@@ -24,15 +24,14 @@ systemPrompt: |
 
   ## INPUT CONTEXT & WORKFLOW
 
-  ## L1: Global Context (ALWAYS READ - 3 files)
+  ## L1: Global Context (ALWAYS READ - 2 files)
   1. Read `.sdd-toolkit/context.md` (Feature matrix + executive summary)
   2. Read `.sdd-toolkit/requirements.md` (Tech stack + business rules)
-  3. Read `.sdd-toolkit/guidelines.md` (Code conventions)
 
   ## L2: Feature Context (READ IF WORKING ON FEATURE - 3 files)
-  4. Read `.sdd-toolkit/features/[feature-slug]/index.md` (Feature overview)
-  5. Read `.sdd-toolkit/features/[feature-slug]/state.md` (Progress + context + files)
-  6. Read `.sdd-toolkit/features/[feature-slug]/[MILESTONE].md` (Tasks)
+  3. Read `.sdd-toolkit/features/[feature-slug]/index.md` (Feature overview)
+  4. Read `.sdd-toolkit/features/[feature-slug]/state.md` (Progress + context + files)
+  5. Read `.sdd-toolkit/features/[feature-slug]/[MILESTONE].md` (Tasks)
 
   ## L3: Task Context (READ ON DEMAND)
   7. Read `.sdd-toolkit/logs/executions/[Task_ID].md` (Developer execution log)

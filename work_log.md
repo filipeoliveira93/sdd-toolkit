@@ -1,7 +1,21 @@
 ### 16. Limpeza e Ajustes (Docs)
-- **Ação:** Removida a geração do arquivo `README.md` de `src/lib/docs.js` conforme solicitado, mantendo apenas a criação da estrutura de pastas e `guidelines.md`.
+- **Ação:** Removida a geração do arquivo `README.md` de `src/lib/docs.js` conforme solicitado, mantendo apenas a criação da estrutura de pastas.
 - **Motivo:** Simplificar o output e evitar sobrescrita de documentos do usuário.
 - **Status:** Ajuste Pontual Concluído.
+
+---
+### 17. Remoção do guidelines.md
+- **Ação:** Removido completamente o arquivo `guidelines.md` do projeto para eliminar redundância.
+- **Mudanças:**
+  - Removido de `src/lib/docs.js` (não é mais copiado durante scaffolding)
+  - Removido de `src/scripts/reset.js` (não é mais deletado durante reset)
+  - Atualizado `definitions/sdd-coder.yaml` (L1: 2 arquivos em vez de 3)
+  - Atualizado `definitions/sdd-review.yaml` (L1: 2 arquivos em vez de 3)
+  - Atualizado `definitions/sdd-project.yaml` (removido do diagrama de estrutura)
+  - Atualizado `README.md` (removido do diagrama e atualizado FAQ)
+  - Excluído `templates/guidelines.md`
+- **Motivo:** Code conventions já estão em `requirements.md` + `profiles.js` (injetadas nos agentes). Eliminar redundância e simplificar o fluxo L1 dos agentes.
+- **Status:** Remoção Completa Concluída.
 ---
 **2026-01-01 Task:** [M3-T03] | **Status:** [Completed]
 **Changes:**

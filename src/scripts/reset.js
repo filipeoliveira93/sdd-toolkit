@@ -8,7 +8,7 @@ console.log('Your source code (src/) will NOT be touched.');
 console.log('Are you sure? (Run with --force to execute)');
 
 if (process.argv.includes('--force')) {
-    ['project.md', 'requirements.md', 'guidelines.md', 'context.md', 'system.md'].forEach(file => {
+    ['project.md', 'requirements.md', 'context.md', 'system.md'].forEach(file => {
         const p = path.join(docsDir, file);
         if (fs.existsSync(p)) {
             fs.unlinkSync(p);

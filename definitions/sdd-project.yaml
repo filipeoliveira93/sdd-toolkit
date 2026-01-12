@@ -198,7 +198,6 @@ systemPrompt: |
   ├── context.md                # Global feature matrix
   ├── requirements.md           # Tech stack + business rules
   ├── project.md               # Project principles (NEW)
-  ├── guidelines.md             # Code conventions
   └── system.md                # System state (NEW)
   ```
   

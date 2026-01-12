@@ -194,7 +194,6 @@ After running `sdd-toolkit`, the following structure is created in your project:
 .sdd-toolkit/
 ├── project.md              # Project scope and principles
 ├── requirements.md         # Technical requirements and stack
-├── guidelines.md           # Project development guidelines
 ├── milestones.md           # Development roadmap
 ├── task.md                # Task execution backlog
 ├── features/               # Individual feature specifications
@@ -390,4 +389,4 @@ A: Currently, stack profiles are hardcoded in the toolkit. To add a custom profi
 
 **Q: Is this suitable for enterprise projects?**
 
-A: Yes, sdd-toolkit is designed to scale. The `.sdd-toolkit/` folder can be committed to your repository, ensuring all team members use the same agent configurations and follow the same development principles defined in `guidelines.md`.
+A: Yes, sdd-toolkit is designed to scale. The `.sdd-toolkit/` folder can be committed to your repository, ensuring all team members use the same agent configurations and follow the same development principles defined in `requirements.md` and `project.md`. Stack-specific conventions are automatically applied via selected profile during agent installation.

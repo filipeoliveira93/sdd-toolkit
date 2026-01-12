@@ -35,7 +35,6 @@ function generateWorkflowGuide(baseDir) {
     const templatesDir = path.join(__dirname, '..', '..', 'templates');
     
     const templateFiles = [
-        { src: 'guidelines.md', dest: 'guidelines.md' },
         { src: 'project.md', dest: 'project.md' },
         { src: 'requirements.md', dest: 'requirements.md' },
         { src: 'context.md', dest: 'context.md' },
