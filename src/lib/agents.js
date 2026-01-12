@@ -2,7 +2,6 @@ const fs = require('fs/promises');
 const path = require('path');
 const yaml = require('js-yaml');
 const { AgentSchema } = require('./schema');
-const { STACK_PROFILES } = require('./profiles');
 const pc = require('picocolors');
 
 /**
@@ -78,14 +77,6 @@ async function loadAgents(options = {}) {
             agent.slug = file.replace(/\.ya?ml$/, '').replace(/\./g, '-');
             agent.originalName = file.replace(/\.ya?ml$/, '');
             agent.source = source; // Useful metadata for logs
-
-            // Feature 5: Stack Rules Injection
-            if (options.stackProfile && STACK_PROFILES[options.stackProfile]) {
-                const stackRules = STACK_PROFILES[options.stackProfile].rules;
-                if (stackRules && stackRules.length > 0) {
-                    agent.rules = [...agent.rules, ...stackRules];
-                }
-            }
 
             // Feature 3: Global Rules Injection
             if (options.globalRules && typeof options.globalRules === 'string') {

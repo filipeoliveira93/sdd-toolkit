@@ -4,18 +4,37 @@
 - **Status:** Ajuste Pontual Concluído.
 
 ---
-### 17. Remoção do guidelines.md
-- **Ação:** Removido completamente o arquivo `guidelines.md` do projeto para eliminar redundância.
-- **Mudanças:**
-  - Removido de `src/lib/docs.js` (não é mais copiado durante scaffolding)
-  - Removido de `src/scripts/reset.js` (não é mais deletado durante reset)
-  - Atualizado `definitions/sdd-coder.yaml` (L1: 2 arquivos em vez de 3)
-  - Atualizado `definitions/sdd-review.yaml` (L1: 2 arquivos em vez de 3)
-  - Atualizado `definitions/sdd-project.yaml` (removido do diagrama de estrutura)
-  - Atualizado `README.md` (removido do diagrama e atualizado FAQ)
-  - Excluído `templates/guidelines.md`
-- **Motivo:** Code conventions já estão em `requirements.md` + `profiles.js` (injetadas nos agentes). Eliminar redundância e simplificar o fluxo L1 dos agentes.
-- **Status:** Remoção Completa Concluída.
+### 17. Simplificações do Fluxo de Instalação (v2.1)
+**Changes:**
+- Removida a geração do arquivo `README.md` de `src/lib/docs.js` conforme solicitado, mantendo apenas a criação da estrutura de pastas.
+- Removido completamente o arquivo `guidelines.md` do projeto para eliminar redundância.
+- **Removida a seleção de stack profile do processo de instalação.**
+- **Removido o arquivo `src/lib/profiles.js` (187 linhas, 16 stacks).**
+- **Ajustado o Requirements Engineer para questionar usuário com perguntas detalhadas sobre stack quando necessário.**
+- **Atualizado o template de `requirements.md` com subseções detalhadas de tech stack.**
+
+**Arquivos Modificados:**
+- `src/lib/docs.js` (removido guidelines.md do scaffolding)
+- `src/scripts/reset.js` (removido guidelines.md do reset)
+- `definitions/sdd-coder.yaml` (L1: 2 arquivos em vez de 3)
+- `definitions/sdd-review.yaml` (L1: 2 arquivos em vez de 3)
+- `definitions/sdd-project.yaml` (removido guidelines.md do diagrama)
+- `src/index.js` (removida seleção de stack profile)
+- `src/lib/agents.js` (removida injeção de stack rules e import de profiles.js)
+- `definitions/sdd-requirements.yaml` (adicionado Stack Definition Protocol)
+- `templates/requirements.md` (adicionadas subseções detalhadas)
+- `README.md` (removidas referências a stack profiles)
+- `src/lib/messages.js` (removidas mensagens de stack selection)
+- `work_log.md` (mesclado histórico de alterações)
+
+**Arquivos Excluídos:**
+- `templates/guidelines.md`
+- `src/lib/profiles.js`
+
+**Motivo:**
+Simplificar o onboarding removendo decisões prematuras (guidelines.md e stack selection). Tech stack e convenções agora são definidas dinamicamente pelo Requirements Engineer através de entrevistas detalhadas e documentadas em `requirements.md`. Isso elimina redundância e melhora a flexibilidade do fluxo.
+
+**Status:** Refatoração de Fluxo Concluída.
 ---
 **2026-01-01 Task:** [M3-T03] | **Status:** [Completed]
 **Changes:**

@@ -8,7 +8,6 @@ const pc = require('picocolors');
 
 // Internal Modules
 const { loadAgents } = require('./lib/agents');
-const { STACK_PROFILES } = require('./lib/profiles');
 const { setLocale, t, getLocale } = require('./lib/i18n');
 const {
     toGeminiTOML,
@@ -102,24 +101,7 @@ async function main() {
         s.stop(pc.red(t('SCAFFOLD.ERROR')));
     }
 
-    // 2. Feature 5: Stack Selection
-    const stackOptions = Object.entries(STACK_PROFILES).map(([key, profile]) => ({
-        value: key,
-        label: profile.label
-    }));
-
-    const stackProfile = await select({
-        message: t('SETUP.STACK_SELECT'),
-        options: stackOptions,
-        initialValue: 'generic'
-    });
-
-    if (typeof stackProfile === 'symbol') {
-        outro(pc.yellow(t('GENERAL.CANCELLED')));
-        process.exit(0);
-    }
-
-    // 3. Feature 3: Global Rules
+    // 2. Feature 3: Global Rules
     const globalRules = await text({
         message: t('SETUP.GLOBAL_RULES'),
         placeholder: t('SETUP.GLOBAL_RULES_HINT'),
@@ -161,7 +143,7 @@ async function main() {
         process.exit(0);
     }
 
-    await processAgentsInstallation(tools, { stackProfile, globalRules, locale: getLocale() });
+    await processAgentsInstallation(tools, { globalRules, locale: getLocale() });
 
     outro(pc.green(t('SETUP.SUCCESS')));
 }

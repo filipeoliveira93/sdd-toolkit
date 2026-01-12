@@ -327,18 +327,6 @@ MIT
 - Re-run `sdd-toolkit` and ensure you select the correct language during setup (English, Portuguese, or Spanish).
 - Or manually edit the `LANGUAGE_RULES` in your agent files.
 
-### Stack profile not applying rules
-
-**Problem:** Selected stack profile rules are not being used by agents.
-
-**Solution:**
-
-- The stack profile is only applied during initial installation or upgrade. Run:
-    ```bash
-    sdd-toolkit upgrade
-    ```
-    Ensure you select the same stack profile again.
-
 ### `.sdd-toolkit/` folder not created
 
 **Problem:** The hidden folder structure is not created after installation.
@@ -357,7 +345,7 @@ A: Yes! You can install agents for multiple AI tools in the same project. Each t
 
 **Q: How do I update agents after initial setup?**
 
-A: Run `sdd-toolkit upgrade`. This will update all installed agents without requiring you to reconfigure your stack profile or global rules.
+A: Run `sdd-toolkit upgrade`. This will update all installed agents without requiring you to reconfigure global rules.
 
 **Q: Can I customize agent definitions?**
 
@@ -383,9 +371,9 @@ A: Simply delete the `.sdd-toolkit/` folder and any tool-specific folders (`.roo
 
 A: No, sdd-toolkit only manages documentation and AI agent configurations. It does not track code changes, read your source files, or interfere with version control.
 
-**Q: Can I add my own stack profiles?**
+**Q: How do I define my tech stack and conventions?**
 
-A: Currently, stack profiles are hardcoded in the toolkit. To add a custom profile, you can use the "Global Rules" feature during setup to inject your own conventions, or you can fork the repository and add your profile to `src/lib/profiles.js`.
+A: Use the Requirements Engineer agent (`/sdd.requirements`) to define your tech stack. The agent will interview you with detailed questions about frontend, backend, database, and infrastructure. Stack-specific conventions can also be added via "Global Rules" during setup or by manually editing `.sdd-toolkit/requirements.md`.
 
 **Q: Is this suitable for enterprise projects?**
 
