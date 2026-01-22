@@ -51,7 +51,7 @@ const EN = {
         KILO: 'Kilo Code',
         COPILOT: 'GitHub Copilot',
         WEB: 'OpenAI / Claude',
-        OPENCODE: 'OpenCode',
+        OPENCODE: 'OpenCode (Skills)',
         ANTIGRAVITY: 'Antigravity (Skills)',
     },
     LANGUAGE_RULES: {
@@ -125,7 +125,7 @@ const PT_BR = {
         KILO: 'Kilo Code',
         COPILOT: 'GitHub Copilot',
         WEB: 'OpenAI / Claude',
-        OPENCODE: 'OpenCode',
+        OPENCODE: 'OpenCode (Skills)',
         ANTIGRAVITY: 'Antigravity (Skills)',
     },
     LANGUAGE_RULES: {
@@ -199,7 +199,7 @@ const ES = {
         KILO: 'Kilo Code',
         COPILOT: 'GitHub Copilot',
         WEB: 'OpenAI / Claude',
-        OPENCODE: 'OpenCode',
+        OPENCODE: 'OpenCode (Skills)',
         ANTIGRAVITY: 'Antigravity (Skills)',
     },
     LANGUAGE_RULES: {

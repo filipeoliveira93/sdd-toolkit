@@ -111,6 +111,7 @@ Simplificar o onboarding removendo decisões prematuras (guidelines.md e stack s
 - [x] Definitions Updated
 - [x] Docs Updated
 ---
+### Release 2.1.0 (Skills Support)
 **2026-01-21 Task:** [Feature] Support Google Antigravity Skills | **Status:** [Completed]
 **Changes:**
 - Implemented `toAntigravitySkill` transformer in `src/lib/transformers.js`.
@@ -121,4 +122,24 @@ Simplificar o onboarding removendo decisões prematuras (guidelines.md e stack s
 - [x] Transformed SKILL.md format verified.
 - [x] CLI Menu updated verified.
 - [x] Syntax Check Passed.
+---
+**2026-01-21 Task:** [Refactor] Migrate OpenCode to Skills V2 | **Status:** [Completed]
+**Changes:**
+- Migrated OpenCode integration from "Subagents" (`.opencode/commands`) to "Skills" (`.opencode/skills`).
+- Implemented `toOpenCodeSkill` with compliant frontmatter (`compatibility: opencode`).
+- Updated CLI menu label to 'OpenCode (Skills)'.
+- REMOVED legacy `AGENTS.md` and `toOpenCodeAgent` implementation.
+**Self-Check:**
+- [x] Structure verified: .opencode/skills/[slug]/SKILL.md
+- [x] Frontmatter metadata verified.
+---
+**2026-01-21 Task:** [Refactor] Migrate OpenCode to Skills V2 | **Status:** [Completed]
+**Changes:**
+- Migrated OpenCode integration from "Subagents" (`.opencode/commands`) to "Skills" (`.opencode/skills`).
+- Implemented `toOpenCodeSkill` with compliant frontmatter (`compatibility: opencode`).
+- Updated CLI menu label to 'OpenCode (Skills)'.
+- REMOVED legacy `AGENTS.md` and `toOpenCodeAgent` implementation.
+**Self-Check:**
+- [x] Structure verified: .opencode/skills/[slug]/SKILL.md
+- [x] Frontmatter metadata verified.
 ---
