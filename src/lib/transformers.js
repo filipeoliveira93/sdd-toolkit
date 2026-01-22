@@ -252,44 +252,34 @@ ${allRules.length > 0 ? '## Constraints\n' + allRules.map(r => `- ${r}`).join('\
 `;
 }
 
+
 /**
- * Converte para OpenCode Agent (.opencode/agent/*.md)
+ * Converte para OpenCode Skill (SKILL.md)
+ * Ref: https://opencode.ai/docs/skills/
  */
-function toOpenCodeAgent(agent, options = {}) {
+function toOpenCodeSkill(agent, options = {}) {
     const languageRule = getLanguageRule(options.locale);
     const allRules = [languageRule, ...(agent.rules || [])];
 
-    // Configurar permissões baseado no tipo de agente
-    const isReadOnly = agent.slug.includes('review') || agent.slug.includes('audit') || agent.name.includes('Architect') || agent.role.includes('QA') || agent.role.includes('Review');
-    const tools = {
-        write: !isReadOnly,
-        edit: !isReadOnly,
-        bash: !isReadOnly
-    };
-
-    const frontmatter = {
-        description: agent.description || agent.role,
-        mode: 'subagent',
-        temperature: 0.3,
-        tools
-    };
-
-    const frontmatterStr = Object.entries(frontmatter)
-        .map(([key, value]) => `${key}: ${JSON.stringify(value)}`)
-        .join('\n');
+    // Ensure slug is compliant (lowercase, alphanumeric, single hyphens)
+    const skillName = agent.slug.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-+|-+$/g, '');
 
     return `---
-${frontmatterStr}
+name: ${skillName}
+description: ${agent.description || agent.role}
+license: MIT
+compatibility: opencode
+metadata:
+  role: ${agent.role}
 ---
-
 # ${agent.name} ${agent.emoji}
 
 **Role**: ${agent.role}
 
+## Instructions
 ${agent.systemPrompt.trim()}
 
-## Rules
-${allRules.map(rule => `- ${rule}`).join('\n')}
+${allRules.length > 0 ? '## Rules & Guidelines\n' + allRules.map(r => `- ${r}`).join('\n') : ''}
 `;
 }
 
@@ -344,7 +334,7 @@ module.exports = {
     toWindsurfRules,
     toClaudeCommand,
     toPlainSystemPrompt,
-    toOpenCodeAgent,
+    toOpenCodeSkill,
     toTraeRules,
     toAntigravitySkill
 };

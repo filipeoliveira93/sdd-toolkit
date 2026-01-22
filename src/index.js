@@ -19,7 +19,7 @@ const {
     toClaudeCommand,
     toPlainSystemPrompt,
     toTraeRules,
-    toOpenCodeAgent,
+    toOpenCodeSkill,
     toAntigravitySkill
 } = require('./lib/transformers');
 const { generateWorkflowGuide } = require('./lib/docs');
@@ -129,7 +129,7 @@ async function main() {
             { value: 'kilo', label: t('TOOLS.KILO'), hint: '.kilocode/workflows/*.md' },
             { value: 'copilot', label: t('TOOLS.COPILOT'), hint: '.github/prompts/*.md' },
             { value: 'web', label: t('TOOLS.WEB'), hint: 'prompts/*.txt' },
-            { value: 'opencode', label: t('TOOLS.OPENCODE'), hint: '.opencode/commands/*.md' },
+            { value: 'opencode', label: t('TOOLS.OPENCODE'), hint: '.opencode/skills/*' },
             { value: 'antigravity', label: t('TOOLS.ANTIGRAVITY'), hint: '.antigravity/skills/*' }
         ],
         required: true,
@@ -284,49 +284,24 @@ async function processAgentsInstallation(tools, options) {
                 );
             },
             opencode: async (validAgents, options) => {
-                const targetDir = path.join(process.cwd(), '.opencode', 'commands');
-                await fsp.mkdir(targetDir, { recursive: true });
+                const skillsDir = path.join(process.cwd(), '.opencode', 'skills');
+                
+                // Ensure base directory exists
+                await fsp.mkdir(skillsDir, { recursive: true });
 
                 await Promise.all(
-                    validAgents.map((agent) => {
-                        const md = toOpenCodeAgent(agent, options);
-                        return fsp.writeFile(path.join(targetDir, `${agent.slug}.md`), md);
+                    validAgents.map(async (agent) => {
+                         // Create specific folder for the skill: .opencode/skills/[agent-slug]/
+                         // Ensure compatibility with naming rules (lowercase, alphanumeric, single hyphens)
+                         const skillName = agent.slug.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-+|-+$/g, '');
+                         const agentSkillDir = path.join(skillsDir, skillName);
+                         
+                         await fsp.mkdir(agentSkillDir, { recursive: true });
+
+                         const skillContent = toOpenCodeSkill(agent, options);
+                         return fsp.writeFile(path.join(agentSkillDir, 'SKILL.md'), skillContent);
                     })
                 );
-
-                // Generate AGENTS.md with interaction rules and agent location
-                const agentsMdPath = path.join(process.cwd(), 'AGENTS.md');
-                let agentsMdContent = `# Interaction Rules
-
-- Always respond to the user in the language they initially interact in; if they interact in English, respond in English, if they interact in Portuguese, respond in Portuguese.
-- If possible, display reasoning in the user's language as well.
-- Be didactic when explaining things, focus on providing complete responses and not just summaries.
-- Whenever possible, provide examples to illustrate concepts.
-
-# Allowed Commands
-
-- Never execute rm or rm -rf commands without confirming with the user.
-- Whenever possible, use more specific commands instead of generic ones.
-- Be cautious when using commands that may affect critical systems, such as shutdown or reboot.
-- For commands that may affect files or directories, always confirm with the user before executing.
-- Never execute commands that require administrative privileges (sudo, admin) without explicit permission from the user.
-- Avoid running background processes or daemons unless explicitly requested.
-- Be cautious when using commands that alter network settings, firewall configurations, or external connections.
-- Always quote file paths that contain spaces to avoid interpretation errors.
-- For package installation commands (npm install, pip install, etc.), confirm that the user has control over dependencies and versions.
-- Avoid irreversible git operations (such as force push or reset --hard) without confirmation.
-
-# Agent Location
-
-Custom agents are located in .opencode/commands/`;
-
-                let userRules = '';
-                if (options.globalRules && options.globalRules.trim()) {
-                    userRules = '\n\n# User Specified Rules\n\n' + options.globalRules.split('\n').filter(line => line.trim()).map(line => '- ' + line.trim()).join('\n');
-                }
-                agentsMdContent += userRules;
-
-                await fsp.writeFile(agentsMdPath, agentsMdContent);
             },
             antigravity: async (validAgents, options) => {
                 const skillsDir = path.join(process.cwd(), '.antigravity', 'skills');

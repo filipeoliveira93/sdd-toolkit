@@ -51,7 +51,7 @@ Reads agnostic definitions (YAML) and converts them to specific formats:
 - **Cursor:** Generates rules in `.cursor/commands/*.mdc`.
 - **Windsurf:** Generates workflows in `.windsurf/workflows/*.md`.
 - **Trae:** Generates instructions in `.trae/instructions.md`.
-- **OpenCode:** Generates agents in `.opencode/commands/*.md`.
+- **OpenCode:** Generates skills in `.opencode/skills/`.
 - **Kilo Code:** Generates Markdown prompts (`.kilocode/workflows/*.md`).
 
 ## 👥 The Squad (Agent Roles)
