@@ -19,7 +19,8 @@ const {
     toClaudeCommand,
     toPlainSystemPrompt,
     toTraeRules,
-    toOpenCodeAgent
+    toOpenCodeAgent,
+    toAntigravitySkill
 } = require('./lib/transformers');
 const { generateWorkflowGuide } = require('./lib/docs');
 const { view } = require('./commands/view');
@@ -76,6 +77,7 @@ async function main() {
         if (fs.existsSync(path.join(process.cwd(), '.opencode'))) tools.push('opencode');
         if (fs.existsSync(path.join(process.cwd(), 'prompts'))) tools.push('web');
 
+        if (fs.existsSync(path.join(process.cwd(), '.antigravity'))) tools.push('antigravity');
         if (tools.length === 0) {
             note(t('UPGRADE.NO_CONFIG'), t('UPGRADE.NO_CONFIG_TITLE'));
         } else {
@@ -127,7 +129,8 @@ async function main() {
             { value: 'kilo', label: t('TOOLS.KILO'), hint: '.kilocode/workflows/*.md' },
             { value: 'copilot', label: t('TOOLS.COPILOT'), hint: '.github/prompts/*.md' },
             { value: 'web', label: t('TOOLS.WEB'), hint: 'prompts/*.txt' },
-            { value: 'opencode', label: t('TOOLS.OPENCODE'), hint: '.opencode/commands/*.md' }
+            { value: 'opencode', label: t('TOOLS.OPENCODE'), hint: '.opencode/commands/*.md' },
+            { value: 'antigravity', label: t('TOOLS.ANTIGRAVITY'), hint: '.antigravity/skills/*' }
         ],
         required: true,
         hint: t('SETUP.TOOL_HINT')
@@ -324,6 +327,23 @@ Custom agents are located in .opencode/commands/`;
                 agentsMdContent += userRules;
 
                 await fsp.writeFile(agentsMdPath, agentsMdContent);
+            },
+            antigravity: async (validAgents, options) => {
+                const skillsDir = path.join(process.cwd(), '.antigravity', 'skills');
+                
+                // Ensure base directory exists (though we will mkdir for each agent)
+                await fsp.mkdir(skillsDir, { recursive: true });
+
+                await Promise.all(
+                    validAgents.map(async (agent) => {
+                         // Create specific folder for the skill: .antigravity/skills/[agent-slug]/
+                         const agentSkillDir = path.join(skillsDir, agent.slug);
+                         await fsp.mkdir(agentSkillDir, { recursive: true });
+
+                         const skillContent = toAntigravitySkill(agent, options);
+                         return fsp.writeFile(path.join(agentSkillDir, 'SKILL.md'), skillContent);
+                    })
+                );
             }
         };
 

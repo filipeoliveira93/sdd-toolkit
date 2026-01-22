@@ -52,6 +52,7 @@ const EN = {
         COPILOT: 'GitHub Copilot',
         WEB: 'OpenAI / Claude',
         OPENCODE: 'OpenCode',
+        ANTIGRAVITY: 'Antigravity (Skills)',
     },
     LANGUAGE_RULES: {
         EN: 'Always reply in English unless told otherwise.',
@@ -125,6 +126,7 @@ const PT_BR = {
         COPILOT: 'GitHub Copilot',
         WEB: 'OpenAI / Claude',
         OPENCODE: 'OpenCode',
+        ANTIGRAVITY: 'Antigravity (Skills)',
     },
     LANGUAGE_RULES: {
         EN: 'Always reply in English unless told otherwise.',
@@ -198,6 +200,7 @@ const ES = {
         COPILOT: 'GitHub Copilot',
         WEB: 'OpenAI / Claude',
         OPENCODE: 'OpenCode',
+        ANTIGRAVITY: 'Antigravity (Skills)',
     },
     LANGUAGE_RULES: {
         EN: 'Always reply in English unless told otherwise.',

@@ -312,6 +312,29 @@ ${allRules.length > 0 ? '## Constraints\n' + allRules.map(r => `- ${r}`).join('\
 `;
 }
 
+
+/**
+ * Converte para Antigravity Skill (SKILL.md)
+ */
+function toAntigravitySkill(agent, options = {}) {
+    const languageRule = getLanguageRule(options.locale);
+    const allRules = [languageRule, ...(agent.rules || [])];
+
+    return `---
+name: ${agent.name}
+description: ${agent.description || agent.role}
+---
+# ${agent.name} ${agent.emoji}
+
+**Role**: ${agent.role}
+
+## Instructions
+${agent.systemPrompt.trim()}
+
+${allRules.length > 0 ? '## Rules & Guidelines\n' + allRules.map(r => `- ${r}`).join('\n') : ''}
+`;
+}
+
 module.exports = {
     toGeminiTOML,
     toRooConfig,
@@ -322,5 +345,6 @@ module.exports = {
     toClaudeCommand,
     toPlainSystemPrompt,
     toOpenCodeAgent,
-    toTraeRules
+    toTraeRules,
+    toAntigravitySkill
 };

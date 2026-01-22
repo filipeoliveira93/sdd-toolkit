@@ -63,6 +63,7 @@ Simplificar o onboarding removendo decisões prematuras (guidelines.md e stack s
 **Self-Check:**
 - [x] Definition Updated
 ---
+---
 **2026-01-02 Task:** [Improvement] Agent Usability Upgrade | **Status:** [Completed]
 **Changes:**
 - **Requirements Engineer:** Added 'Config Scan' mode to auto-detect tech stack from `package.json`, `Cargo.toml`, etc., reducing user friction.
@@ -109,4 +110,15 @@ Simplificar o onboarding removendo decisões prematuras (guidelines.md e stack s
 **Self-Check:**
 - [x] Definitions Updated
 - [x] Docs Updated
+---
+**2026-01-21 Task:** [Feature] Support Google Antigravity Skills | **Status:** [Completed]
+**Changes:**
+- Implemented `toAntigravitySkill` transformer in `src/lib/transformers.js`.
+- Updated `src/index.js` to include 'Antigravity (Skills)' in the tool selection menu.
+- Added internationalization strings for Antigravity in `src/lib/messages.js`.
+- Verified implementation with `test_antigravity.js` simulating 7 agents.
+**Self-Check:**
+- [x] Transformed SKILL.md format verified.
+- [x] CLI Menu updated verified.
+- [x] Syntax Check Passed.
 ---
