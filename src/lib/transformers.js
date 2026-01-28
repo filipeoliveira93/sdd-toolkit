@@ -325,6 +325,37 @@ ${allRules.length > 0 ? '## Rules & Guidelines\n' + allRules.map(r => `- ${r}`).
 `;
 }
 
+/**
+ * Converte para OpenCode Subagent (.opencode/agents/*.md)
+ * Ref: https://opencode.ai/docs/agents
+ */
+function toOpenCodeSubagent(agent, options = {}) {
+    const languageRule = getLanguageRule(options.locale);
+    const allRules = [languageRule, ...(agent.rules || [])];
+
+    // Determine tool permissions based on agent role
+    const roleLower = (agent.slug || '').toLowerCase();
+    const isReadOnly = roleLower.includes('review') || roleLower.includes('security') || roleLower.includes('qa');
+
+    return `---
+description: ${agent.description || agent.role}
+mode: subagent
+tools:
+  write: ${!isReadOnly}
+  edit: ${!isReadOnly}
+  bash: ${!isReadOnly}
+---
+# ${agent.name} ${agent.emoji}
+
+**Role**: ${agent.role}
+
+## Instructions
+${agent.systemPrompt.trim()}
+
+${allRules.length > 0 ? '## Rules & Guidelines\n' + allRules.map(r => `- ${r}`).join('\n') : ''}
+`;
+}
+
 module.exports = {
     toGeminiTOML,
     toRooConfig,
@@ -335,6 +366,7 @@ module.exports = {
     toClaudeCommand,
     toPlainSystemPrompt,
     toOpenCodeSkill,
+    toOpenCodeSubagent,
     toTraeRules,
     toAntigravitySkill
 };

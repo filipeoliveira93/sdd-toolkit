@@ -20,6 +20,7 @@ const {
     toPlainSystemPrompt,
     toTraeRules,
     toOpenCodeSkill,
+    toOpenCodeSubagent,
     toAntigravitySkill
 } = require('./lib/transformers');
 const { generateWorkflowGuide } = require('./lib/docs');
@@ -129,7 +130,7 @@ async function main() {
             { value: 'kilo', label: t('TOOLS.KILO'), hint: '.kilocode/workflows/*.md' },
             { value: 'copilot', label: t('TOOLS.COPILOT'), hint: '.github/prompts/*.md' },
             { value: 'web', label: t('TOOLS.WEB'), hint: 'prompts/*.txt' },
-            { value: 'opencode', label: t('TOOLS.OPENCODE'), hint: '.opencode/skills/*' },
+            { value: 'opencode', label: t('TOOLS.OPENCODE'), hint: '.opencode/skills/* & agents/*' },
             { value: 'antigravity', label: t('TOOLS.ANTIGRAVITY'), hint: '.antigravity/skills/*' }
         ],
         required: true,
@@ -285,21 +286,26 @@ async function processAgentsInstallation(tools, options) {
             },
             opencode: async (validAgents, options) => {
                 const skillsDir = path.join(process.cwd(), '.opencode', 'skills');
+                const agentsDir = path.join(process.cwd(), '.opencode', 'agents');
                 
-                // Ensure base directory exists
+                // Ensure base directories exist
                 await fsp.mkdir(skillsDir, { recursive: true });
+                await fsp.mkdir(agentsDir, { recursive: true });
 
                 await Promise.all(
                     validAgents.map(async (agent) => {
-                         // Create specific folder for the skill: .opencode/skills/[agent-slug]/
                          // Ensure compatibility with naming rules (lowercase, alphanumeric, single hyphens)
                          const skillName = agent.slug.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-+|-+$/g, '');
-                         const agentSkillDir = path.join(skillsDir, skillName);
                          
+                         // Generate Skill: .opencode/skills/[agent-slug]/SKILL.md
+                         const agentSkillDir = path.join(skillsDir, skillName);
                          await fsp.mkdir(agentSkillDir, { recursive: true });
-
                          const skillContent = toOpenCodeSkill(agent, options);
-                         return fsp.writeFile(path.join(agentSkillDir, 'SKILL.md'), skillContent);
+                         await fsp.writeFile(path.join(agentSkillDir, 'SKILL.md'), skillContent);
+
+                         // Generate Subagent: .opencode/agents/[agent-slug].md
+                         const subagentContent = toOpenCodeSubagent(agent, options);
+                         await fsp.writeFile(path.join(agentsDir, `${skillName}.md`), subagentContent);
                     })
                 );
             },
