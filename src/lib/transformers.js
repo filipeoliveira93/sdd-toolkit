@@ -67,6 +67,32 @@ function toGeminiTOML(agent, options = {}) {
 }
 
 /**
+ * Converte para Gemini CLI Skill (.gemini/skills/<name>/SKILL.md)
+ * Ref: https://github.com/google-gemini/gemini-cli
+ */
+function toGeminiSkill(agent, options = {}) {
+    const languageRule = getLanguageRule(options.locale);
+    const allRules = [languageRule, ...(agent.rules || [])];
+
+    // Generate trigger description for Gemini to know when to activate
+    const triggerHints = `Use when working on ${agent.role.toLowerCase()} tasks.`;
+
+    return `---
+name: ${agent.slug.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-+|-+$/g, '')}
+description: ${agent.description || agent.role}. ${triggerHints}
+---
+# ${agent.name} ${agent.emoji}
+
+**Role**: ${agent.role}
+
+## Instructions
+${agent.systemPrompt.trim()}
+
+${allRules.length > 0 ? '## Rules & Guidelines\n' + allRules.map(r => `- ${r}`).join('\n') : ''}
+`;
+}
+
+/**
  * Converte para configuração de Custom Mode do Roo Code / Cline (JSON)
  */
 function toRooConfig(agent, slug, options = {}) {
@@ -111,6 +137,30 @@ function toKiloMarkdown(agent, options = {}) {
     }
 
     return parts.join('\n');
+}
+
+/**
+ * Converte para Kilo Code Skill (.kilocode/skills/<name>/SKILL.md)
+ * Ref: https://kilo.ai/docs/skills
+ */
+function toKiloSkill(agent, options = {}) {
+    const languageRule = getLanguageRule(options.locale);
+    const allRules = [languageRule, ...(agent.rules || [])];
+    const skillName = agent.slug.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-+|-+$/g, '');
+
+    return `---
+name: ${skillName}
+description: ${agent.description || agent.role}. Use when working on ${agent.role.toLowerCase()} tasks.
+---
+# ${agent.name} ${agent.emoji}
+
+**Role**: ${agent.role}
+
+## Instructions
+${agent.systemPrompt.trim()}
+
+${allRules.length > 0 ? '## Rules & Guidelines\n' + allRules.map(r => `- ${r}`).join('\n') : ''}
+`;
 }
 
 /**
@@ -175,6 +225,34 @@ ${allRules.length > 0 ? '## Rules\n' + allRules.map(r => `- ${r}`).join('\n') : 
 }
 
 /**
+ * Converte para Cursor Skill (.cursor/skills/<nome>/SKILL.md)
+ * Formato oficial: https://cursor.com/docs/context/skills
+ */
+function toCursorSkill(agent, options = {}) {
+    const languageRule = getLanguageRule(options.locale);
+    const allRules = [languageRule, ...(agent.rules || [])];
+    const skillName = agent.slug.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-+|-+$/g, '');
+
+    return `---
+name: ${skillName}
+description: ${agent.description || agent.role}. Use when working on ${agent.role.toLowerCase()} tasks.
+---
+# ${agent.name} ${agent.emoji}
+
+**Role**: ${agent.role}
+
+## When to Use
+- Use this skill when working on ${agent.role.toLowerCase()} tasks
+- This skill is helpful for ${agent.description || agent.role}
+
+## Instructions
+${agent.systemPrompt.trim()}
+
+${allRules.length > 0 ? '## Rules & Guidelines\\n' + allRules.map(r => `- ${r}`).join('\\n') : ''}
+`;
+}
+
+/**
  * Converte para Windsurf Workflow (.windsurf/workflows/*.md)
  * Cascade reconhece esses arquivos como comandos de workflow
  */
@@ -213,6 +291,60 @@ Role: ${agent.role}
 ${agent.systemPrompt.trim()}
 
 ${allRules.length > 0 ? '## Rules\n' + allRules.map(r => `- ${r}`).join('\n') : ''}
+`;
+}
+
+/**
+ * Converte para Claude Code Skill (.claude/skills/<name>/SKILL.md)
+ * Ref: https://docs.anthropic.com/en/docs/claude-code/skills
+ */
+function toClaudeSkill(agent, options = {}) {
+    const languageRule = getLanguageRule(options.locale);
+    const allRules = [languageRule, ...(agent.rules || [])];
+    const skillName = agent.slug.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-+|-+$/g, '');
+
+    return `---
+name: ${skillName}
+description: ${agent.description || agent.role}. Use when working on ${agent.role.toLowerCase()} tasks.
+---
+# ${agent.name} ${agent.emoji}
+
+**Role**: ${agent.role}
+
+## Instructions
+${agent.systemPrompt.trim()}
+
+${allRules.length > 0 ? '## Rules & Guidelines\n' + allRules.map(r => `- ${r}`).join('\n') : ''}
+`;
+}
+
+/**
+ * Converte para Claude Code Subagent (.claude/agents/<name>.md)
+ * Ref: https://docs.anthropic.com/en/docs/claude-code/sub-agents
+ */
+function toClaudeSubagent(agent, options = {}) {
+    const languageRule = getLanguageRule(options.locale);
+    const allRules = [languageRule, ...(agent.rules || [])];
+
+    // Determine tool permissions based on agent role
+    const roleLower = (agent.slug || '').toLowerCase();
+    const isReadOnly = roleLower.includes('review') || roleLower.includes('security') || roleLower.includes('qa');
+    const tools = isReadOnly ? 'Read, Glob, Grep' : 'Read, Edit, Write, Bash';
+
+    return `---
+name: ${agent.slug.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-+|-+$/g, '')}
+description: ${agent.description || agent.role}
+tools: ${tools}
+model: sonnet
+---
+# ${agent.name} ${agent.emoji}
+
+**Role**: ${agent.role}
+
+## Instructions
+${agent.systemPrompt.trim()}
+
+${allRules.length > 0 ? '## Rules & Guidelines\n' + allRules.map(r => `- ${r}`).join('\n') : ''}
 `;
 }
 
@@ -304,21 +436,54 @@ ${allRules.length > 0 ? '## Constraints\n' + allRules.map(r => `- ${r}`).join('\
 
 
 /**
- * Converte para Antigravity Skill (SKILL.md)
+ * Converte para Antigravity Skill (.agent/skills/<nome>/SKILL.md)
+ * Ref: https://antigravity.google/docs/skills
  */
 function toAntigravitySkill(agent, options = {}) {
     const languageRule = getLanguageRule(options.locale);
     const allRules = [languageRule, ...(agent.rules || [])];
+    const skillName = agent.slug.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-+|-+$/g, '');
 
     return `---
-name: ${agent.name}
-description: ${agent.description || agent.role}
+name: ${skillName}
+description: ${agent.description || agent.role}. Use when working on ${agent.role.toLowerCase()} tasks.
 ---
 # ${agent.name} ${agent.emoji}
 
 **Role**: ${agent.role}
 
+## When to Use
+- Use this skill when working on ${agent.role.toLowerCase()} tasks
+- This skill is helpful for ${agent.description || agent.role}
+
 ## Instructions
+${agent.systemPrompt.trim()}
+
+${allRules.length > 0 ? '## Rules & Guidelines\n' + allRules.map(r => `- ${r}`).join('\n') : ''}
+`;
+}
+
+/**
+ * Converte para Antigravity Workflow (.agent/workflows/<nome>.md)
+ * Workflows são invocáveis via /workflow-name
+ * Ref: https://antigravity.google/docs/rules-workflows
+ */
+function toAntigravityWorkflow(agent, options = {}) {
+    const languageRule = getLanguageRule(options.locale);
+    const allRules = [languageRule, ...(agent.rules || [])];
+
+    return `# ${agent.name} ${agent.emoji}
+
+${agent.description || agent.role}
+
+## Steps
+
+1. **Understand the Context**: Review the current codebase and requirements
+2. **Apply Role**: Act as ${agent.role}
+3. **Follow Instructions**: Execute according to the guidelines below
+
+## Instructions
+
 ${agent.systemPrompt.trim()}
 
 ${allRules.length > 0 ? '## Rules & Guidelines\n' + allRules.map(r => `- ${r}`).join('\n') : ''}
@@ -358,15 +523,21 @@ ${allRules.length > 0 ? '## Rules & Guidelines\n' + allRules.map(r => `- ${r}`).
 
 module.exports = {
     toGeminiTOML,
+    toGeminiSkill,
     toRooConfig,
     toKiloMarkdown,
+    toKiloSkill,
     toCopilotInstructions,
     toCursorMDC,
+    toCursorSkill,
     toWindsurfRules,
     toClaudeCommand,
+    toClaudeSkill,
+    toClaudeSubagent,
     toPlainSystemPrompt,
     toOpenCodeSkill,
     toOpenCodeSubagent,
     toTraeRules,
-    toAntigravitySkill
+    toAntigravitySkill,
+    toAntigravityWorkflow
 };
