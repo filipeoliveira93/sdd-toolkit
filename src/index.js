@@ -13,6 +13,7 @@ const {
     toGeminiTOML,
     toGeminiSkill,
     toRooConfig,
+    toRooSkill,
     toKiloMarkdown,
     toKiloSkill,
     toCopilotInstructions,
@@ -127,7 +128,7 @@ async function main() {
         message: t('SETUP.TOOL_SELECT'),
         options: [
             { value: 'gemini', label: t('TOOLS.GEMINI'), hint: '.gemini/commands/* & skills/*' },
-            { value: 'roo', label: t('TOOLS.ROO'), hint: '.roo/commands/*.md' },
+            { value: 'roo', label: t('TOOLS.ROO'), hint: '.roo/skills/*' },
             { value: 'cline', label: t('TOOLS.CLINE'), hint: '.cline/ & custom_modes.json' },
             { value: 'cursor', label: t('TOOLS.CURSOR'), hint: '.cursor/commands/* & skills/*' },
             { value: 'windsurf', label: t('TOOLS.WINDSURF'), hint: '.windsurf/workflows/*.md' },
@@ -197,13 +198,18 @@ async function processAgentsInstallation(tools, options) {
                 );
             },
             roo: async (validAgents, options) => {
-                const targetDir = path.join(process.cwd(), '.roo', 'commands');
-                await fsp.mkdir(targetDir, { recursive: true });
+                const skillsDir = path.join(process.cwd(), '.roo', 'skills');
+                await fsp.mkdir(skillsDir, { recursive: true });
 
                 await Promise.all(
-                    validAgents.map((agent) => {
-                        const md = toOpenCodeAgent(agent, options);
-                        return fsp.writeFile(path.join(targetDir, `${agent.slug}.md`), md);
+                    validAgents.map(async (agent) => {
+                        const skillName = agent.slug.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-+|-+$/g, '');
+
+                        // Generate Skill: .roo/skills/[agent-slug]/SKILL.md
+                        const agentSkillDir = path.join(skillsDir, skillName);
+                        await fsp.mkdir(agentSkillDir, { recursive: true });
+                        const skillContent = toRooSkill(agent, options);
+                        await fsp.writeFile(path.join(agentSkillDir, 'SKILL.md'), skillContent);
                     })
                 );
             },

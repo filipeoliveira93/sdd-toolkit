@@ -116,6 +116,34 @@ function toRooConfig(agent, slug, options = {}) {
 }
 
 /**
+ * Converte para Roo Code Skill (.roo/skills/<nome>/SKILL.md)
+ * Ref: https://docs.roocode.com/features/skills
+ */
+function toRooSkill(agent, options = {}) {
+    const languageRule = getLanguageRule(options.locale);
+    const allRules = [languageRule, ...(agent.rules || [])];
+    const skillName = agent.slug.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-+|-+$/g, '');
+
+    return `---
+name: ${skillName}
+description: ${agent.description || agent.role}. Use when working on ${agent.role.toLowerCase()} tasks.
+---
+# ${agent.name} ${agent.emoji}
+
+**Role**: ${agent.role}
+
+## When to Use
+- Use this skill when working on ${agent.role.toLowerCase()} tasks
+- This skill is helpful for ${agent.description || agent.role}
+
+## Instructions
+${agent.systemPrompt.trim()}
+
+${allRules.length > 0 ? '## Rules & Guidelines\n' + allRules.map(r => `- ${r}`).join('\n') : ''}
+`;
+}
+
+/**
  * Converte para Markdown do Kilo Code
  */
 function toKiloMarkdown(agent, options = {}) {
@@ -525,6 +553,7 @@ module.exports = {
     toGeminiTOML,
     toGeminiSkill,
     toRooConfig,
+    toRooSkill,
     toKiloMarkdown,
     toKiloSkill,
     toCopilotInstructions,
