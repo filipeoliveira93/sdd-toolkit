@@ -9,24 +9,9 @@ const pc = require('picocolors');
 // Internal Modules
 const { loadAgents } = require('./lib/agents');
 const { setLocale, t, getLocale } = require('./lib/i18n');
-const {
-    toGeminiTOML,
-    toGeminiSkill,
-    toRooSkill,
-    toKiloMarkdown,
-    toKiloSkill,
-    toCursorMDC,
-    toCursorSkill,
-    toClaudeCommand,
-    toClaudeSkill,
-    toClaudeSubagent,
-    toOpenCodeSkill,
-    toOpenCodeSubagent,
-    toAntigravitySkill,
-    toAntigravityWorkflow
-} = require('./lib/transformers');
 const { generateWorkflowGuide } = require('./lib/docs');
 const { view } = require('./commands/view');
+const handlers = require('./lib/handlers');
 
 async function main() {
     console.clear();
@@ -85,6 +70,22 @@ async function main() {
             note(t('UPGRADE.NO_CONFIG'), t('UPGRADE.NO_CONFIG_TITLE'));
         } else {
             note(t('UPGRADE.DETECTED_TOOLS', tools.join(', ')), t('UPGRADE.DETECTED_TITLE'));
+            
+            // 1. Smart Scaffolding (Update folders, preserve files)
+            const s = spinner();
+            s.start(t('SCAFFOLD.LOADING'));
+            try {
+                const stats = generateWorkflowGuide(process.cwd());
+                if (stats.created > 0) {
+                     s.stop(`${t('SCAFFOLD.SUCCESS')} (${stats.created} new, ${stats.verified} verified)`);
+                } else {
+                     s.stop(t('SCAFFOLD.ALREADY_EXISTS'));
+                }
+            } catch (e) {
+                s.stop(pc.red(t('SCAFFOLD.ERROR')));
+            }
+
+            // 2. Update Agents
             await processAgentsInstallation(tools, { locale: getLocale() });
             outro(pc.green(t('UPGRADE.SUCCESS')));
             process.exit(0);
@@ -163,175 +164,10 @@ async function processAgentsInstallation(tools, options) {
 
         s.message(t('INSTALL.INSTALLING', tools.join(', ')));
 
-        const toolHandlers = {
-            gemini: async (validAgents, options) => {
-                const commandsDir = path.join(process.cwd(), '.gemini', 'commands', 'dev');
-                const skillsDir = path.join(process.cwd(), '.gemini', 'skills');
-                
-                await fsp.mkdir(commandsDir, { recursive: true });
-                await fsp.mkdir(skillsDir, { recursive: true });
-
-                await Promise.all(
-                    validAgents.map(async (agent) => {
-                        // Generate Command (TOML)
-                        const toml = toGeminiTOML(agent, options);
-                        const fileName = `${agent.originalName}.toml`;
-                        await fsp.writeFile(path.join(commandsDir, fileName), toml);
-
-                        // Generate Skill
-                        const skillName = agent.slug.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-+|-+$/g, '');
-                        const agentSkillDir = path.join(skillsDir, skillName);
-                        await fsp.mkdir(agentSkillDir, { recursive: true });
-                        const skillContent = toGeminiSkill(agent, options);
-                        await fsp.writeFile(path.join(agentSkillDir, 'SKILL.md'), skillContent);
-                    })
-                );
-            },
-            roo: async (validAgents, options) => {
-                const skillsDir = path.join(process.cwd(), '.roo', 'skills');
-                await fsp.mkdir(skillsDir, { recursive: true });
-
-                await Promise.all(
-                    validAgents.map(async (agent) => {
-                        const skillName = agent.slug.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-+|-+$/g, '');
-
-                        // Generate Skill: .roo/skills/[agent-slug]/SKILL.md
-                        const agentSkillDir = path.join(skillsDir, skillName);
-                        await fsp.mkdir(agentSkillDir, { recursive: true });
-                        const skillContent = toRooSkill(agent, options);
-                        await fsp.writeFile(path.join(agentSkillDir, 'SKILL.md'), skillContent);
-                    })
-                );
-            },
-            claude: async (validAgents, options) => {
-                const commandsDir = path.join(process.cwd(), '.claude', 'commands', 'agents');
-                const skillsDir = path.join(process.cwd(), '.claude', 'skills');
-                const agentsDir = path.join(process.cwd(), '.claude', 'agents');
-                
-                await fsp.mkdir(commandsDir, { recursive: true });
-                await fsp.mkdir(skillsDir, { recursive: true });
-                await fsp.mkdir(agentsDir, { recursive: true });
-
-                await Promise.all(
-                    validAgents.map(async (agent) => {
-                        const skillName = agent.slug.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-+|-+$/g, '');
-
-                        // Generate Command
-                        const command = toClaudeCommand(agent, options);
-                        await fsp.writeFile(path.join(commandsDir, `${agent.slug}.md`), command);
-
-                        // Generate Skill
-                        const agentSkillDir = path.join(skillsDir, skillName);
-                        await fsp.mkdir(agentSkillDir, { recursive: true });
-                        const skill = toClaudeSkill(agent, options);
-                        await fsp.writeFile(path.join(agentSkillDir, 'SKILL.md'), skill);
-
-                        // Generate Subagent
-                        const subagent = toClaudeSubagent(agent, options);
-                        await fsp.writeFile(path.join(agentsDir, `${skillName}.md`), subagent);
-                    })
-                );
-            },
-            cursor: async (validAgents, options) => {
-                const commandsDir = path.join(process.cwd(), '.cursor', 'commands');
-                const skillsDir = path.join(process.cwd(), '.cursor', 'skills');
-                
-                await fsp.mkdir(commandsDir, { recursive: true });
-                await fsp.mkdir(skillsDir, { recursive: true });
-
-                await Promise.all(
-                    validAgents.map(async (agent) => {
-                        const skillName = agent.slug.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-+|-+$/g, '');
-                        
-                        // Generate Commands (.mdc)
-                        const mdc = toCursorMDC(agent, options);
-                        await fsp.writeFile(path.join(commandsDir, `${agent.slug}.mdc`), mdc);
-                        
-                        // Generate Skills (SKILL.md)
-                        const skillDir = path.join(skillsDir, skillName);
-                        await fsp.mkdir(skillDir, { recursive: true });
-                        const skill = toCursorSkill(agent, options);
-                        await fsp.writeFile(path.join(skillDir, 'SKILL.md'), skill);
-                    })
-                );
-            },
-            kilo: async (validAgents, options) => {
-                const workflowsDir = path.join(process.cwd(), '.kilocode', 'workflows');
-                const skillsDir = path.join(process.cwd(), '.kilocode', 'skills');
-                
-                await fsp.mkdir(workflowsDir, { recursive: true });
-                await fsp.mkdir(skillsDir, { recursive: true });
-
-                await Promise.all(
-                    validAgents.map(async (agent) => {
-                        const skillName = agent.slug.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-+|-+$/g, '');
-
-                        // Generate Workflow
-                        const workflow = toKiloMarkdown(agent, options);
-                        await fsp.writeFile(path.join(workflowsDir, `${agent.slug}.md`), workflow);
-
-                        // Generate Skill
-                        const agentSkillDir = path.join(skillsDir, skillName);
-                        await fsp.mkdir(agentSkillDir, { recursive: true });
-                        const skill = toKiloSkill(agent, options);
-                        await fsp.writeFile(path.join(agentSkillDir, 'SKILL.md'), skill);
-                    })
-                );
-            },
-            opencode: async (validAgents, options) => {
-                const skillsDir = path.join(process.cwd(), '.opencode', 'skills');
-                const agentsDir = path.join(process.cwd(), '.opencode', 'agents');
-                
-                // Ensure base directories exist
-                await fsp.mkdir(skillsDir, { recursive: true });
-                await fsp.mkdir(agentsDir, { recursive: true });
-
-                await Promise.all(
-                    validAgents.map(async (agent) => {
-                         // Ensure compatibility with naming rules (lowercase, alphanumeric, single hyphens)
-                         const skillName = agent.slug.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-+|-+$/g, '');
-                         
-                         // Generate Skill: .opencode/skills/[agent-slug]/SKILL.md
-                         const agentSkillDir = path.join(skillsDir, skillName);
-                         await fsp.mkdir(agentSkillDir, { recursive: true });
-                         const skillContent = toOpenCodeSkill(agent, options);
-                         await fsp.writeFile(path.join(agentSkillDir, 'SKILL.md'), skillContent);
-
-                         // Generate Subagent: .opencode/agents/[agent-slug].md
-                         const subagentContent = toOpenCodeSubagent(agent, options);
-                         await fsp.writeFile(path.join(agentsDir, `${skillName}.md`), subagentContent);
-                    })
-                );
-            },
-            antigravity: async (validAgents, options) => {
-                const skillsDir = path.join(process.cwd(), '.agent', 'skills');
-                const workflowsDir = path.join(process.cwd(), '.agent', 'workflows');
-                
-                await fsp.mkdir(skillsDir, { recursive: true });
-                await fsp.mkdir(workflowsDir, { recursive: true });
-
-                await Promise.all(
-                    validAgents.map(async (agent) => {
-                         const skillName = agent.slug.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-+|-+$/g, '');
-
-                         // Generate Skill: .agent/skills/[agent-slug]/SKILL.md
-                         const agentSkillDir = path.join(skillsDir, skillName);
-                         await fsp.mkdir(agentSkillDir, { recursive: true });
-                         const skillContent = toAntigravitySkill(agent, options);
-                         await fsp.writeFile(path.join(agentSkillDir, 'SKILL.md'), skillContent);
-
-                         // Generate Workflow: .agent/workflows/[agent-slug].md
-                         const workflowContent = toAntigravityWorkflow(agent, options);
-                         await fsp.writeFile(path.join(workflowsDir, `${skillName}.md`), workflowContent);
-                    })
-                );
-            }
-        };
-
         for (const tool of tools) {
-            const handler = toolHandlers[tool];
-            if (handler) {
-                await handler(validAgents, options);
+            const handler = handlers[tool];
+            if (handler && typeof handler.install === 'function') {
+                await handler.install(validAgents, options);
             }
         }
 
