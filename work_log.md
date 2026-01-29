@@ -143,3 +143,24 @@ Simplificar o onboarding removendo decisões prematuras (guidelines.md e stack s
 - [x] Structure verified: .opencode/skills/[slug]/SKILL.md
 - [x] Frontmatter metadata verified.
 ---
+
+### Release 2.2.0 (Tool Standardization)
+**2026-01-29 Task:** [Refactor] Standardize Tool Support | **Status:** [Completed]
+**Changes:**
+- **Antigravity (Updated):**
+    - Corrected structure to use `.agent/skills/` (Skills) and `.agent/workflows/` (Workflows).
+    - Added `toAntigravityWorkflow` generator.
+    - Updated `toAntigravitySkill` to use slug-based naming.
+- **Roo Code (Updated):**
+    - Implemented `toRooSkill` to natively support `.roo/skills/` (Agent Skills format).
+    - Fixed handler to use the correct transformer instead of `toOpenCodeAgent`.
+- **Cleanup (Removals):**
+    - Removed support for deprecated/unmaintained tools: Cliner, Windsurf, Trae, Copilot, Web.
+    - Removed unused transformers: `toCopilotInstructions`, `toWindsurfRules`, `toTraeRules`, `toAntigravitySubagent`.
+- **CLI (Updated):**
+    - Cleaned up selection menu to show only the 7 fully supported tools (Gemini, Roo, Cursor, Claude, Kilo, OpenCode, Antigravity).
+**Self-Check:**
+- [x] Full installation test verified (7/7 tools generating correct structure).
+- [x] Antigravity `.agent/workflows` format confirmed.
+- [x] Roo Code `.roo/skills` format confirmed.
+---

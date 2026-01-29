@@ -12,19 +12,14 @@ const { setLocale, t, getLocale } = require('./lib/i18n');
 const {
     toGeminiTOML,
     toGeminiSkill,
-    toRooConfig,
     toRooSkill,
     toKiloMarkdown,
     toKiloSkill,
-    toCopilotInstructions,
     toCursorMDC,
     toCursorSkill,
-    toWindsurfRules,
     toClaudeCommand,
     toClaudeSkill,
     toClaudeSubagent,
-    toPlainSystemPrompt,
-    toTraeRules,
     toOpenCodeSkill,
     toOpenCodeSubagent,
     toAntigravitySkill,
@@ -129,14 +124,9 @@ async function main() {
         options: [
             { value: 'gemini', label: t('TOOLS.GEMINI'), hint: '.gemini/commands/* & skills/*' },
             { value: 'roo', label: t('TOOLS.ROO'), hint: '.roo/skills/*' },
-            { value: 'cline', label: t('TOOLS.CLINE'), hint: '.cline/ & custom_modes.json' },
             { value: 'cursor', label: t('TOOLS.CURSOR'), hint: '.cursor/commands/* & skills/*' },
-            { value: 'windsurf', label: t('TOOLS.WINDSURF'), hint: '.windsurf/workflows/*.md' },
             { value: 'claude', label: 'Claude Code', hint: '.claude/commands/* & skills/* & agents/*' },
-            { value: 'trae', label: t('TOOLS.TRAE'), hint: '.trae/instructions.md' },
             { value: 'kilo', label: t('TOOLS.KILO'), hint: '.kilocode/workflows/* & skills/*' },
-            { value: 'copilot', label: t('TOOLS.COPILOT'), hint: '.github/prompts/*.md' },
-            { value: 'web', label: t('TOOLS.WEB'), hint: 'prompts/*.txt' },
             { value: 'opencode', label: t('TOOLS.OPENCODE'), hint: '.opencode/skills/* & agents/*' },
             { value: 'antigravity', label: t('TOOLS.ANTIGRAVITY'), hint: '.agent/skills/* & workflows/*' }
         ],
@@ -213,32 +203,6 @@ async function processAgentsInstallation(tools, options) {
                     })
                 );
             },
-            cline: async (validAgents, options) => {
-                const targetDir = path.join(process.cwd(), '.cline');
-                await fsp.mkdir(targetDir, { recursive: true });
-
-                await Promise.all(
-                    validAgents.map((agent) => {
-                        const md = toKiloMarkdown(agent, options);
-                        return fsp.writeFile(path.join(targetDir, `${agent.slug}.md`), md);
-                    })
-                );
-
-                const modes = validAgents.map((agent) => toRooConfig(agent, agent.slug, options));
-                const jsonContent = JSON.stringify({ customModes: modes }, null, 2);
-                await fsp.writeFile(path.join(process.cwd(), 'cline_custom_modes.json'), jsonContent);
-            },
-            windsurf: async (validAgents, options) => {
-                const targetDir = path.join(process.cwd(), '.windsurf', 'workflows');
-                await fsp.mkdir(targetDir, { recursive: true });
-
-                await Promise.all(
-                    validAgents.map((agent) => {
-                        const md = toWindsurfRules(agent, options);
-                        return fsp.writeFile(path.join(targetDir, `${agent.slug}.md`), md);
-                    })
-                );
-            },
             claude: async (validAgents, options) => {
                 const commandsDir = path.join(process.cwd(), '.claude', 'commands', 'agents');
                 const skillsDir = path.join(process.cwd(), '.claude', 'skills');
@@ -311,41 +275,6 @@ async function processAgentsInstallation(tools, options) {
                         await fsp.mkdir(agentSkillDir, { recursive: true });
                         const skill = toKiloSkill(agent, options);
                         await fsp.writeFile(path.join(agentSkillDir, 'SKILL.md'), skill);
-                    })
-                );
-            },
-            copilot: async (validAgents, options) => {
-                const githubDir = path.join(process.cwd(), '.github');
-                const promptsDir = path.join(githubDir, 'prompts');
-                await fsp.mkdir(promptsDir, { recursive: true });
-
-                await Promise.all(
-                    validAgents.map((agent) => {
-                        const md = toCopilotInstructions(agent, options);
-                        return fsp.writeFile(path.join(promptsDir, `${agent.slug}.md`), md);
-                    })
-                );
-
-                const mainAgent = validAgents.find((a) => a.slug.includes('coder')) || validAgents[0];
-                const mainInstructions = toCopilotInstructions(mainAgent, options);
-                await fsp.writeFile(path.join(githubDir, 'prompts.md'), mainInstructions);
-            },
-            trae: async (validAgents, options) => {
-                const traeDir = path.join(process.cwd(), '.trae');
-                await fsp.mkdir(traeDir, { recursive: true });
-
-                const mainAgent = validAgents.find((a) => a.slug.includes('coder')) || validAgents[0];
-                const rules = toTraeRules(mainAgent, options);
-                await fsp.writeFile(path.join(traeDir, 'instructions.md'), rules);
-            },
-            web: async (validAgents, options) => {
-                const targetDir = path.join(process.cwd(), 'prompts');
-                await fsp.mkdir(targetDir, { recursive: true });
-
-                await Promise.all(
-                    validAgents.map((agent) => {
-                        const txt = toPlainSystemPrompt(agent, options);
-                        return fsp.writeFile(path.join(targetDir, `${agent.slug}.txt`), txt);
                     })
                 );
             },
