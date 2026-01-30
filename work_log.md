@@ -164,3 +164,19 @@ Simplificar o onboarding removendo decisões prematuras (guidelines.md e stack s
 - [x] Antigravity `.agent/workflows` format confirmed.
 - [x] Roo Code `.roo/skills` format confirmed.
 ---
+### Release 3.0.0 (Smart Update & Refactor)
+**2026-01-29 Task:** [Feature] Smart Update & CLI Refactoring | **Status:** [Completed]
+**Changes:**
+- **Smart Update Mechanism:**
+    - Updated \src/index.js\ to support non-destructive upgrades.
+    - Preserves user documentation (.sdd-toolkit/) while updating agent definitions.
+    - Implemented smart scaffolding to only create missing folders/files.
+- **CLI Refactoring:**
+    - Extracted monolithic installation logic into \src/lib/handlers/\.
+    - Created modular handlers for Gemini, Roo, Claude, Cursor, Kilo, OpenCode, and Antigravity.
+    - Simplified \src/index.js\ to act as a clean orchestrator.
+**Self-Check:**
+- [x] Upgrade Preserves User Files Verified.
+- [x] All 7 Tool Handlers Verified.
+---
+
