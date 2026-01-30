@@ -56,16 +56,10 @@ async function main() {
         if (fs.existsSync(path.join(process.cwd(), '.roo'))) tools.push('roo');
         if (fs.existsSync(path.join(process.cwd(), '.cline'))) tools.push('cline');
         if (fs.existsSync(path.join(process.cwd(), '.cursor'))) tools.push('cursor');
-        if (fs.existsSync(path.join(process.cwd(), '.windsurf'))) tools.push('windsurf');
         if (fs.existsSync(path.join(process.cwd(), '.claude'))) tools.push('claude');
-        if (fs.existsSync(path.join(process.cwd(), '.trae'))) tools.push('trae');
         if (fs.existsSync(path.join(process.cwd(), '.kilocode'))) tools.push('kilo');
-        if (fs.existsSync(path.join(process.cwd(), '.github'))) tools.push('copilot');
-        if (fs.existsSync(path.join(process.cwd(), '.roo'))) tools.push('roo');
         if (fs.existsSync(path.join(process.cwd(), '.opencode'))) tools.push('opencode');
-        if (fs.existsSync(path.join(process.cwd(), 'prompts'))) tools.push('web');
-
-        if (fs.existsSync(path.join(process.cwd(), '.antigravity'))) tools.push('antigravity');
+        if (fs.existsSync(path.join(process.cwd(), '.antigravity')) || fs.existsSync(path.join(process.cwd(), '.agent'))) tools.push('antigravity');
         if (tools.length === 0) {
             note(t('UPGRADE.NO_CONFIG'), t('UPGRADE.NO_CONFIG_TITLE'));
         } else {
