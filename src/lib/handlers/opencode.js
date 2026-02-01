@@ -1,6 +1,6 @@
 const fsp = require('fs/promises');
 const path = require('path');
-const { toOpenCodeSkill, toOpenCodeSubagent } = require('../transformers');
+const { toOpenCodeSkill, toOpenCodeAgent } = require('../transformers');
 
 /**
  * Handles installation for OpenCode
@@ -26,11 +26,31 @@ async function install(agents, options) {
              const skillContent = toOpenCodeSkill(agent, options);
              await fsp.writeFile(path.join(agentSkillDir, 'SKILL.md'), skillContent);
 
-             // Generate Subagent: .opencode/agents/[agent-slug].md
-             const subagentContent = toOpenCodeSubagent(agent, options);
-             await fsp.writeFile(path.join(agentsDir, `${skillName}.md`), subagentContent);
+             // Generate Agent: .opencode/agents/[agent-slug].md
+             const agentContent = toOpenCodeAgent(agent, { ...options, mode: 'all' });
+             await fsp.writeFile(path.join(agentsDir, `${skillName}.md`), agentContent);
         })
     );
+
+    // Install Pre-defined Skills (from definitions/skills)
+    const predefinedSkillsDir = path.join(__dirname, '..', '..', '..', 'definitions', 'skills');
+    try {
+        await fsp.access(predefinedSkillsDir);
+        const skillFolders = await fsp.readdir(predefinedSkillsDir);
+        
+        await Promise.all(skillFolders.map(async (folder) => {
+            const srcPath = path.join(predefinedSkillsDir, folder);
+            const stats = await fsp.stat(srcPath);
+            
+            if (stats.isDirectory()) {
+                const destPath = path.join(skillsDir, folder);
+                await fsp.cp(srcPath, destPath, { recursive: true, force: true });
+            }
+        }));
+    } catch (e) {
+        // Silently ignore if definitions/skills doesn't exist or is inaccessible
+        // console.error('Error installing predefined skills:', e);
+    }
 }
 
 module.exports = { install };

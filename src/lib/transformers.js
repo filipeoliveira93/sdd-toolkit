@@ -519,12 +519,13 @@ ${allRules.length > 0 ? '## Rules & Guidelines\n' + allRules.map(r => `- ${r}`).
 }
 
 /**
- * Converte para OpenCode Subagent (.opencode/agents/*.md)
+ * Converte para OpenCode Agent (.opencode/agents/*.md)
  * Ref: https://opencode.ai/docs/agents
  */
-function toOpenCodeSubagent(agent, options = {}) {
+function toOpenCodeAgent(agent, options = {}) {
     const languageRule = getLanguageRule(options.locale);
     const allRules = [languageRule, ...(agent.rules || [])];
+    const mode = options.mode || 'all';
 
     // Determine tool permissions based on agent role
     const roleLower = (agent.slug || '').toLowerCase();
@@ -532,7 +533,7 @@ function toOpenCodeSubagent(agent, options = {}) {
 
     return `---
 description: ${agent.description || agent.role}
-mode: subagent
+mode: ${mode}
 tools:
   write: ${!isReadOnly}
   edit: ${!isReadOnly}
@@ -565,7 +566,7 @@ module.exports = {
     toClaudeSubagent,
     toPlainSystemPrompt,
     toOpenCodeSkill,
-    toOpenCodeSubagent,
+    toOpenCodeAgent,
     toTraeRules,
     toAntigravitySkill,
     toAntigravityWorkflow
