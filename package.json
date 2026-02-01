@@ -22,8 +22,7 @@
         "src",
         "definitions",
         "templates",
-        "README.md",
-        "README.pt.md"
+        "README.md"
     ],
     "keywords": [
         "ai",
@@ -32,7 +31,6 @@
         "dev-tools",
         "llm",
         "gemini",
-        "roo-code",
         "cline"
     ],
     "repository": {

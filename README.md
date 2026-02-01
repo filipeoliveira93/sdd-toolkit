@@ -8,7 +8,7 @@ CLI tool to automatically set up the development environment and install AI agen
 
 ## Overview
 
-**sdd-toolkit** is an "AI Agent Package Manager". It defines a standard squad of AI Developers and installs them directly into the context of your favorite AI Coding Assistant (such as Gemini, Roo Code, Kilo Code, OpenCode).
+**sdd-toolkit** is an "AI Agent Package Manager". It defines a standard squad of AI Developers and installs them directly into the context of your favorite AI Coding Assistant (such as Gemini, Cline, Kilo Code, OpenCode).
 
 The main idea is to stop creating prompts from scratch and install a proven, structured workflow.
 
@@ -45,7 +45,6 @@ The toolkit supports English, Portuguese (Brazil), and Spanish. Agents automatic
 Reads agnostic definitions (YAML) and converts them to specific formats:
 
 - **Gemini CLI:** Generates `.toml` configuration files.
-- **Roo Code:** Generates agents in `.roo/commands/*.md`.
 - **Cline:** Generates custom modes (`_custom_modes.json`) and context rules in `.cline/`.
 - **GitHub Copilot:** Generates instructions in `.github/prompts.md` and agents in `.github/prompts/*.md`.
 - **Cursor:** Generates rules in `.cursor/commands/*.mdc`.
@@ -283,7 +282,7 @@ MIT
 
 ---
 
-**Nota:** Uma versão em português deste README está disponível em [README.pt.md](README.pt.md).
+
 
 ## Troubleshooting
 
@@ -293,7 +292,7 @@ MIT
 
 **Solutions:**
 
-- **Roo Code/Cline:** Check if you've configured Custom Modes in your settings. See the warning message after installation.
+- **Cline:** Check if you've configured Custom Modes in your settings. See the warning message after installation.
 - **Cursor:** Restart the IDE after installation.
 - **OpenCode:** Refresh the command palette.
 - **Gemini CLI:** Verify `.gemini/commands/dev/` folder exists with `.toml` files.
@@ -341,7 +340,7 @@ MIT
 
 **Q: Can I use multiple AI assistants simultaneously?**
 
-A: Yes! You can install agents for multiple AI tools in the same project. Each tool has its own folder structure (`.roo/`, `.cline/`, `.cursor/`, etc.) and they can coexist without conflicts.
+A: Yes! You can install agents for multiple AI tools in the same project. Each tool has its own folder structure (`.cline/`, `.cursor/`, etc.) and they can coexist without conflicts.
 
 **Q: How do I update agents after initial setup?**
 
@@ -365,7 +364,7 @@ A: Yes, it's recommended. The `.sdd-toolkit/` folder contains your project docum
 
 **Q: How do I remove sdd-toolkit from my project?**
 
-A: Simply delete the `.sdd-toolkit/` folder and any tool-specific folders (`.roo/`, `.cline/`, `.cursor/`, etc.). These are all generated files and won't affect your source code.
+A: Simply delete the `.sdd-toolkit/` folder and any tool-specific folders (`.cline/`, `.cursor/`, etc.). These are all generated files and won't affect your source code.
 
 **Q: Are my code changes tracked by sdd-toolkit?**
 

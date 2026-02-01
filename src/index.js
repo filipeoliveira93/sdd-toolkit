@@ -53,7 +53,6 @@ async function main() {
 
         const tools = [];
         if (fs.existsSync(path.join(process.cwd(), '.gemini'))) tools.push('gemini');
-        if (fs.existsSync(path.join(process.cwd(), '.roo'))) tools.push('roo');
         if (fs.existsSync(path.join(process.cwd(), '.cline'))) tools.push('cline');
         if (fs.existsSync(path.join(process.cwd(), '.cursor'))) tools.push('cursor');
         if (fs.existsSync(path.join(process.cwd(), '.claude'))) tools.push('claude');
@@ -118,7 +117,6 @@ async function main() {
         message: t('SETUP.TOOL_SELECT'),
         options: [
             { value: 'gemini', label: t('TOOLS.GEMINI'), hint: '.gemini/commands/* & skills/*' },
-            { value: 'roo', label: t('TOOLS.ROO'), hint: '.roo/skills/*' },
             { value: 'cursor', label: t('TOOLS.CURSOR'), hint: '.cursor/commands/* & skills/*' },
             { value: 'claude', label: 'Claude Code', hint: '.claude/commands/* & skills/* & agents/*' },
             { value: 'kilo', label: t('TOOLS.KILO'), hint: '.kilocode/workflows/* & skills/*' },
@@ -167,8 +165,8 @@ async function processAgentsInstallation(tools, options) {
 
         s.stop(t('INSTALL.FINISHED'));
 
-        if (tools.includes('roo') || tools.includes('cline')) {
-            note(t('INSTALL.ROO_WARNING'), t('INSTALL.ROO_WARNING_TITLE'));
+        if (tools.includes('cline')) {
+            note(t('INSTALL.CLINE_WARNING'), t('INSTALL.CLINE_WARNING_TITLE'));
         }
     } catch (e) {
         s.stop(pc.red(`${t('INSTALL.FAILED')}: ${e.message}`));
